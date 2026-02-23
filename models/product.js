@@ -1,0 +1,54 @@
+import mongoose from "mongoose";
+
+const ProductSchema = new mongoose.Schema({
+  name: String,
+  md5_name : String,
+  slug: String,
+  item_code: String,
+  price: Number,
+  special_price: Number,
+  quantity: Number,
+  description: String,
+  category: String,
+  sub_category: String,
+  brand: String,
+  size: { type: String, default: "" },
+  star: { type: String, default: "" },
+  category: String,
+  movement: String,
+  key_specifications : { type: [String], default: [] },
+  status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
+  stock_status: { type: String, enum: ["In Stock", "Out of Stock"], default: "In Stock" },
+  hasVariants: { type: Boolean, default: false },
+  variants: { type: Object, default: {} },
+  images: { type: [String], default: [] }, 
+  filter : { type: Object, default: {} },
+  overview_image: { type: [String], default: [] }, 
+  featured_products :{ type: Object, default: {} },
+  related_products: { 
+  type: [mongoose.Schema.Types.ObjectId], 
+  ref: "Product", 
+  default: [] 
+},
+
+add_ons: {
+  type: [mongoose.Schema.Types.ObjectId],
+  ref: "Product",
+  default: [],
+},
+
+  warranty: Number,
+  extended_warranty:Number,
+  overviewdescription: String,
+  product_highlights: {type: [String],default: [],},
+  meta_title: { type: String, default: "" }, // Add meta_title field
+  meta_description: { type: String, default: "" }, // Add meta_description field
+  search_keywords: { type: String, default: "" }, // Add search_keywords field
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  category_new : String,
+  sub_category_new : String,
+  sub_category_name : String,
+});
+
+export default mongoose.models.Product || mongoose.model("Product", ProductSchema);
