@@ -103,7 +103,7 @@ export default function OnSaleSection() {
 
         {/* LEFT CATEGORY LIST */}
         <div className="space-y-4 text-center lg:text-left z-50">
-          <div className="lg:grid lg:grid-rows-7 lg:gap-y-2.3 flex gap-x-2.5 overflow-x-auto">
+          <div className="lg:grid lg:grid-rows-7 lg:gap-y-2.5 flex gap-x-2.5 overflow-x-auto">
             {categories.map((cat) => (
               <div
                 key={cat._id}
