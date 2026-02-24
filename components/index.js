@@ -205,47 +205,45 @@ function CategoryCard({ image, title, bg }) {
        {/* ================= BEST SELLERS ================= */}    
       <BestSeller />
 
-        <div className="inner-section-padding my-10">
-          <div className="my-0 rounded-2xl overflow-hidden">
-            <Link href="/category/mobiles">
-            <Image
-              src="/assets/images/banner-w-pt-m-st.png"
-              alt="Sony Banner"
-              width={1400}
-              height={400}
-              className="w-full h-auto rounded-2xl"
-            />
-            </Link>
-          </div>
-        </div>
-
-          {/* ================= Latest Products ================= */}  
-        <LatestProducts />
-    
-
-    {/* TOP BANNER */}
       <div className="inner-section-padding my-10">
         <div className="my-0 rounded-2xl overflow-hidden">
-          <Link href="/category/air-conditioner">
+          <Link href="/category/mobiles">
           <Image
-            src="/assets/images/test-banner-w-pt.png"
-            alt="AC"
+            src="/assets/images/mobile-banner.png"
+            alt="Sony Banner"
             width={1400}
             height={400}
             className="w-full h-auto rounded-2xl"
-            priority
           />
           </Link>
         </div>
-        
       </div>
 
-       {/* ================= Latest Products ================= */}  
-        <OnSaleSection />
+      {/* ================= Latest Products ================= */}  
+      <LatestProducts />
+    
 
-     
+    {/* TOP BANNER */}
+    <div className="inner-section-padding my-10">
+      <div className="my-0 rounded-2xl overflow-hidden">
+        <Link href="/category/air-conditioner">
+        <Image
+          src="/assets/images/ac-banner.png"
+          alt="AC"
+          width={1400}
+          height={400}
+          className="w-full h-auto rounded-2xl"
+          priority
+        />
+        </Link>
+      </div>
+      
+    </div>
 
-      <section className="inner-section-padding py-10">
+    {/* ================= Latest Products ================= */}  
+    <OnSaleSection />
+
+    <section className="inner-section-padding py-10">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* LEFT BIG BANNER */}
         <div className="lg:col-span-2 relative rounded-2xl overflow-hidden bg-black min-h-[260px] lg:min-h-[420px]">
@@ -303,33 +301,33 @@ function CategoryCard({ image, title, bg }) {
       </div>
     </section>
 
-{/* ================= Top Sellers Section Products ================= */}  
-        <TopSellersSection />
+    {/* ================= Top Sellers Section Products ================= */}  
+    <TopSellersSection />
 
 
-     {/* TOP BANNER */}
-      <div className="inner-section-padding my-10">
-        <div>
-          <Link href="/aboutus">
-            <Image
-              src="/assets/images/channels4_banner.jpg"
-              alt="Sony Banner"
-              width={1920}
-              height={600}
-              className="rounded-2xl w-full h-auto"
-              priority
-            />
-          </Link>
-        </div>
+    {/* TOP BANNER */}
+    <div className="inner-section-padding my-10">
+      <div>
+        <Link href="/aboutus">
+          <Image
+            src="/assets/images/sathya-banner.png"
+            alt="Sony Banner"
+            width={1920}
+            height={600}
+            className="rounded-2xl w-full h-auto"
+            priority
+          />
+        </Link>
       </div>
+    </div>
 
 
 
-      {/* NEWLY ARRIVED SECTION */}
-          <NewlyArrivedSection />
-      
-      {/* NEWLY Brand Slider SECTION */}
-          <BrandSlider />
+    {/* NEWLY ARRIVED SECTION */}
+        <NewlyArrivedSection />
+    
+    {/* NEWLY Brand Slider SECTION */}
+        <BrandSlider />
 
      
     <section className="w-full inner-section-padding py-5">
@@ -357,9 +355,10 @@ function CategoryCard({ image, title, bg }) {
                     className="w-full aspect-video object-cover"
                     alt="" 
                   />
+                  <div className="absolute inset-0 bg-black/15"></div>
                   <span className="absolute inset-0 flex items-center justify-center">
-                    <span className="bg-pink-100 shadow-lg text-primary rounded-full w-10 h-10 flex items-center justify-center">
-                      <i className="fi fi-sr-play"></i>
+                    <span className="bg-pink-100 shadow-lg text-primary rounded-full w-9 h-9 flex items-center justify-center">
+                      <i className="fi fi-sr-play flex"></i>
                     </span>
                   </span>
                 </button>

@@ -71,7 +71,7 @@ export default function TopSellersSection() {
 
   return (
     <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5 lg:gap-8 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
 
         {/* LEFT LIST */}
         <div className="space-y-4 text-center md:col-span-2 lg:col-span-1 lg:text-left z-50">
@@ -94,8 +94,8 @@ export default function TopSellersSection() {
                       <Image
                         src={`/uploads/products/${product.images?.[0]}`}
                         alt={product.name}
-                        width={130}
-                        height={130}
+                        width={100}
+                        height={100}
                       />
                     </Link>
                   </div>
@@ -106,13 +106,13 @@ export default function TopSellersSection() {
                         href={`/brand/${brandMap[product.brand]
                           ?.toLowerCase()
                           .replace(/\s+/g, "-") || ""}`}
-                        className="hover:text-red-600"
+                        className="text-[10px] font-bold hover:text-red-600"
                       >
                         Brand: {brandMap[product.brand] || ""}
                       </Link>
                     </h4>
 
-                    <p className="font-semibold text-sm mb-2 line-clamp-2">
+                    <p className="font-semibold text-xs mb-2 line-clamp-2">
                       <Link href={`/product/${product.slug}`}>
                         {product.name}
                       </Link>
@@ -120,13 +120,13 @@ export default function TopSellersSection() {
 
                     {/* PRICE */}
                     <div className="flex items-center flex-wrap gap-x-2 p">
-                      <span className="font-bold text-lg">
+                      <span className="font-bold text-md">
                         ₹ {finalPrice}
                       </span>
 
                       {originalPrice > finalPrice && (
                         <>
-                          <span className="text-red-500 line-through">
+                          <span className="text-red-500 line-through text-xs">
                             ₹ {originalPrice}
                           </span>
 
@@ -187,8 +187,8 @@ export default function TopSellersSection() {
             spaceBetween={20}
             slidesPerView={1}
             breakpoints={{
-              550: { slidesPerView: 2 },
-              768: { slidesPerView: 3 },
+              0: { slidesPerView: 2 },     // mobile
+              768: { slidesPerView: 3 },   // tablet
             }}
           >
             {products.slice(3, 10).map((product, i) => {
@@ -197,14 +197,14 @@ export default function TopSellersSection() {
 
               return (
                 <SwiperSlide key={i}>
-                  <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-4 h-[430px] flex flex-col">
-                    <div className="bg-white rounded-lg p-4 flex justify-center items-center h-[240px]">
+                  <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-4 h-auto flex flex-col">
+                    <div className="bg-white rounded-lg p-4 flex justify-center items-center h-[260px]">
                       <Link href={`/product/${product.slug}`}>
                         <Image
                           src={`/uploads/products/${product.images?.[0]}`}
                           alt={product.name}
                           width={240}
-                          height={240}
+                          height={250}
                           className="object-contain max-h-full"
                         />
                       </Link>
@@ -212,12 +212,6 @@ export default function TopSellersSection() {
 
                     <div className="mt-3 flex flex-col flex-1 justify-between">
                       <div>
-                        <Link href={`/product/${product.slug}`}>
-                          <p className="font-semibold text-sm mb-2 line-clamp-2">
-                            {product.name}
-                          </p>
-                        </Link>
-
                         <h4 className="text-xs text-gray-500 uppercase truncate mb-1">
                           <Link
                             href={`/brand/${brandMap[product.brand]
@@ -228,26 +222,36 @@ export default function TopSellersSection() {
                             Brand: {brandMap[product.brand] || ""}
                           </Link>
                         </h4>
+
+                        <Link href={`/product/${product.slug}`}>
+                          <p className="font-semibold text-sm mb-2 line-clamp-2 text-md">
+                            {product.name}
+                          </p>
+                        </Link>
+
                       </div>
 
                       {/* PRICE */}
-                      <div>
-                        <div className="flex items-center gap-x-2">
-                          <span className="font-bold text-lg">
+                      <div className="flex flex-wrap items-center gap-2 w-full">
+                        <div >
+                          <span className="font-bold text-xs sm:text-lg px-2 py-2">
                             ₹ {finalPrice}
                           </span>
 
                           {originalPrice > finalPrice && (
                             <>
-                              <span className="text-red-500 line-through">
+                              <span className="text-red-500 line-through px-2 py-2 text-xs sm:text-xs">
                                 ₹ {originalPrice}
-                              </span>
-
-                              <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md">
-                                {discountPercent}% Off
                               </span>
                             </>
                           )}
+                        </div>
+                        <div>
+                          {originalPrice > finalPrice && (
+                           <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md">
+                                {discountPercent}% Off
+                           </span>
+                         )}
                         </div>
 
                         <div className="mt-2 flex items-center justify-between">

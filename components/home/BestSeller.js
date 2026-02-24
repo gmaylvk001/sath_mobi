@@ -145,60 +145,60 @@ const BestSellers = () => {
           {categoryName === "Mobiles" && (
             <>
           {/* ---------------- Mobile GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
-        <div className="col-span-2 max-sm:col-span-2">
-          <Link href="/category/mobiles">
-            <GridImage src="/assets/images/categoryimages/M-1.png" alt="Mobile Main" />
-          </Link>
-          
-        </div>
+            <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+              <div className="col-span-2 max-sm:col-span-2">
+                <Link href="/category/mobiles">
+                  <GridImage src="/assets/images/categoryimages/Mobile-1.png" alt="Mobile Main" />
+                </Link>
+                
+              </div>
 
-        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-          <Link href="/category/mobiles">
-          <GridImage src="/assets/images/categoryimages/M-2.png" alt="iPhone Category" />
-          </Link>
-          <Link href="/category/mobiles"> 
-          <GridImage src="/assets/images/categoryimages/M-3.png" alt="iPhone Category" />
-          </Link>
-        </div>
+              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+                <Link href="/category/mobiles">
+                <GridImage src="/assets/images/categoryimages/Mobile-2.png" alt="iPhone Category" />
+                </Link>
+                <Link href="/category/mobiles"> 
+                <GridImage src="/assets/images/categoryimages/Mobile-3.png" alt="iPhone Category" />
+                </Link>
+              </div>
 
-        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-          <Link href="/category/mobiles"> 
-          <GridImage src="/assets/images/categoryimages/M-4.png" alt="Android Category" />
-          </Link>
-          <Link href="/category/mobiles"> 
-          <GridImage src="/assets/images/categoryimages/M-5.png" alt="Keypad Category" />
-          </Link>
-        </div>
-      </div>
-      </>
-        )}
-        {categoryName === "Air Conditioner" && (
-          <>  
-      {/* ---------------- AC GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
-        <div className="col-span-2 max-sm:col-span-2">
-          <Link href="/category/air-conditioner">
-          <GridImage src="/assets/images/categoryimages/ac-w-button-new-1.png" alt="AC Main" />
-          </Link>
-        </div>
+              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+                <Link href="/category/mobiles"> 
+                <GridImage src="/assets/images/categoryimages/Mobile-4.png" alt="Android Category" />
+                </Link>
+                <Link href="/category/mobiles"> 
+                <GridImage src="/assets/images/categoryimages/Mobile-5.png" alt="Keypad Category" />
+                </Link>
+              </div>
+            </div>
+            </>
+              )}
+              {categoryName === "Air Conditioner" && (
+                <>  
+            {/* ---------------- AC GRID ---------------- */}
+            <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+              <div className="col-span-2 max-sm:col-span-2">
+                <Link href="/category/air-conditioner">
+                <GridImage src="/assets/images/categoryimages/ac-1.png" alt="AC Main" />
+                </Link>
+              </div>
 
-        <div className="col-span-1 max-sm:col-span-1">
-          <Link href="/category/air-conditioner">
-          <GridImage src="/assets/images/categoryimages/ac-inverter-w-button-new-1.png" alt="Inverter AC" />
-          </Link>
-        </div>
+              <div className="col-span-1 max-sm:col-span-1">
+                <Link href="/category/air-conditioner">
+                <GridImage src="/assets/images/categoryimages/ac-2.png" alt="Inverter AC" />
+                </Link>
+              </div>
 
-        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-          <Link href="/category/air-conditioner">
-          <GridImage src="/assets/images/categoryimages/ac-split-w-button-new-1.png" alt="Split AC" />
-          </Link>
-          <Link href="/category/air-conditioner">
-          <GridImage src="/assets/images/categoryimages/ac-window-w-button-new-1.png" alt="Window AC" />
-          </Link>
-        </div>
-      </div>
-    </>
+              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+                <Link href="/category/air-conditioner">
+                <GridImage src="/assets/images/categoryimages/ac-3.png" alt="Split AC" />
+                </Link>
+                <Link href="/category/air-conditioner">
+                <GridImage src="/assets/images/categoryimages/ac-4.png" alt="Window AC" />
+                </Link>
+              </div>
+            </div>
+          </>
         )}
 {categoryName === "Smart Tv" && (
   <> 
@@ -206,25 +206,25 @@ const BestSellers = () => {
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
         <div className="col-span-2 max-sm:col-span-2">
           <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/TV-1.png" alt="TV Main" />
+          <GridImage src="/assets/images/categoryimages/Television-1.png" alt="TV Main" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
           <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/TV-2.png" alt="TV Category" />
+          <GridImage src="/assets/images/categoryimages/Television-2.png" alt="TV Category" />
           </Link>
           <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/TV-3.png" alt="TV Category" />
+          <GridImage src="/assets/images/categoryimages/Television-3.png" alt="TV Category" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
           <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/TV-4.png" alt="TV Category" />
+          <GridImage src="/assets/images/categoryimages/Television-4.png" alt="TV Category" />
           </Link>
           <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/TV-5.png" alt="TV Category" />
+          <GridImage src="/assets/images/categoryimages/Television-5.png" alt="TV Category" />
             </Link>
         </div>
       </div>
@@ -236,19 +236,19 @@ const BestSellers = () => {
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
         <div className="col-span-2 max-sm:col-span-2">
           <Link href="/category/laptop-desktops">
-          <GridImage src="/assets/images/categoryimages/L-D-1.png" alt="Laptop Main" />
+          <GridImage src="/assets/images/categoryimages/Lap-D-1.png" alt="Laptop Main" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1">
           <Link href="/category/laptop-desktops">
-          <GridImage src="/assets/images/categoryimages/L-D-2.png" alt="Laptop Category" />
+          <GridImage src="/assets/images/categoryimages/Lap-D-2.png" alt="Laptop Category" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1">
           <Link href="/category/laptop-desktops">
-          <GridImage src="/assets/images/categoryimages/L-D-3.png" alt="Desktop Category" />
+          <GridImage src="/assets/images/categoryimages/Lap-D-3.png" alt="Desktop Category" />
           </Link>
         </div>
       </div>
@@ -260,34 +260,34 @@ const BestSellers = () => {
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
         <div className="col-span-1">
           <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-1.png" alt="Accessories" />
+          <GridImage src="/assets/images/categoryimages/accessories-1.png" alt="Accessories" />
           </Link>
         </div>
 
         <div className="col-span-1 flex flex-col gap-4">
           <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-2.png" alt="Accessories" />
+          <GridImage src="/assets/images/categoryimages/accessories-2.png" alt="Accessories" />
           </Link>
           <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-3.png" alt="Accessories" />
-          </Link>
-        </div>
-
-        <div className="col-span-1 flex flex-col gap-4">
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-4.png" alt="Accessories" />
-          </Link>
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-5.png" alt="Accessories" />
+          <GridImage src="/assets/images/categoryimages/accessories-3.png" alt="Accessories" />
           </Link>
         </div>
 
         <div className="col-span-1 flex flex-col gap-4">
           <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-6.png" alt="Accessories" />
+          <GridImage src="/assets/images/categoryimages/accessories-4.png" alt="Accessories" />
           </Link>
           <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-7.png" alt="Accessories" />
+          <GridImage src="/assets/images/categoryimages/accessories-5.png" alt="Accessories" />
+          </Link>
+        </div>
+
+        <div className="col-span-1 flex flex-col gap-4">
+          <Link href="/category/accessories">
+          <GridImage src="/assets/images/categoryimages/accessories-6.png" alt="Accessories" />
+          </Link>
+          <Link href="/category/accessories">
+          <GridImage src="/assets/images/categoryimages/accessories-7.png" alt="Accessories" />
           </Link>
         </div>
       </div>
@@ -299,22 +299,22 @@ const BestSellers = () => {
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
         <div className="col-span-2 max-sm:col-span-2">
           <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/T-1.png" alt="Tablet Main" />
+          <GridImage src="/assets/images/categoryimages/Tab-1.png" alt="Tablet Main" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1">
            <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/T-2.png" alt="Tablet Category" />
+          <GridImage src="/assets/images/categoryimages/Tab-2.png" alt="Tablet Category" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
           <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/T-3.png" alt="Tablet Category" />
+          <GridImage src="/assets/images/categoryimages/Tab-3.png" alt="Tablet Category" />
           </Link>
           <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/T-4.png" alt="Tablet Category" />
+          <GridImage src="/assets/images/categoryimages/Tab-4.png" alt="Tablet Category" />
           </Link>
         </div>
       </div>
@@ -338,10 +338,10 @@ const BestSellers = () => {
             prevEl: ".product-nav-prev",
           }}
           spaceBetween={16}
-          slidesPerView={1}
+          slidesPerView={2} // default for mobile
           breakpoints={{
-            550: { slidesPerView: 2 },
-            1024: { slidesPerView: 4 },
+            768: { slidesPerView: 3 },  // tablets
+            1024: { slidesPerView: 4 }, // desktop
           }}
         >
           {loading
@@ -358,7 +358,7 @@ const BestSellers = () => {
 
                 return (
                   <SwiperSlide key={product._id}>
-                    <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-4 h-[430px] flex flex-col">
+                    <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-auto flex flex-col">
                       <div className="bg-white rounded-lg p-4 flex justify-center items-center h-[260px]">
                         <Link href={`/product/${product.slug}`}>
                           <Image
@@ -386,29 +386,30 @@ const BestSellers = () => {
                         </h4>
 
                         <Link href={`/product/${product.slug}`}>
-                          <p className="font-semibold line-clamp-2 min-h-[40px]">
-                            {product.name}
-                          </p>
+                          <p className="font-semibold line-clamp-2 min-h-[40px] text-md">
+                              {product.name}
+                            </p>
                         </Link>
 
-                        <div className="mt-2">
-                          <span className="font-bold text-lg px-2 py-2">
-                            ₹ {sell}
-                          </span>
+                        <div className="flex flex-wrap items-center gap-2 w-full">
 
-                          {mrp && (
-                            <>
-                              <span className="text-red-500 line-through ml-2 px-2 py-2">
+                          <div>
+                            <span className="font-bold text-xs sm:text-lg px-2 py-2">
+                              ₹ {sell}
+                            </span>
+                            {mrp && (
+                              <span className="text-red-500 line-through px-2 py-2 text-xs sm:text-xs">
                                 ₹ {mrp}
                               </span>
+                            )}
+                          </div>
+                          {mrp && (
+                              <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md 
+                                w-auto mt-1 sm:mt-0">
+                                {discount}% Off
+                              </span>
+                            )}
 
-                              {discount > 0 && (
-                                <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md ml-2">
-                                  {discount}% Off
-                                </span>
-                              )}
-                            </>
-                          )}
 
                           <div className="flex items-center justify-between mt-2">
                             <Addtocart

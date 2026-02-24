@@ -99,11 +99,11 @@ export default function OnSaleSection() {
         </span>
       </h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-8 gap-y-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-8 gap-y-4 items-start">
 
         {/* LEFT CATEGORY LIST */}
         <div className="space-y-4 text-center lg:text-left z-50">
-          <div className="lg:grid lg:grid-rows-7 lg:gap-y-2.5 flex gap-x-2.5 overflow-x-auto">
+          <div className="lg:grid lg:grid-rows-7 lg:gap-y-2.3 flex gap-x-2.5 overflow-x-auto">
             {categories.map((cat) => (
               <div
                 key={cat._id}
@@ -122,7 +122,7 @@ export default function OnSaleSection() {
                     />
                   </div>
 
-                  <span className="max-lg:pr-2.5 text-red-600 font-bold text-sm ml-4">
+                  <span className="max-lg:pr-2.5 text-red-600 font-bold text-lg ml-4">
                     {cat.category_name}
                   </span>
                 </div>
@@ -132,7 +132,7 @@ export default function OnSaleSection() {
         </div>
 
         {/* PRODUCT AREA */}
-        <div className="relative z-0 col-span-2">
+        <div className="relative z-0 col-span-3">
           <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-3.5 auto-rows-fr">
 
             {products.map((p) => {
