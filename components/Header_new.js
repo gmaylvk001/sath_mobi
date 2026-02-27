@@ -1784,7 +1784,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
             </div>
 
             {/* Mobile Menu */}
-           <div className="hidden sm:block lg:hidden">
+           <div className="sm:block lg:hidden">
               <button onClick={toggleMobileMenu} aria-label="Menu" className="relative">
                 {isMobileMenuOpen
                   ? <FiX size={16} className="text-red-600" />
@@ -2016,7 +2016,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                                       
                                       {/* Mobile Menu (Hidden on desktop) */}
                                       {isMobileMenuOpen && (
-                                        <div className="sm:hidden bg-white fixed inset-0 z-auto p-4 pt-3 rounded-lg shadow-lg overflow-y-auto transition-all duration-300"
+                                        <div className="lg:hidden bg-white fixed inset-0 z-50 p-4 pt-3 rounded-lg shadow-lg overflow-y-auto transition-all duration-300"
                                           style={{ touchAction: 'auto', userSelect: 'auto', WebkitUserSelect: 'auto' }}
                                         >
                                           {/* Internal sticky header */}
