@@ -599,10 +599,10 @@ if (stockFilter) {
                     </td> */}
                     
                     {/* Price Column */}
-                    <td className="p-2">{product.price}</td>
+                    <td className="p-2 red-text-color ">₹ {product.price}</td>
                     
                     {/* Special Price Column */}
-                    <td className="p-2">{product.special_price}</td>
+                    <td className="p-2">₹ {product.special_price}</td>
                     
                     {/* Quantity Column */}
                     <td className="p-2">{product.quantity}</td>
