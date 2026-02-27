@@ -651,7 +651,7 @@ if (stockFilter) {
       {isLoading ? (
         <p>Loading Products...</p>
       ) : (
-        <div className="bg-white shadow-md rounded-lg p-5 mb-5 overflow-x-auto">
+        <div className="bg-white shadow-md rounded-lg p-5 mb-5">
           {/* Search and Filters */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-4">
             {/* Search Filter */}
@@ -744,10 +744,12 @@ if (stockFilter) {
           <hr className="border-t border-gray-200 mb-4" />
 
           {/* Products Table */}
-          <table className="w-full border border-gray-300">
+          <div className="overflow-x-auto">
+          <table className="min-w-[900px] w-full border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-2">Item Code</th>
+                <th className="p-2">Ean</th>
                 <th className="p-2">Image</th>
                 <th className="p-2">Name</th>
                 <th className="p-2">Price</th>
@@ -764,6 +766,9 @@ if (stockFilter) {
                     {/* Item Code Column */}
                     <td className="p-2 text-center align-middle">
                       {product.item_code}
+                    </td>
+                    <td className="p-2 text-center align-middle">
+                      {product.ean ? product.ean : <span className="text-gray-400 italic">No EAN</span>}
                     </td>
                   
                     {/* Image Column */}
@@ -797,10 +802,14 @@ if (stockFilter) {
                     </td>
                     
                     {/* Price Column */}
-                    <td className="p-2">{product.price}</td>
-                    
-                    {/* Special Price Column */}
-                    <td className="p-2">{product.special_price}</td>
+                    {/* MRP */}
+                    <td className="p-2 whitespace-nowrap">
+                      ₹ {Number(product.price).toLocaleString("en-IN")}
+                    </td>
+
+                    <td className="p-2 whitespace-nowrap">
+                      ₹ {Number(product.special_price).toLocaleString("en-IN")}
+                    </td>
                     
                     {/* Quantity Column */}
                     <td className="p-2">{product.quantity}</td>
@@ -847,6 +856,7 @@ if (stockFilter) {
               )}
             </tbody>
           </table>
+          </div>
 
           {/* Pagination */}
           <div className="flex justify-between items-center mt-6 flex-wrap gap-3">
