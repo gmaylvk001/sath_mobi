@@ -26,7 +26,7 @@ const BestSellers = () => {
         if (!brandResult.error) {
           const map = {};
           brandResult.data.forEach((b) => {
-            map[b._id] = b.brand_name;
+            map[b._id] = { name: b.brand_name, image: b.image };
           });
           setBrandMap(map);
         }
@@ -359,31 +359,46 @@ const BestSellers = () => {
                 return (
                   <SwiperSlide key={product._id}>
                     <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-auto flex flex-col">
-                      <div className="bg-white rounded-lg p-4 flex justify-center items-center h-[260px]">
+                      <div className="bg-white rounded-lg p-4 flex justify-center items-center h-[150px] sm:h-[260px] md:h-[220px] lg:h-[260px]">
                         <Link href={`/product/${product.slug}`}>
                           <Image
-                            src={`/uploads/products/${product.images?.[0]}`}
-                            alt={product.name}
-                            width={200}
-                            height={250}
-                            className="object-contain max-h-full"
-                          />
+                              src={`/uploads/products/${product.images?.[0]}`}
+                              alt={product.name}
+                              width={200}
+                              height={250}
+                              className="object-contain sm:w-[120px] sm:h-[150px]"
+                            />
                         </Link>
                       </div>
 
                       <div className="mt-3 text-sm flex flex-col flex-1 justify-between">
-                        <h4 className="text-xs text-gray-500 mb-1 uppercase truncate">
+                        <div className="mb-1">
                           <Link
                             href={`/brand/${
-                              brandMap[product.brand]
+                              brandMap[product.brand]?.name
                                 ?.toLowerCase()
                                 .replace(/\s+/g, "-") || ""
                             }`}
-                            className="hover:text-red-600"
+                            className="hover:opacity-80"
                           >
-                            Brand: {brandMap[product.brand] || ""}
+                            {/* BRAND IMAGE - uncomment when ready
+                            {brandMap[product.brand]?.image ? (
+                              <img
+                                src={brandMap[product.brand].image.startsWith('/') ? brandMap[product.brand].image : `/uploads/Brands/${brandMap[product.brand].image}`}
+                                alt={brandMap[product.brand]?.name || "Brand"}
+                                className="object-contain mix-blend-multiply h-[22px] max-w-[55px]"
+                              />
+                            ) : (
+                              <span className="text-[10px] font-bold text-gray-500 uppercase">
+                                {brandMap[product.brand]?.name || ""}
+                              </span>
+                            )}
+                            */}
+                            <span className="text-[10px] font-bold text-gray-500 uppercase">
+                              Brand: {brandMap[product.brand]?.name || ""}
+                            </span>
                           </Link>
-                        </h4>
+                        </div>
 
                         <Link href={`/product/${product.slug}`}>
                           <p className="font-semibold line-clamp-2 min-h-[40px] text-md">
@@ -394,24 +409,23 @@ const BestSellers = () => {
                         <div className="flex flex-wrap items-center gap-2 w-full">
 
                           <div>
-                            <span className="font-bold text-xs sm:text-lg px-2 py-2">
-                              ₹ {sell}
+                            <span className="font-bold text-xs sm:text-[15px] px-1 py-2">
+                              ₹ {sell.toLocaleString('en-IN')}
                             </span>
                             {mrp && (
-                              <span className="text-red-500 line-through px-2 py-2 text-xs sm:text-xs">
-                                ₹ {mrp}
+                              <span className="text-red-500 fold-semiblod line-through px-1 py-2 text-[9px] sm:text-xs">
+                                ₹ {mrp.toLocaleString('en-IN')}
                               </span>
                             )}
                           </div>
                           {mrp && (
-                              <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md 
+                              <span className="bg-green-600 text-white text-[9px] sm:text-[10px] font-semibold px-1 py-1 rounded-md 
                                 w-auto mt-1 sm:mt-0">
                                 {discount}% Off
                               </span>
                             )}
-
-
-                          <div className="flex items-center justify-between mt-2">
+                        </div>
+                        <div className="flex items-center justify-between mt-2">
                             <Addtocart
                               productId={product._id}
                               stockQuantity={product.quantity}
@@ -435,7 +449,6 @@ const BestSellers = () => {
                             </svg>
                             </a>
                           </div>
-                        </div>
                       </div>
                     </div>
                   </SwiperSlide>

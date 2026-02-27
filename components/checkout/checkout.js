@@ -1255,7 +1255,7 @@ const grandTotal = subtotal - totalDiscount;
 
                       {/* Price */}
                       <div className="text-sm whitespace-nowrap text-base font-semibold text-red-600">
-                        ₹{(item.price > 0 ? item.price : item.actual_price) * item.quantity.toFixed(2)}
+                        ₹{((item.price > 0 ? item.price : item.actual_price) * item.quantity).toLocaleString('en-IN')}
                       </div>
                     </div>
                   ))}
@@ -1280,14 +1280,14 @@ const grandTotal = subtotal - totalDiscount;
               {totalDiscount > 0 && (
                 <div className="flex justify-between text-green-600 mb-2">
                   <span>Discount:</span>
-                  <span>-₹{totalDiscount.toFixed(2)}</span>
+                  <span>-₹{totalDiscount.toLocaleString('en-IN')}</span>
                 </div>
               )}
               {cartItems.some(item => item.warranty > 0) && (
                 <div className="flex justify-between text-gray-800 font-semibold">
                   <span className="text-[#0069c6] hover:text-[#00badb] text-xs sm:text-sm font-medium">Warranty:</span>
                   <span className="text-sm whitespace-nowrap text-base font-semibold text-red-600">
-                    ₹{cartItems.reduce((sum, item) => sum + (item.warranty || 0), 0).toFixed(2)}
+                    ₹{cartItems.reduce((sum, item) => sum + (item.warranty || 0), 0).toLocaleString('en-IN')}
                   </span>
                 </div>
               )}
@@ -1295,7 +1295,7 @@ const grandTotal = subtotal - totalDiscount;
                 <div className="flex justify-between text-gray-800 font-semibold pt-2 mt-2">
                   <span className="text-[#0069c6] hover:text-[#00badb] text-xs sm:text-sm font-medium">Extended Warranty:</span>
                   <span className="text-sm whitespace-nowrap text-base font-semibold text-red-600">
-                    ₹{cartItems.reduce((sum, item) => sum + (item.extendedWarranty || 0), 0).toFixed(2)}
+                    ₹{cartItems.reduce((sum, item) => sum + (item.extendedWarranty || 0), 0).toLocaleString('en-IN')}
                   </span>
                 </div>
               )}
@@ -1305,20 +1305,20 @@ const grandTotal = subtotal - totalDiscount;
               {orderSummary.discount > 0 && (
                 <div className="flex justify-between text-green-600 mb-2">
                   <span>Discount:</span>
-                  <span>-₹{orderSummary.discount.toFixed(2)}</span>
+                  <span>-₹{orderSummary.discount.toLocaleString('en-IN')}</span>
                 </div>
               )}
 
               {/* Subtotal */}
               <div className="flex justify-between text-gray-800 font-semibold  pt-2 mt-2">
                 <span>Subtotal:</span>
-                <span>₹{orderSummary.subtotal.toFixed(2)}</span>
+                <span>₹{orderSummary.subtotal.toLocaleString('en-IN')}</span>
               </div>
 
               {/* Total */}
               <div className="flex justify-between text-gray-800 font-semibold pt-2 mt-2">
                 <span>Total:</span>
-                <span>₹{orderSummary.total.toFixed(2)}</span>
+                <span>₹{orderSummary.total.toLocaleString('en-IN')}</span>
               </div>
 
               <div className="mt-6">

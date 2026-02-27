@@ -1549,7 +1549,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
               className="ml-2"
             >
               <FiChevronRight
-                className={`text-white rounded-full p-1 transition-transform duration-200 bg-[#2453D3] ${
+                className={`text-white rounded-full p-1 transition-transform duration-200 bg-[#d32424] ${
                   isOpen ? "rotate-90" : "rotate-0"
                 }`}
                 size={18}
@@ -1575,8 +1575,6 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
       const ids = (Array.isArray(categories) ? categories : []).slice(0, 5).map(c => c._id);
       ids.forEach((id) => { ensureSubcategories(id); });
     }, [isMobileMenuOpen, categories, ensureSubcategories]);
-
-
 
   return (
     <>
@@ -1765,8 +1763,6 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                             )}
             </div>
 
-            
-
             {/* Wishlist */}
             <div className="relative flex items-center gap-1 text-sm">
               <Link href="/wishlist" className="flex">
@@ -1788,8 +1784,12 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
             </div>
 
             {/* Mobile Menu */}
-            <div className="max-md:block hidden">
-              <i className="fi fi-bs-menu-burger flex text-primary font-bold text-2xl"></i>
+           <div className="hidden sm:block lg:hidden">
+              <button onClick={toggleMobileMenu} aria-label="Menu" className="relative">
+                {isMobileMenuOpen
+                  ? <FiX size={16} className="text-red-600" />
+                  : <FaBars size={16} className="text-red-600" />}
+              </button>
             </div>
           </div>
         </div>
@@ -1830,69 +1830,85 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
       </header>
 
       {/* ================= CATEGORY NAV ================= */}
-      <nav className="bg-primary text-white md:block hidden">
-      <div className="max-w-7xl mx-auto px-4">
+       
+
+     <nav className="bg-primary text-white lg:block hidden relative ">
+      <div className="max-w-7xl mx-auto px-4 ">
         <ul className="flex items-center gap-8 py-3 font-semibold text-sm justify-between">
-          {categoriesMenu.map((cat) => (
-            <li key={cat._id} className="relative group">
-  {/* Main Category */}
-  <Link
-    href={`/category/${cat.category_slug}`}
-    className="flex items-center gap-2 text-[16px] font-black hover:text-yellow-300"
-  >
-    <Image
-      src={cat.image}
-      alt={cat.category_name}
-      width={28}
-      height={28}
-      className="object-contain"
-    />
-    <span>{cat.category_name}</span>
-  </Link>
+          
+          {categoriesMenu.map((cat, index) => {
+            const total = categoriesMenu.length;
+            const dropdownPos =
+              index <= 1
+                ? "left-0"
+                : index >= total - 2
+                ? "right-0"
+                : "left-1/2 -translate-x-1/2";
 
-  {/* Submenu */}
-  {cat.subcategories?.length > 0 && (
-  <div className="absolute left-0 top-full mt-2 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-200 bg-linear-to-r from-linearyellow via-white to-linearyellow text-black rounded-lg shadow-lg p-4 z-50">
-    
-    <div className="flex gap-10 items-start">
-  
-  {/* LEFT SIDE - Subcategories */}
-  <div className="flex gap-8">
-    {chunkArray(cat.subcategories, 10).map((group, index) => (
-      <ul key={index} className="space-y-2 min-w-[180px]">
-        {group.map((sub) => (
-          <li key={sub._id}>
-            <Link
-              href={`/category/${sub.category_slug}`}
-              className="block hover:text-primary hover:underline"
-            >
-              {sub.category_name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    ))}
-  </div>
+            return (
+              <li key={cat._id} className="relative group">
 
-  {/* RIGHT SIDE - Category Image */}
-  {cat.image && (
-    <div className="min-w-[180px]">
-      <Image
-        src={cat.image}
-        alt={cat.category_name}
-        width={180}
-        height={180}
-        className="object-contain rounded-lg"
-      />
-    </div>
-  )}
+                {/* Main Category */}
+                <Link
+                  href={`/category/${cat.category_slug}`}
+                  className="flex items-center gap-2 text-[16px] font-black hover:text-yellow-300"
+                >
+                  <Image
+                    src={cat.image}
+                    alt={cat.category_name}
+                    width={28}
+                    height={28}
+                    className="object-contain"
+                  />
+                  <span>{cat.category_name}</span>
+                </Link>
 
-</div>
+                {/* Submenu */}
+                {cat.subcategories?.length > 0 && (
+                  <div
+                    className={`absolute ${dropdownPos} top-full mt-2 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-200 bg-linear-to-r from-linearyellow via-white to-linearyellow text-black rounded-lg shadow-lg p-4 z-50`}
+                  >
+                    <div className="flex gap-10 items-start">
 
-  </div>
-)}
-</li>
-          ))}
+                      {/* LEFT SIDE - Subcategories */}
+                      <div className="flex gap-8">
+                        {chunkArray(cat.subcategories, 10).map((group, i) => (
+                          <ul key={i} className="space-y-2 min-w-[180px]">
+                            {group.map((sub) => (
+                              <li key={sub._id}>
+                                <Link
+                                  href={`/category/${sub.category_slug}`}
+                                  className="block hover:text-primary hover:underline"
+                                >
+                                  {sub.category_name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        ))}
+                      </div>
+
+                      {/* RIGHT SIDE - Category Image */}
+                      {cat.image && (
+                        <div className="min-w-[180px]">
+                          <Image
+                            src={cat.image}
+                            alt={cat.category_name}
+                            width={180}
+                            height={180}
+                            className="object-contain rounded-lg"
+                          />
+                        </div>
+                      )}
+
+                    </div>
+                  </div>
+                )}
+
+              </li>
+            );
+          })}
+
         </ul>
       </div>
     </nav>
@@ -2000,13 +2016,12 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                                       
                                       {/* Mobile Menu (Hidden on desktop) */}
                                       {isMobileMenuOpen && (
-                                        <div className="sm:hidden bg-white fixed inset-0 z-50 p-4 pt-3 rounded-lg shadow-lg overflow-y-auto transition-all duration-300"
+                                        <div className="sm:hidden bg-white fixed inset-0 z-auto p-4 pt-3 rounded-lg shadow-lg overflow-y-auto transition-all duration-300"
                                           style={{ touchAction: 'auto', userSelect: 'auto', WebkitUserSelect: 'auto' }}
                                         >
                                           {/* Internal sticky header */}
                                           <div className="flex items-center justify-between mb-3 sticky top-0 bg-white pb-2 border-b">
                                             <div className="flex items-center gap-2 text-red-600 font-semibold text-sm">
-                                              <FiMenu size={18} />
                                               <span>Menu</span>
                                             </div>
                                             <button
@@ -2020,7 +2035,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                               
                                           {/* Mobile Category Block (accordion) */}
                                             <div className=" bg-white rounded-md border border-gray-200 overflow-hidden">
-                                                <div className="px-3 py-4 text-[14px] font-semibold tracking-wide text-white  bg-[#2453D3]">
+                                                <div className="px-3 py-4 text-[14px] font-semibold tracking-wide text-white  bg-[#d32424]">
                                                   Browse Category
                                                 </div>
                                                 {/* Use unified nodes (categories + hoveredCategory subcategories when available) */}

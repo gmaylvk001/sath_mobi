@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import ProductCard from "@/components/ProductCard";
 import Image from "next/image";
+import { FaRupeeSign } from "react-icons/fa";
 
 const RecentlyViewedProducts = () => {
   const [recentProducts, setRecentProducts] = useState([]);
@@ -313,20 +314,19 @@ const RecentlyViewedProducts = () => {
 
                         {/* Price */}
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="text-base font-semibold text-red-600">
-                            ₹ {(
+                          <span className="text-base font-semibold text-red-600 inline-flex items-center">
+                            <FaRupeeSign className="inline text-sm" />{(
                               product.special_price && product.special_price > 0 && product.special_price != '0'  && product.special_price != 0 && product.special_price < product.price
                                 ? product.special_price
                                 : product.price
-                            ).toLocaleString()}
+                            ).toLocaleString('en-IN')}
                           </span>
-    
-    
+
                           {product.special_price > 0 && product.special_price != '0'  && product.special_price != 0 &&   product.special_price &&
                             product.special_price < product.price &&
                             (
-                              <span className="text-xs text-gray-500 line-through">
-                                ₹ {product.price.toLocaleString()}
+                              <span className="text-xs text-gray-500 line-through inline-flex items-center">
+                                <FaRupeeSign className="inline text-xs" />{product.price.toLocaleString('en-IN')}
                               </span>
                           )}
                         </div>

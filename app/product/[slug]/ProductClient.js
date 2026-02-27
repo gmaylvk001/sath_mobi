@@ -848,13 +848,13 @@ export default function ProductClient() {
                                 <div className="flex items-baseline gap-2">
                                     {(Number(product.special_price) > 0 || Number(product.price) > 0) && (
                                     <>
-                                        <span className="text-2xl font-bold text-red-800">
-                                        Rs.{Math.round(Number(product.special_price) || Number(product.price))}
+                                        <span className="text-2xl font-bold text-red-800 flex items-center">
+                                        <FaRupeeSign className="inline" />{Math.round(Number(product.special_price) || Number(product.price)).toLocaleString('en-IN')}
                                         </span>
 
                                         {Number(product.special_price) > 0 && Number(product.price) > 0 && (
-                                            <span className="text-gray-800 line-through text-sm">
-                                                Rs.{Math.round(Number(product.price))}
+                                            <span className="text-gray-800 line-through text-sm flex items-center">
+                                                <FaRupeeSign className="inline text-xs" />{Math.round(Number(product.price)).toLocaleString('en-IN')}
                                             </span>
                                         )}
                                     </>
@@ -1017,12 +1017,12 @@ export default function ProductClient() {
                                             <div className="font-medium text-sm">{option.bank}</div>
                                             <div className="text-xs text-gray-500">{option.tenure}</div>
                                             </div>
-                                            <div className="font-semibold">₹{option.emi}/month</div>
+                                            <div className="font-semibold">₹{option.emi.toLocaleString('en-IN')}/month</div>
                                         </div>
                                         ))}
                                     </div>
                                     </div>
-                                    
+
                                     <div className="mt-4">
                                     <h4 className="font-medium text-sm mb-2">Debit Card EMI</h4>
                                     <div className="space-y-3">
@@ -1035,7 +1035,7 @@ export default function ProductClient() {
                                             <div className="font-medium text-sm">{option.bank}</div>
                                             <div className="text-xs text-gray-500">{option.tenure}</div>
                                             </div>
-                                            <div className="font-semibold">₹{option.emi}/month</div>
+                                            <div className="font-semibold">₹{option.emi.toLocaleString('en-IN')}/month</div>
                                         </div>
                                         ))}
                                     </div>
@@ -1092,8 +1092,8 @@ export default function ProductClient() {
                                                 <label key={warranty._id || index} className="flex items-center gap-3 p-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
                                                     <input type="radio" name="extendedWarranty" value={warranty.amount} checked={selectedWarrantyAmount === warranty.amount} onChange={() => setSelectedWarrantyAmount(warranty.amount)} className="w-4 h-4 accent-blue-800" />
                                                     <span className="text-gray-700 text-sm">
-                                                        Include {warranty.year} Year{warranty.year > 1 ? "s" : ""} for 
-                                                        <span className="font-semibold"> ₹{warranty.amount.toLocaleString()}</span>
+                                                        Include {warranty.year} Year{warranty.year > 1 ? "s" : ""} for
+                                                        <span className="font-semibold inline-flex items-center"> <FaRupeeSign className="inline text-xs" />{warranty.amount.toLocaleString('en-IN')}</span>
                                                     </span>
                                                 </label>
                                             ))}
@@ -1118,13 +1118,13 @@ export default function ProductClient() {
                                                     <tbody>
                                                         <tr>
                                                         <td className="py-2 font-semibold text-gray-900">
-                                                            ₹{(product.special_price || product.price).toLocaleString()}
+                                                            <span className="inline-flex items-center"><FaRupeeSign className="inline text-xs" />{(product.special_price || product.price).toLocaleString('en-IN')}</span>
                                                         </td>
                                                         <td className="py-2 font-semibold text-gray-900">
-                                                            ₹{selectedWarrantyAmount.toLocaleString()}
+                                                            <span className="inline-flex items-center"><FaRupeeSign className="inline text-xs" />{selectedWarrantyAmount.toLocaleString('en-IN')}</span>
                                                         </td>
                                                         <td className="py-2 text-right font-bold text-blue-800 text-lg">
-                                                            ₹{((product.special_price || product.price) + selectedWarrantyAmount).toLocaleString()}
+                                                            <span className="inline-flex items-center"><FaRupeeSign className="inline" />{((product.special_price || product.price) + selectedWarrantyAmount).toLocaleString('en-IN')}</span>
                                                         </td>
                                                         </tr>
                                                     </tbody>
@@ -1134,16 +1134,16 @@ export default function ProductClient() {
                                                 <div className="md:hidden mt-3 space-y-2">
                                                     <div className="flex justify-between">
                                                         <span className="text-gray-700">Product:</span>
-                                                        <span className="font-semibold">₹{(product.special_price || product.price).toLocaleString()}</span>
+                                                        <span className="font-semibold inline-flex items-center"><FaRupeeSign className="inline text-xs" />{(product.special_price || product.price).toLocaleString('en-IN')}</span>
                                                     </div>
                                                     <div className="flex justify-between">
                                                         <span className="text-gray-700">Warranty:</span>
-                                                        <span className="font-semibold">₹{selectedWarrantyAmount.toLocaleString()}</span>
+                                                        <span className="font-semibold inline-flex items-center"><FaRupeeSign className="inline text-xs" />{selectedWarrantyAmount.toLocaleString('en-IN')}</span>
                                                     </div>
                                                     <div className="flex justify-between border-t border-gray-300 pt-2">
                                                         <span className="font-semibold text-gray-900">Total:</span>
-                                                        <span className="font-bold text-blue-800 text-lg">
-                                                        ₹{((product.special_price || product.price) + selectedWarrantyAmount).toLocaleString()}
+                                                        <span className="font-bold text-blue-800 text-lg inline-flex items-center">
+                                                        <FaRupeeSign className="inline" />{((product.special_price || product.price) + selectedWarrantyAmount).toLocaleString('en-IN')}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -1547,23 +1547,23 @@ export default function ProductClient() {
                                     </Link>
 
                                     <div className="flex items-center gap-2">
-                                        <span className="text-base font-semibold text-red-600">
-                                        ₹ {(
+                                        <span className="text-base font-semibold text-red-600 inline-flex items-center">
+                                        <FaRupeeSign className="inline text-sm" />{(
                                             item.special_price &&
                                             item.special_price > 0 &&
                                             item.special_price !== "0" &&
                                             item.special_price < item.price
                                             ? item.special_price
                                             : item.price
-                                        ).toLocaleString()}
+                                        ).toLocaleString('en-IN')}
                                         </span>
 
                                         {item.special_price &&
                                         item.special_price > 0 &&
                                         item.special_price !== "0" &&
                                         item.special_price < item.price && (
-                                            <span className="text-xs text-gray-500 line-through">
-                                            ₹ {item.price.toLocaleString()}
+                                            <span className="text-xs text-gray-500 line-through inline-flex items-center">
+                                            <FaRupeeSign className="inline text-xs" />{item.price.toLocaleString('en-IN')}
                                             </span>
                                         )}
                                     </div>
@@ -1697,23 +1697,23 @@ export default function ProductClient() {
                                         </Link>
 
                                         <div className="flex items-center gap-2">
-                                        <span className="text-base font-semibold text-red-600">
-                                            ₹ {(
+                                        <span className="text-base font-semibold text-red-600 inline-flex items-center">
+                                            <FaRupeeSign className="inline text-sm" />{(
                                             item.special_price &&
                                             item.special_price > 0 &&
                                             item.special_price !== "0" &&
                                             item.special_price < item.price
                                                 ? item.special_price
                                                 : item.price
-                                            ).toLocaleString()}
+                                            ).toLocaleString('en-IN')}
                                         </span>
 
                                         {item.special_price &&
                                             item.special_price > 0 &&
                                             item.special_price !== "0" &&
                                             item.special_price < item.price && (
-                                            <span className="text-xs text-gray-500 line-through">
-                                                ₹ {item.price.toLocaleString()}
+                                            <span className="text-xs text-gray-500 line-through inline-flex items-center">
+                                                <FaRupeeSign className="inline text-xs" />{item.price.toLocaleString('en-IN')}
                                             </span>
                                             )}
                                         </div>
@@ -1783,7 +1783,7 @@ export default function ProductClient() {
                                             item.special_price < item.price
                                             ? item.special_price
                                             : item.price
-                                        ).toLocaleString()}
+                                        ).toLocaleString('en-IN')}
                                         </span>
                     
                                         {item.special_price &&
@@ -1791,7 +1791,7 @@ export default function ProductClient() {
                                         item.special_price !== "0" &&
                                         item.special_price < item.price && (
                                             <span className="text-xs text-gray-500 line-through">
-                                            ₹ {item.price.toLocaleString()}
+                                            ₹ {item.price.toLocaleString('en-IN')}
                                             </span>
                                         )}
                                     </div>
@@ -1832,7 +1832,7 @@ export default function ProductClient() {
 
                                 {/* Right - Price + View Cart */}
                                 <div className="flex flex-col items-end leading-tight">
-                                    <span className="text-md font-semibold">₹{cartTotal.toLocaleString()}</span>
+                                    <span className="text-md font-semibold inline-flex items-center"><FaRupeeSign className="inline" />{cartTotal.toLocaleString('en-IN')}</span>
                                     <Link
                                     href="/cart"
                                     className="text-[12px] text-white hover:underline mt-0.5"

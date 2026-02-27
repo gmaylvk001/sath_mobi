@@ -343,9 +343,9 @@ const getCategoryBrands = (category) => {
 
         {/* Bottom Section */}
         <div className="bg-[#222529] text-gray-400 mt-10 pt-5 border-t border-white">
-          <div className="container mx-auto px-2 grid grid-cols-1 md:grid-cols-[70%_30%] gap-8">
+          <div className="container mx-auto px-2 grid grid-cols-1 md:grid-cols-3 gap-8">
              {/* LEFT SECTION (Categories + Brands) */}
-              <div>
+              <div className="col-span-2">
                 {/* <div className="mb-2  flex flex-col md:flex-row justify-between items-center gap-6">
                   <div className="text-center md:text-left ml-1 mb-1">
                     <p>
@@ -410,7 +410,8 @@ const getCategoryBrands = (category) => {
                 </div>
               </div>
               {/* RIGHT SECTION (Our Location) */}
-              <div className="space-y-4">
+              <div className="col-span-1">
+                <div className="space-y-4">
                 <h3 className="text-white font-semibold text-lg mb-4">Our Stores</h3>
                 {/* {Object.entries(groupedStores).map(([city, orgs], index) => (
                   <div key={index}>
@@ -419,31 +420,29 @@ const getCategoryBrands = (category) => {
                 ))} */}
 
                 {/* {Object.entries(groupedStores).map(([city, orgList], index) => (
-  <div key={index}>
-    {orgList.map((org, i) => (
-      <a key={i} href={`store/${org.slug}`} className="hover:text-white hover:underline">
-        <p className="text-sm text-white-400">{org.name}</p>
-      </a>
-    ))}
-  </div>
-))} */}
+                        <div key={index}>
+                          {orgList.map((org, i) => (
+                            <a key={i} href={`store/${org.slug}`} className="hover:text-white hover:underline">
+                              <p className="text-sm text-white-400">{org.name}</p>
+                            </a>
+                          ))}
+                        </div>
+                      ))} */}
 
-{Object.entries(groupedStores).map(([city, orgList], index) => (
-  <div key={index}>
-    {orgList.map((org, i) => (
-      <a
-        key={i}
-        href={`/store/${org.slug}`}   // ✅ FIXED — add leading slash
-        className="hover:text-white hover:underline"
-      >
-        <p className="text-sm text-white-400">{org.name}</p>
-      </a>
-    ))}
-  </div>
-))}
-
-
-
+                      {Object.entries(groupedStores).map(([city, orgList], index) => (
+                        <div key={index}>
+                          {orgList.map((org, i) => (
+                            <a
+                              key={i}
+                              href={`/store/${org.slug}`}   // ✅ FIXED — add leading slash
+                              className="hover:text-white hover:underline"
+                            >
+                              <p className="text-sm text-white-400">{org.name}</p>
+                            </a>
+                          ))}
+                        </div>
+                      ))}
+               </div>
               </div>
           </div>
           

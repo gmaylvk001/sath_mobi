@@ -1116,11 +1116,11 @@ export default function CartComponent() {
                           <div className="flex items-center gap-2">
                             {item.price > 0 ? (
                               <>
-                                <h3 className="text-base font-semibold text-red-600">₹{(item.price ?? 0).toFixed(2)}</h3>
-                                <h3 className="text-xs text-gray-500 line-through">₹{(item.actual_price ?? item.price ?? 0).toFixed(2)}</h3>
+                                <h3 className="text-base font-semibold text-red-600">₹{(item.price ?? 0).toLocaleString('en-IN')}</h3>
+                                <h3 className="text-xs text-gray-500 line-through">₹{(item.actual_price ?? item.price ?? 0).toLocaleString('en-IN')}</h3>
                               </>
                             ) : (
-                              <h3 className="text-base font-semibold text-red-600">₹{(item.actual_price ?? 0).toFixed(2)}</h3>
+                              <h3 className="text-base font-semibold text-red-600">₹{(item.actual_price ?? 0).toLocaleString('en-IN')}</h3>
                             )}
                           </div>
                         </div>
@@ -1150,7 +1150,7 @@ export default function CartComponent() {
                         </button>
                       </td>
                       <td className="py-4 px-4 text-center font-semibold text-gray-900">
-                        ₹{(((item.price > 0 ? item.price : item.actual_price) ?? 0) * (item.quantity ?? 1)).toFixed(2)}
+                        ₹{(((item.price > 0 ? item.price : item.actual_price) ?? 0) * (item.quantity ?? 1)).toLocaleString('en-IN')}
                       </td>
                       <td className="py-4 px-4 text-center">&emsp;</td>
                     </tr>
@@ -1163,9 +1163,9 @@ export default function CartComponent() {
                           <h3 className="text-gray-500 text-sm font-semibold">Discount</h3>
                         </td>
                         <td className="py-4 px-4 text-center">
-                          <h3 className="text-gray-500 text-sm font-semibold">₹{item.warranty.toFixed(2)}</h3>
-                          <h3 className="text-gray-500 text-sm font-semibold">₹{item.extendedWarranty.toFixed(2)}</h3>
-                          <h3 className="text-gray-500 text-sm font-semibold">₹{item.discount.toFixed(2)}</h3>
+                          <h3 className="text-gray-500 text-sm font-semibold">₹{item.warranty.toLocaleString('en-IN')}</h3>
+                          <h3 className="text-gray-500 text-sm font-semibold">₹{item.extendedWarranty.toLocaleString('en-IN')}</h3>
+                          <h3 className="text-gray-500 text-sm font-semibold">₹{item.discount.toLocaleString('en-IN')}</h3>
                         </td>
                         <td className="py-4 px-4 text-center">&emsp;</td>
                       </tr>
@@ -1206,7 +1206,7 @@ export default function CartComponent() {
                 <p className="text-sm text-green-600 mt-1">
                   {appliedCoupon.offer_type === "percentage"
                     ? `${appliedCoupon.percentage}% off`
-                    : `₹${appliedCoupon.fixed_price} off`}
+                    : `₹${Number(appliedCoupon.fixed_price).toLocaleString('en-IN')} off`}
                 </p>
               </div>
             ) : (
@@ -1268,7 +1268,7 @@ export default function CartComponent() {
                             <span className="whitespace-nowrap">
                               and get{" "}
                               {Number(display_coupon.fixed_price) > 0
-                                ? `₹${Number(display_coupon.fixed_price).toFixed(0)} Off`
+                                ? `₹${Number(display_coupon.fixed_price).toLocaleString('en-IN')} Off`
                                 : `${Number(display_coupon.percentage).toFixed(0)}% Discount`}
                             </span>
 
@@ -1325,7 +1325,7 @@ export default function CartComponent() {
             <div className="flex justify-between items-center">
               <span>Subtotal</span>
               <span className="font-semibold text-gray-900">
-                ₹{calculateSubtotal().toFixed(2)}
+                ₹{calculateSubtotal().toLocaleString('en-IN')}
               </span>
             </div>
             <hr className="border-gray-300" />
@@ -1334,7 +1334,7 @@ export default function CartComponent() {
               <div className="flex justify-between items-center">
                 <span>Discount</span>
                 <span className="font-semibold text-green-600">
-                  -₹{calculateDiscount().toFixed(2)}
+                  -₹{calculateDiscount().toLocaleString('en-IN')}
                 </span>
               </div>
             )}
@@ -1355,7 +1355,7 @@ export default function CartComponent() {
           {/* Total Price */}
           <div className="bg-gray-200 p-4 mt-4 rounded-lg flex justify-between font-bold text-gray-900">
             <span>Total</span>
-            <span>₹{calculateTotal().toFixed(2)}</span>
+            <span>₹{calculateTotal().toLocaleString('en-IN')}</span>
           </div>
 
           {/* Checkout Button */}

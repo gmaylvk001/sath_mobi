@@ -31,7 +31,7 @@ export default function LatestProducts() {
         if (!brandResult.error) {
           const map = {};
           brandResult.data.forEach((b) => {
-            map[b._id] = b.brand_name;
+            map[b._id] = { name: b.brand_name, image: b.image };
           });
           setBrandMap(map);
         }
@@ -75,7 +75,7 @@ export default function LatestProducts() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
 
         {/* LEFT CONTENT */}
-        <div className="space-y-4 md:col-span-2 lg:col-span-1 z-50">
+        <div className="space-y-4 md:col-span-2 lg:col-span-1 z-40">
           <h2 className="text-2xl text-primary font-bold">Latest Products</h2>
 
           <div className="grid grid-rows-3 gap-y-2.5">
@@ -111,14 +111,29 @@ export default function LatestProducts() {
                   {/* Product Info */}
                   <div className="grid grid-rows-[auto_auto_1fr_auto]">
                     {/* Brand */}
-                    <h4 className="text-xs text-gray-500 mb-1 uppercase truncate">
+                    <div className="mb-1">
                       <Link
-                        href={`/brand/${brandMap[product.brand]?.toLowerCase().replace(/\s+/g, "-") || ""}`}
-                        className="text-[10px] font-bold hover:text-red-600"
+                        href={`/brand/${brandMap[product.brand]?.name?.toLowerCase().replace(/\s+/g, "-") || ""}`}
+                        className="hover:opacity-80"
                       >
-                        Brand: {brandMap[product.brand] || ""}
+                        {/* BRAND IMAGE - uncomment when ready
+                        {brandMap[product.brand]?.image ? (
+                          <img
+                            src={brandMap[product.brand].image.startsWith('/') ? brandMap[product.brand].image : `/uploads/Brands/${brandMap[product.brand].image}`}
+                            alt={brandMap[product.brand]?.name || "Brand"}
+                            className="object-contain mix-blend-multiply h-[22px] max-w-[55px]"
+                          />
+                        ) : (
+                          <span className="text-[10px] font-bold text-gray-500 uppercase">
+                            Brand: {brandMap[product.brand]?.name || ""}
+                          </span>
+                        )}
+                        */}
+                        <span className="text-[10px] font-bold text-gray-500 uppercase">
+                          Brand: {brandMap[product.brand]?.name || ""}
+                        </span>
                       </Link>
-                    </h4>
+                    </div>
 
                     {/* Product Name */}
                     <Link href={`/product/${product.slug}`}>
@@ -129,11 +144,11 @@ export default function LatestProducts() {
 
                     {/* Price & Discount */}
                     <div className="flex items-center gap-3">
-                      <span className="text-red-600 font-bold text-md">₹ {sell}</span>
+                      <span className="text-red-600 font-bold text-md py-2">₹ {sell.toLocaleString('en-IN')}</span>
                       {mrp && (
                         <>
-                          <span className="text-gray-500 line-through text-xs">₹ {mrp}</span>
-                          <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md">
+                          <span className="text-gray-500 line-through text-xs">₹ {mrp.toLocaleString('en-IN')}</span>
+                          <span className="bg-green-600 text-white text-[10px] font-semibold px-2 py-1 rounded-md">
                             {discount}% Off
                           </span>
                         </>
@@ -174,11 +189,11 @@ export default function LatestProducts() {
         {/* RIGHT SWIPER */}
         <div className="relative md:col-span-2 lg:col-span-2 z-0 pt-10">
 
-          <div className="latest-prev absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer z-50 text-white">
+          <div className="latest-prev absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer z-40 text-white">
             ‹
           </div>
 
-          <div className="latest-next absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer z-50 text-white">
+          <div className="latest-next absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer z-40 text-white">
             ›
           </div>
 
@@ -213,7 +228,7 @@ export default function LatestProducts() {
                       <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-auto flex flex-col">
                         <Link
                           href={`/product/${product.slug}`}
-                          className="bg-white rounded-lg p-4 flex justify-center items-center h-[260px]"
+                          className="bg-white rounded-lg p-4 flex justify-center items-center h-[150px] sm:h-[260px] md:h-[220px] lg:h-[260px]"
                         >
                           <Image
                             src={
@@ -229,11 +244,26 @@ export default function LatestProducts() {
                         </Link>
 
                         <div className="mt-3 flex flex-col flex-1 justify-between text-sm">
-                          <h4 className="text-xs text-gray-500 mb-1 uppercase truncate line-clamp-2">
-                          <Link href={`/brand/${brandMap[product.brand]?.toLowerCase().replace(/\s+/g, "-") || ""}`} className="hover:text-red-600">
-                            Brand: {brandMap[product.brand] || ""}
+                          <div className="mb-1">
+                          <Link href={`/brand/${brandMap[product.brand]?.name?.toLowerCase().replace(/\s+/g, "-") || ""}`} className="hover:opacity-80">
+                            {/* BRAND IMAGE - uncomment when ready
+                            {brandMap[product.brand]?.image ? (
+                              <img
+                                src={brandMap[product.brand].image.startsWith('/') ? brandMap[product.brand].image : `/uploads/Brands/${brandMap[product.brand].image}`}
+                                alt={brandMap[product.brand]?.name || "Brand"}
+                                className="object-contain mix-blend-multiply h-[22px] max-w-[55px]"
+                              />
+                            ) : (
+                              <span className="text-[10px] font-bold text-gray-500 uppercase">
+                                Brand: {brandMap[product.brand]?.name || ""}
+                              </span>
+                            )}
+                            */}
+                            <span className="text-[10px] font-bold text-gray-500 uppercase">
+                              Brand: {brandMap[product.brand]?.name || ""}
+                            </span>
                           </Link>
-                        </h4>
+                        </div>
                             <p className="font-semibold line-clamp-2 min-h-[40px] text-md">
                           {product.name}
                         </p>
@@ -243,19 +273,19 @@ export default function LatestProducts() {
 
                             <div>
                                {/* Selling Price */}
-                            <span className="font-bold text-xs sm:text-lg px-2 py-2">₹ {sell}</span>
+                            <span className="font-bold text-xs sm:text-[15px] px-1 py-2">₹ {sell.toLocaleString('en-IN')}</span>
 
                             {/* MRP */}
                             {mrp && (
-                              <span className="text-red-500 line-through px-2 py-2 text-xs sm:text-xs">
-                                ₹ {mrp}
+                              <span className="text-red-500 fold-semilod line-through px-1 py-2 text-[9px] sm:text-xs">
+                                ₹ {mrp.toLocaleString('en-IN')}
                               </span>
                             )}
 
                             </div>
                             {/* Discount */}
                             {mrp && (
-                              <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md 
+                              <span className="bg-green-600 text-white text-[9px] sm:text-[10px] font-semibold px-1 py-1 rounded-md 
                                 w-auto mt-1 sm:mt-0">
                                 {discount}% Off
                               </span>

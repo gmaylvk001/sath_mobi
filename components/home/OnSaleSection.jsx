@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Addtocart from "@/components/AddToCart";
-import Swiper from "swiper";
-import "swiper/css";
 
 export default function OnSaleSection() {
   const [categories, setCategories] = useState([]);
@@ -47,7 +45,7 @@ export default function OnSaleSection() {
         if (!brandResult.error) {
           const map = {};
           brandResult.data.forEach((b) => {
-            map[b._id] = b.brand_name;
+            map[b._id] = { name: b.brand_name, image: b.image };
           });
           setBrandMap(map);
         }
@@ -58,16 +56,6 @@ export default function OnSaleSection() {
       }
     };
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    new Swiper(".onsale-product-swiper", {
-      slidesPerView: 1,
-      navigation: {
-        nextEl: ".onsale-product-nav-next",
-        prevEl: ".onsale-product-nav-prev",
-      },
-    });
   }, []);
 
   useEffect(() => {
@@ -92,7 +80,7 @@ export default function OnSaleSection() {
 
   return (
     <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-      <h2 className="text-xl text-primary font-bold mb-2">
+      <h2 className="text-xl text-primary font-bold mb-5">
         Fast Moving Products of{" "}
         <span className="text-2xl text-red-800">
           {selectedProduct}
@@ -102,8 +90,8 @@ export default function OnSaleSection() {
       <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-8 gap-y-4 items-start">
 
         {/* LEFT CATEGORY LIST */}
-        <div className="space-y-4 text-center lg:text-left z-50">
-          <div className="lg:grid lg:grid-rows-7 lg:gap-y-2.5 flex gap-x-2.5 overflow-x-auto">
+        <div className="space-y-4 text-center z-40">
+          <div className="lg:grid lg:grid-rows-7 lg:gap-y-3.5 flex gap-x-2.5 overflow-x-auto">
             {categories.map((cat) => (
               <div
                 key={cat._id}
@@ -112,7 +100,7 @@ export default function OnSaleSection() {
                 }
                 className="shrink-0 cursor-pointer"
               >
-                <div className="flex items-center border-2 rounded-full bg-white border-primary">
+                <div className="flex items-center border-2 rounded-full bg-white border-primary pl-3">
                   <div className="bg-white rounded-full overflow-hidden w-fit h-fit">
                     <Image
                       src={cat.image}
@@ -142,33 +130,46 @@ export default function OnSaleSection() {
               return (
                 <div
                   key={p._id}
-                  className="bg-white rounded-xl shadow-lg p-4 flex gap-4 h-full"
+                  className="bg-white rounded-xl shadow-lg p-4 flex gap-4 items-center"
                 >
                   <Link href={`/product/${p.slug}`}>
                     <Image
                       src={`/uploads/products/${p.images?.[0]}`}
                       alt="Product image"
-                      width={112}
-                      height={112}
+                      width={200}
+                      height={230}
                       className="object-contain shrink-0"
                     />
                   </Link>
 
-                  <div className="flex flex-col justify-between w-full min-h-full">
+                  <div className="flex flex-col justify-between w-full ">
 
                     <div>
-                      <p className="mb-2 text-sm text-gray-500">
+                      <div className="mb-2">
                         {brandMap[p.brand] && (
                           <Link
-                            href={`/brand/${brandMap[
-                              p.brand
-                            ]?.toLowerCase().replace(/\s+/g, "-")}`}
-                            className="hover:text-red-600"
+                            href={`/brand/${brandMap[p.brand]?.name?.toLowerCase().replace(/\s+/g, "-")}`}
+                            className="hover:opacity-80"
                           >
-                            Brand: {brandMap[p.brand]}
+                            {/* BRAND IMAGE - uncomment when ready
+                            {brandMap[p.brand]?.image ? (
+                              <img
+                                src={brandMap[p.brand].image.startsWith('/') ? brandMap[p.brand].image : `/uploads/Brands/${brandMap[p.brand].image}`}
+                                alt={brandMap[p.brand]?.name || "Brand"}
+                                className="object-contain mix-blend-multiply h-[22px] max-w-[55px]"
+                              />
+                            ) : (
+                              <span className="text-[10px] font-bold text-gray-500 uppercase">
+                                {brandMap[p.brand]?.name || ""}
+                              </span>
+                            )}
+                            */}
+                            <span className="text-[10px] font-bold text-gray-500 uppercase">
+                              Brand: {brandMap[p.brand]?.name || ""}
+                            </span>
                           </Link>
                         )}
-                      </p>
+                      </div>
 
                       <h3 className="font-semibold text-sm leading-snug line-clamp-2">
                         <Link href={`/product/${p.slug}`}>
@@ -185,17 +186,17 @@ export default function OnSaleSection() {
 
                     {/* 🔥 PRICE SECTION */}
                     <div className="mt-2 ">
-                      <span className="text-red-600 font-bold text-lg px-2 py-2">
-                        ₹ {sell}
+                      <span className="text-red-600 font-bold text-xs sm:text-[15px] px-1 py-2">
+                        ₹ {sell.toLocaleString('en-IN')}
                       </span>
 
                       {mrp && (
                         <>
-                          <span className="text-gray-500 line-through ml-2 px-2 py-2">
-                            ₹ {mrp}
+                          <span className="text-gray-500 line-through ml-2 text-xs sm:text-xs px-1 py-2">
+                            ₹ {mrp.toLocaleString('en-IN')}
                           </span>
 
-                          <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-md ml-2">
+                          <span className="bg-green-600 text-white text-xs font-semibold text-[10px] sm:text-xs px-1 py-1 rounded-md ml-2">
                             {discount}% Off
                           </span>
                         </>
