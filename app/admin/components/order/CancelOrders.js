@@ -193,7 +193,7 @@ export default function CancelledOrders() {
                     <td className=" px-4 py-2">{order.order_number || 'N/A'}</td>
                     <td className=" px-4 py-2">{order.email_address || 'N/A'}</td>
                     <td className=" px-4 py-2">{order.order_phonenumber || 'N/A'}</td>
-                    <td className=" px-4 py-2">{order.order_amount || 'N/A'}</td>
+                    <td className=" px-4 py-2">{Number(order.order_amount).toLocaleString("en-IN")}</td>
                    <td className="px-4 py-2">
                     <span className="bg-red-100 text-red-600 rounded-full font-medium text-sm px-3 py-1 inline-block capitalize">
                         {order.order_status || 'N/A'}

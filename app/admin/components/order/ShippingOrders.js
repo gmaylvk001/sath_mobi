@@ -380,9 +380,9 @@ const clearDateFilter = () => {
                       <tr key={index} className="border-b">
                         <td className="p-2">{item.product_name}</td>
                         <td className="p-2">{item.model || '-'}</td>
-                        <td className="p-2 text-right">₹{item.product_price}</td>
+                        <td className="p-2 text-right">₹{Number(item.quantity * item.product_price).toLocaleString("en-IN")}</td>
                         <td className="p-2 text-right">{item.quantity}</td>
-                        <td className="p-2 text-right">₹{(item.product_price * item.quantity).toFixed(2)}</td>
+                        <td className="p-2 text-right">₹{Number((item.product_price * item.quantity).toFixed(2)).toLocaleString("en-IN")}</td>
                       </tr>
                     ))}
                   </tbody>

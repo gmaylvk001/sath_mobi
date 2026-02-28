@@ -744,8 +744,8 @@ if (stockFilter) {
           <hr className="border-t border-gray-200 mb-4" />
 
           {/* Products Table */}
-          <div className="overflow-x-auto">
-          <table className="min-w-[900px] w-full border border-gray-300">
+          <div className="overflow-x-auto ">
+          <table className="w-full border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-2">Item Code</th>
@@ -812,7 +812,7 @@ if (stockFilter) {
                     </td>
                     
                     {/* Quantity Column */}
-                    <td className="p-2">{product.quantity}</td>
+                    <td className="p-2">{Number(product.quantity).toLocaleString("en-IN")}</td>
                     
                     {/* Status Column */}
                     <td className="p-2 font-semibold">

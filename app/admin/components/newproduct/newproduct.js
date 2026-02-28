@@ -611,7 +611,7 @@ if (stockFilter) {
                     </td>
                     
                     {/* Quantity Column */}
-                    <td className="p-2">{product.quantity}</td>
+                    <td className="p-2">{Number(product.quantity).toLocaleString("en-IN")}</td>
                     <td className="p-2">{product.brand}</td>
                     
                     {/* Status Column */}

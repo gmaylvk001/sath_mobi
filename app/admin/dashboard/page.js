@@ -408,7 +408,7 @@ export default function DashboardPage() {
           <p className="font-medium text-neutral-900 dark:text-white mb-1">
             Total Orders
           </p>
-          <h6 className="mb-0 dark:text-white">{orders.length}</h6>
+          <h6 className="mb-0 dark:text-white">{Number(orders.length).toLocaleString("en-IN")}</h6>
         </div>
         <div className="w-[50px] h-[50px] bg-blue-600 rounded-full flex justify-center items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -441,9 +441,9 @@ export default function DashboardPage() {
           </p>
           <h6 className="mb-0 dark:text-white">
             ₹
-            {orders
+            {Number(orders
               .reduce((acc, o) => acc + parseFloat(o.order_amount || 0), 0)
-              .toFixed(2)}
+              .toFixed(2)).toLocaleString("en-IN")}
           </h6>
         </div>
         <div className="w-[50px] h-[50px] bg-green-600 rounded-full flex justify-center items-center">
@@ -460,10 +460,10 @@ export default function DashboardPage() {
             <polyline points="16 7 22 7 22 13"></polyline>
           </svg>
           +₹
-          {(
+          {Number((
             orders.reduce((acc, o) => acc + parseFloat(o.order_amount || 0), 0) *
             0.1
-          ).toFixed(2)}
+          ).toFixed(2)).toLocaleString("en-IN")}
         </span>
         Last 30 days revenue
       </p>
@@ -479,7 +479,7 @@ export default function DashboardPage() {
             Pending Orders
           </p>
           <h6 className="mb-0 dark:text-white">
-            {orders.filter((o) => o.order_status === "pending").length}
+            {Number(orders.filter((o) => o.order_status === "pending").length).toLocaleString("en-IN")}
           </h6>
         </div>
         <div className="w-[50px] h-[50px] bg-yellow-600 rounded-full flex justify-center items-center">
@@ -511,7 +511,7 @@ export default function DashboardPage() {
           <p className="font-medium text-neutral-900 dark:text-white mb-1">
             Total Products
           </p>
-          <h6 className="mb-0 dark:text-white">{productCount}</h6>
+          <h6 className="mb-0 dark:text-white">{Number(productCount).toLocaleString("en-IN")}</h6>
         </div>
         <div className="w-[50px] h-[50px] bg-pink-600 rounded-full flex justify-center items-center">
           <svg 
@@ -563,7 +563,7 @@ export default function DashboardPage() {
           <p className="font-medium text-neutral-900 dark:text-white mb-1">
             Total Customers
           </p>
-          <h6 className="mb-0 dark:text-white">{customerCount}</h6>
+          <h6 className="mb-0 dark:text-white">{Number(customerCount).toLocaleString("en-IN")}</h6>
         </div>
         <div className="w-[50px] h-[50px] bg-purple-600 rounded-full flex justify-center items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -641,7 +641,7 @@ export default function DashboardPage() {
               <tr key={o._id} className="border-b hover:bg-gray-50">
                 <td className="p-2">{o.order_number}</td>
                 <td className="p-2">{o.order_username}</td>
-                <td className="p-2">₹{o.order_amount}</td>
+                <td className="p-2">₹ {Number(o.order_amount).toLocaleString("en-IN")}</td>
                 <td className="p-2 capitalize">{o.order_status}</td>
               </tr>
             ))}

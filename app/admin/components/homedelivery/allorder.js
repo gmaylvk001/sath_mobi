@@ -276,7 +276,7 @@ useEffect(() => {
       <td className="p-2 border">{o.order_number}</td>
       <td className="p-2 border capitalize">{o.order_status}</td>
       <td className="p-2 border">{o.order_username}</td>
-      <td className="p-2 border">₹{o.order_amount}</td>
+      <td className="p-2 border">₹{Number(o.order_amount).toLocaleString("en-IN")}</td>
       <td className="p-2 border">{new Date(o.createdAt).toLocaleDateString()}</td>
     </tr>
   ))
