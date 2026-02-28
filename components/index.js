@@ -325,11 +325,11 @@ function CategoryCard({ image, title, bg }) {
 
     {/* NEWLY ARRIVED SECTION */}
         <NewlyArrivedSection />
-    
+
     {/* NEWLY Brand Slider SECTION */}
         <BrandSlider />
 
-     
+
     <section className="w-full inner-section-padding py-5">
         <h2 className="text-primary mb-5 text-2xl font-bold">
           What&apos;s Trending

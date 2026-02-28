@@ -134,17 +134,17 @@ export default function LatestProducts() {
                         </span>
                       </Link>
                     </div>
-
-                    {/* Product Name */}
-                    <Link href={`/product/${product.slug}`}>
-                      <p className="font-semibold text-xs mb-2 line-clamp-2">
-                        {product.name}
+                    
+                  {/*Prouct Name */}
+                   <Link href={`/product/${product.slug}`}>
+                      <p className="font-semibold text-sm mb-2 truncate antialiased">
+                        {product.name.slice(0, 33)}{product.name.length > 33 ? "…" : ""}
                       </p>
                     </Link>
 
                     {/* Price & Discount */}
                     <div className="flex items-center gap-3">
-                      <span className="text-red-600 font-bold text-md py-2">₹ {sell.toLocaleString('en-IN')}</span>
+                      <span className="text-red-600 font-bold text-md ">₹ {sell.toLocaleString('en-IN')}</span>
                       {mrp && (
                         <>
                           <span className="text-gray-500 line-through text-xs">₹ {mrp.toLocaleString('en-IN')}</span>
@@ -269,7 +269,7 @@ export default function LatestProducts() {
                         </p>
                           
 
-                          <div className="flex flex-wrap items-center gap-2 w-full">
+                          <div className="flex flex-wrap items-center gap-2 w-full py-2">
 
                             <div>
                                {/* Selling Price */}

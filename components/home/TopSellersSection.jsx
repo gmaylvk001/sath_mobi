@@ -125,11 +125,12 @@ export default function TopSellersSection() {
                       </Link>
                     </div>
 
-                    <p className="font-semibold text-xs mb-2 line-clamp-2">
-                      <Link href={`/product/${product.slug}`}>
-                        {product.name}
-                      </Link>
-                    </p>
+                    <p className="font-semibold text-sm mb-2 antialiased truncate">
+                        <Link href={`/product/${product.slug}`}>
+                          {product.name.slice(0, 28)}
+                          {product.name.length > 28 ? "…" : ""}
+                        </Link>
+                      </p>
 
                     {/* PRICE */}
                     <div className="flex items-center flex-wrap gap-x-2 p">
