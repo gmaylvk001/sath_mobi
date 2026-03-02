@@ -475,20 +475,25 @@ const getCategoryBrands = (category) => {
               </div>
           </div>
 
-          <section className="py-10  md:px-2">
-  <div className="max-w-7xl mx-auto space-y-8 text-sm leading-7">
+          <section className="py-10 md:px-2">
+  <div className="max-w-7xl mx-auto space-y-10 text-sm leading-7">
 
     {/* Main Heading */}
     <div>
       <h2 className="font-semibold text-lg mb-3">
         Buy Electronics Online at Sathya Mobiles – Tamil Nadu's Trusted Electronics Store
       </h2>
+
       <p>
-        Transform your home and lifestyle with the latest electronics from Sathya Mobiles.
-        Discover a wide range of smartphones, laptops, smart TVs, air conditioners,
-        tablets, and home appliances from top brands. Shop online or visit our stores
-        across Tamil Nadu for the best deals, easy EMI options, exchange offers,
-        and genuine warranty products.
+        Sathya Mobiles is your one-stop destination for the latest electronics and home appliances in Tamil Nadu. We offer a wide collection of smartphones, laptops, smart TVs, air conditioners, tablets, and accessories from trusted national and international brands.
+      </p>
+
+      <p>
+        Whether you are upgrading your home entertainment system or purchasing a new mobile phone, we provide competitive pricing, exclusive online offers, exchange benefits, and easy EMI options to make your shopping experience smooth and affordable.
+      </p>
+
+      <p>
+        Shop conveniently through our online store or visit our physical outlets across Tamil Nadu to explore genuine products backed by official warranty and reliable customer support.
       </p>
     </div>
 
@@ -496,30 +501,41 @@ const getCategoryBrands = (category) => {
     <div>
       <h3 className="font-semibold mb-2">
         <a href="/category/mobiles" className="hover:underline text-primary">
-        Buy Latest Mobiles Online – Shop Now
+          Buy Latest Mobiles Online – Shop Now
         </a>
       </h3>
+
       <p>
-        Explore the newest smartphones with advanced cameras, powerful processors,
-        long-lasting batteries, and 5G connectivity. Choose from top brands offering
-        budget, mid-range, and flagship devices. Sathya Mobiles ensures competitive
-        pricing, exchange offers, and secure online shopping for a seamless
-        mobile buying experience.
+        Explore the newest smartphones featuring advanced camera systems, high-speed processors, long-lasting batteries, and seamless 5G connectivity. We bring you the latest models designed for gaming, photography, business, and daily use.
+      </p>
+
+      <p>
+        Choose from budget smartphones, mid-range performers, and flagship devices with premium design and cutting-edge features. Compare specifications, storage variants, colors, and prices to find the perfect mobile that suits your needs.
+      </p>
+
+      <p>
+        Sathya Mobiles ensures safe online transactions, fast delivery, exchange offers, and flexible EMI options so you can upgrade your smartphone without hassle.
       </p>
     </div>
 
     {/* Laptops */}
     <div>
       <h3 className="font-semibold mb-2">
-      <a href="/category/laptops" className="hover:underline text-primary">
-        Buy Best Laptops & Desktops Online – Shop Now
+        <a href="/category/laptops" className="hover:underline text-primary">
+          Buy Best Laptops & Desktops Online – Shop Now
         </a>
       </h3>
+
       <p>
-        Find high-performance laptops and desktops for work, gaming, and study.
-        Shop from leading brands with SSD storage, high RAM capacity, latest processors,
-        and dedicated graphics options. Sathya Mobiles provides reliable products,
-        warranty support, and flexible EMI plans.
+        Discover high-performance laptops and desktops built for students, professionals, and gamers. Choose from lightweight ultrabooks, powerful gaming laptops, and reliable desktop PCs with advanced configurations.
+      </p>
+
+      <p>
+        Our collection includes devices powered by the latest processors, high-capacity RAM, fast SSD storage, and dedicated graphics cards to ensure smooth multitasking and superior performance.
+      </p>
+
+      <p>
+        With genuine warranty support, affordable pricing, and EMI facilities, Sathya Mobiles makes it easy to invest in technology that enhances productivity and entertainment.
       </p>
     </div>
 
@@ -527,13 +543,20 @@ const getCategoryBrands = (category) => {
     <div>
       <h3 className="font-semibold mb-2">
         <a href="/category/smart-tv" className="hover:underline text-primary">
-        Buy Smart TVs at Best Prices Online – Shop Now
+          Buy Smart TVs at Best Prices Online – Shop Now
         </a>
       </h3>
+
       <p>
-        Upgrade your home entertainment with Smart TVs featuring 4K Ultra HD,
-        Dolby Audio, Android TV, and OTT app support. Choose from LED, QLED,
-        and large-screen models with stunning picture clarity and immersive sound.
+        Upgrade your home entertainment with Smart TVs featuring 4K Ultra HD resolution, vibrant color accuracy, and immersive surround sound systems.
+      </p>
+
+      <p>
+        Choose from LED, QLED, and large-screen Smart TVs with built-in streaming apps, voice control, and seamless connectivity options for gaming consoles and home theatres.
+      </p>
+
+      <p>
+        Enjoy competitive prices, seasonal discounts, and reliable after-sales support when you shop Smart TVs at Sathya Mobiles.
       </p>
     </div>
 
@@ -541,28 +564,41 @@ const getCategoryBrands = (category) => {
     <div>
       <h3 className="font-semibold mb-2">
         <a href="/category/air-conditioner" className="hover:underline text-primary">
-        Buy Air Conditioners Online – Shop Now
+          Buy Air Conditioners Online – Shop Now
         </a>
       </h3>
+
       <p>
-        Stay cool with energy-efficient Split and Window Air Conditioners.
-        Explore inverter ACs with fast cooling technology and lower power
-        consumption. Get installation support and seasonal offers at
-        Sathya Mobiles.
+        Stay comfortable throughout the year with energy-efficient Split and Window Air Conditioners designed for powerful cooling and optimal performance.
+      </p>
+
+      <p>
+        Explore inverter ACs with advanced cooling technology, low power consumption, and silent operation suitable for homes and offices.
+      </p>
+
+      <p>
+        Sathya Mobiles offers installation assistance, attractive offers, and trusted brand warranty to ensure complete peace of mind with every purchase.
       </p>
     </div>
 
     {/* Tablets */}
     <div>
       <h3 className="font-semibold mb-2">
-      <a href="/category/tablets" className="hover:underline text-primary">
-        Buy Tablets Online at Best Deals – Shop Now
+        <a href="/category/tablets" className="hover:underline text-primary">
+          Buy Tablets Online at Best Deals – Shop Now
         </a>
       </h3>
+
       <p>
-        Shop the latest tablets designed for productivity, entertainment,
-        and online learning. Choose from high-resolution displays, long battery
-        life, and powerful processors. Enjoy affordable pricing and EMI options.
+        Browse the latest tablets ideal for online learning, office productivity, entertainment, and creative tasks.
+      </p>
+
+      <p>
+        Choose from compact lightweight models to high-performance tablets with large displays, powerful processors, and long battery life.
+      </p>
+
+      <p>
+        With affordable pricing, EMI options, and genuine warranty coverage, Sathya Mobiles makes tablet shopping easy and reliable.
       </p>
     </div>
 
