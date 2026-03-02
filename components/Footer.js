@@ -480,7 +480,7 @@ const getCategoryBrands = (category) => {
 
     {/* Main Heading */}
     <div>
-      <h2 className="font-semibold text-lg mb-3">
+      <h2 className="font-semibold text-white text-lg mb-3">
         Buy Electronics Online at Sathya Mobiles – Tamil Nadu's Trusted Electronics Store
       </h2>
 
@@ -499,7 +499,7 @@ const getCategoryBrands = (category) => {
 
     {/* Mobiles */}
     <div>
-      <h3 className="font-semibold mb-2">
+      <h3 className="font-semibold text-white mb-2">
         <a href="/category/mobiles" className="hover:underline ">
           Buy Latest Mobiles Online – Shop Now
         </a>
@@ -520,7 +520,7 @@ const getCategoryBrands = (category) => {
 
     {/* Laptops */}
     <div>
-      <h3 className="font-semibold mb-2">
+      <h3 className="font-semibold text-white mb-2">
         <a href="/category/laptops" className="hover:underline ">
           Buy Best Laptops & Desktops Online – Shop Now
         </a>
@@ -541,7 +541,7 @@ const getCategoryBrands = (category) => {
 
     {/* Smart TV */}
     <div>
-      <h3 className="font-semibold mb-2">
+      <h3 className="font-semibold text-white mb-2">
         <a href="/category/smart-tv" className="hover:underline ">
           Buy Smart TVs at Best Prices Online – Shop Now
         </a>
@@ -562,7 +562,7 @@ const getCategoryBrands = (category) => {
 
     {/* Air Conditioner */}
     <div>
-      <h3 className="font-semibold mb-2">
+      <h3 className="font-semibold text-white mb-2">
         <a href="/category/air-conditioner" className="hover:underline">
           Buy Air Conditioners Online – Shop Now
         </a>
@@ -583,7 +583,7 @@ const getCategoryBrands = (category) => {
 
     {/* Tablets */}
     <div>
-      <h3 className="font-semibold mb-2">
+      <h3 className="font-semibold text-white mb-2">
         <a href="/category/tablets" className="hover:underline">
           Buy Tablets Online at Best Deals – Shop Now
         </a>
