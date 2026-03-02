@@ -500,7 +500,7 @@ const getCategoryBrands = (category) => {
     {/* Mobiles */}
     <div>
       <h3 className="font-semibold mb-2">
-        <a href="/category/mobiles" className="hover:underline text-primary">
+        <a href="/category/mobiles" className="hover:underline ">
           Buy Latest Mobiles Online – Shop Now
         </a>
       </h3>
@@ -521,7 +521,7 @@ const getCategoryBrands = (category) => {
     {/* Laptops */}
     <div>
       <h3 className="font-semibold mb-2">
-        <a href="/category/laptops" className="hover:underline text-primary">
+        <a href="/category/laptops" className="hover:underline ">
           Buy Best Laptops & Desktops Online – Shop Now
         </a>
       </h3>
@@ -542,7 +542,7 @@ const getCategoryBrands = (category) => {
     {/* Smart TV */}
     <div>
       <h3 className="font-semibold mb-2">
-        <a href="/category/smart-tv" className="hover:underline text-primary">
+        <a href="/category/smart-tv" className="hover:underline ">
           Buy Smart TVs at Best Prices Online – Shop Now
         </a>
       </h3>
@@ -563,7 +563,7 @@ const getCategoryBrands = (category) => {
     {/* Air Conditioner */}
     <div>
       <h3 className="font-semibold mb-2">
-        <a href="/category/air-conditioner" className="hover:underline text-primary">
+        <a href="/category/air-conditioner" className="hover:underline">
           Buy Air Conditioners Online – Shop Now
         </a>
       </h3>
@@ -584,7 +584,7 @@ const getCategoryBrands = (category) => {
     {/* Tablets */}
     <div>
       <h3 className="font-semibold mb-2">
-        <a href="/category/tablets" className="hover:underline text-primary">
+        <a href="/category/tablets" className="hover:underline">
           Buy Tablets Online at Best Deals – Shop Now
         </a>
       </h3>
