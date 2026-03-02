@@ -250,16 +250,17 @@ export default function BrandPage() {
 
   // Sorting functionality
   const getSortedProducts = () => {
-    const sortedProducts = [...products];
+    const inStock = (p) => (p.stock_status === "In Stock" && p.quantity) ? 0 : 1;
+    const sortedProducts = [...products].sort((a, b) => inStock(a) - inStock(b));
     switch(sortOption) {
       case 'price-low-high':
-        return sortedProducts.sort((a, b) => a.special_price - b.special_price);
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || a.special_price - b.special_price);
       case 'price-high-low':
-        return sortedProducts.sort((a, b) => b.special_price - a.special_price);
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || b.special_price - a.special_price);
       case 'name-a-z':
-        return sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || a.name.localeCompare(b.name));
       case 'name-z-a':
-        return sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || b.name.localeCompare(a.name));
       default:
         return sortedProducts;
     }

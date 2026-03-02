@@ -117,12 +117,13 @@ export async function GET(req) {
     
     // Update the query to only include filtered products
     query._id = { $in: filteredProductIds };
-    productsQuery = Product.find(query).populate('brand', 'brand_name brand_slug');
+    productsQuery = Product.find(query).populate('brand', 'brand_name brand_slug').sort({ quantity: -1 });
   }
-  
+
   // Apply pagination
   const skip = (page - 1) * limit;
   const products = await productsQuery
+    .sort({ quantity: -1 })
     .skip(skip)
     .limit(limit)
     .lean();

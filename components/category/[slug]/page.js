@@ -300,16 +300,17 @@ useEffect(() => {
 
   // Sorting functionality
   const getSortedProducts = () => {
-    const sortedProducts = [...products];
+    const inStock = (p) => p.stock_status === "In Stock" ? 0 : 1;
+    const sortedProducts = [...products].sort((a, b) => inStock(a) - inStock(b));
     switch(sortOption) {
       case 'price-low-high':
-        return sortedProducts.sort((a, b) => a.special_price - b.special_price);
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || a.special_price - b.special_price);
       case 'price-high-low':
-        return sortedProducts.sort((a, b) => b.special_price - a.special_price);
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || b.special_price - a.special_price);
       case 'name-a-z':
-        return sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || a.name.localeCompare(b.name));
       case 'name-z-a':
-        return sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+        return sortedProducts.sort((a, b) => inStock(a) - inStock(b) || b.name.localeCompare(a.name));
       default:
         return sortedProducts;
     }
@@ -1110,12 +1111,14 @@ const STEP = 100;
       </div>
       </>
       ) : (
-        <div className="text-center justify-center py-10 mx-auto">
-              <img 
-                src="/images/no-productbox.png" 
-                alt="No Products" 
-                className="mx-auto mb-4 w-32 h-32 md:w-40 md:h-40 object-contain" 
-              />
+        <div className="flex-1 flex flex-col items-center justify-center py-16 mx-auto">
+          <img
+            src="/images/no-productbox.png"
+            alt="No Products"
+            className="mx-auto mb-4 w-32 h-32 md:w-40 md:h-40 object-contain"
+          />
+          <h3 className="text-lg font-semibold text-gray-700 mb-1">No Products Found</h3>
+          <p className="text-sm text-gray-500">Try adjusting your filters or search in a different category.</p>
         </div>
       )}
       </div>

@@ -154,19 +154,19 @@ const BestSellers = () => {
               </div>
 
               <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-                <Link href="/category/mobiles">
+                <Link href="/category/iphones">
                 <GridImage src="/assets/images/categoryimages/Mobile-2.png" alt="iPhone Category" />
                 </Link>
-                <Link href="/category/mobiles"> 
+                <Link href="/category/galaxy-phone"> 
                 <GridImage src="/assets/images/categoryimages/Mobile-3.png" alt="iPhone Category" />
                 </Link>
               </div>
 
               <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-                <Link href="/category/mobiles"> 
+                <Link href="/category/google-pixel"> 
                 <GridImage src="/assets/images/categoryimages/Mobile-4.png" alt="Android Category" />
                 </Link>
-                <Link href="/category/mobiles"> 
+                <Link href="/category/smart-phone"> 
                 <GridImage src="/assets/images/categoryimages/Mobile-5.png" alt="Keypad Category" />
                 </Link>
               </div>
@@ -184,16 +184,16 @@ const BestSellers = () => {
               </div>
 
               <div className="col-span-1 max-sm:col-span-1">
-                <Link href="/category/air-conditioner">
+                <Link href="/category/inverter-ac">
                 <GridImage src="/assets/images/categoryimages/ac-2.png" alt="Inverter AC" />
                 </Link>
               </div>
 
               <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-                <Link href="/category/air-conditioner">
+                <Link href="/category/split-ac">
                 <GridImage src="/assets/images/categoryimages/ac-3.png" alt="Split AC" />
                 </Link>
-                <Link href="/category/air-conditioner">
+                <Link href="/category/window-ac">
                 <GridImage src="/assets/images/categoryimages/ac-4.png" alt="Window AC" />
                 </Link>
               </div>
@@ -211,20 +211,20 @@ const BestSellers = () => {
         </div>
 
         <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-          <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/Television-2.png" alt="TV Category" />
+          <Link href="/category/led-hd">
+          <GridImage src="/assets/images/categoryimages/Television-2.png" alt="TV Category1" />
           </Link>
-          <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/Television-3.png" alt="TV Category" />
+          <Link href="/category/ultra-hd">
+          <GridImage src="/assets/images/categoryimages/Television-3.png" alt="TV Category2" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-          <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/Television-4.png" alt="TV Category" />
+          <Link href="/category/qled">
+          <GridImage src="/assets/images/categoryimages/Television-4.png" alt="TV Category3" />
           </Link>
-          <Link href="/category/smart-tv">
-          <GridImage src="/assets/images/categoryimages/Television-5.png" alt="TV Category" />
+          <Link href="/category/hometheatre">
+          <GridImage src="/assets/images/categoryimages/Television-5.png" alt="TV Category4" />
             </Link>
         </div>
       </div>
@@ -241,13 +241,13 @@ const BestSellers = () => {
         </div>
 
         <div className="col-span-1 max-sm:col-span-1">
-          <Link href="/category/laptop-desktops">
+          <Link href="/category/laptops">
           <GridImage src="/assets/images/categoryimages/Lap-D-2.png" alt="Laptop Category" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1">
-          <Link href="/category/laptop-desktops">
+          <Link href="/category/desktops">
           <GridImage src="/assets/images/categoryimages/Lap-D-3.png" alt="Desktop Category" />
           </Link>
         </div>
@@ -260,34 +260,34 @@ const BestSellers = () => {
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
         <div className="col-span-1">
           <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/accessories-1.png" alt="Accessories" />
+          <GridImage src="/assets/images/categoryimages/accessories-1.png" alt="Accessories1" />
           </Link>
         </div>
 
         <div className="col-span-1 flex flex-col gap-4">
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/accessories-2.png" alt="Accessories" />
+          <Link href="/category/speakers">
+          <GridImage src="/assets/images/categoryimages/accessories-2.png" alt="Accessories2" />
           </Link>
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/accessories-3.png" alt="Accessories" />
+          <Link href="/category/smartwatches-and-accessories">
+          <GridImage src="/assets/images/categoryimages/accessories-3.png" alt="Accessories3" />
           </Link>
         </div>
 
         <div className="col-span-1 flex flex-col gap-4">
-          <Link href="/category/accessories">
+          <Link href="/category/earbuds">
           <GridImage src="/assets/images/categoryimages/accessories-4.png" alt="Accessories" />
           </Link>
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/accessories-5.png" alt="Accessories" />
+          <Link href="/category/power-banks">
+          <GridImage src="/assets/images/categoryimages/accessories-5.png" alt="Accessories5" />
           </Link>
         </div>
 
         <div className="col-span-1 flex flex-col gap-4">
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/accessories-6.png" alt="Accessories" />
+          <Link href="/category/chargers">
+          <GridImage src="/assets/images/categoryimages/accessories-6.png" alt="Accessories6" />
           </Link>
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/accessories-7.png" alt="Accessories" />
+          <Link href="/category/back-case">
+          <GridImage src="/assets/images/categoryimages/accessories-7.png" alt="Accessories7" />
           </Link>
         </div>
       </div>
@@ -304,17 +304,17 @@ const BestSellers = () => {
         </div>
 
         <div className="col-span-1 max-sm:col-span-1">
-           <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/Tab-2.png" alt="Tablet Category" />
+           <Link href={`/category/ipad`}>
+          <GridImage src="/assets/images/categoryimages/Tab-2.png" alt="Tablet Category1" />
           </Link>
         </div>
 
         <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
-          <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/Tab-3.png" alt="Tablet Category" />
+          <Link href={`/category/tablet-with-call-facility`}>
+          <GridImage src="/assets/images/categoryimages/Tab-3.png" alt="Tablet Category2" />
           </Link>
-          <Link href={`/category/tablets`}>
-          <GridImage src="/assets/images/categoryimages/Tab-4.png" alt="Tablet Category" />
+          <Link href={`/category/tablet-without-call-facility`}>
+          <GridImage src="/assets/images/categoryimages/Tab-4.png" alt="Tablet Category3" />
           </Link>
         </div>
       </div>

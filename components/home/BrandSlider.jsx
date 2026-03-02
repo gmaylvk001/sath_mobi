@@ -36,7 +36,7 @@ export default function BrandSlider() {
     <section className="w-full inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
       {/* HEADER */}
       <div className="flex justify-between items-end mb-5">
-        <h5 className= "text-lg font-semibold">Shop by Brands</h5>
+        <h2 className="text-primary font-semibold text-2xl mb-4">Shop by Brands</h2>
 
         {/*
         <Link
