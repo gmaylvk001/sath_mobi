@@ -456,13 +456,13 @@ const getCategoryBrands = (category) => {
                         </div>
                       ))} */}
 
-                      <p className="text-gray-600 leading-7 text-sm">
+                      <p className="text-gray-400 leading-7 text-sm">
                         {Object.entries(groupedStores).map(([city, orgList]) =>
                           orgList.map((org, index) => (
                             <span key={org.slug}>
                               <a
                                 href={`/store/${org.slug}`}
-                                className="hover:text-red-600 hover:underline"
+                                className="hover:text-white hover:underline"
                               >
                                 {org.name}
                               </a>
@@ -495,7 +495,9 @@ const getCategoryBrands = (category) => {
     {/* Mobiles */}
     <div>
       <h3 className="font-semibold mb-2">
-        Buy Latest Mobiles Online
+        <a href="/category/mobiles" className="hover:underline text-primary">
+        Buy Latest Mobiles Online – Shop Now
+        </a>
       </h3>
       <p>
         Explore the newest smartphones with advanced cameras, powerful processors,
@@ -509,7 +511,9 @@ const getCategoryBrands = (category) => {
     {/* Laptops */}
     <div>
       <h3 className="font-semibold mb-2">
-        Buy Best Laptops & Desktops Online
+      <a href="/category/laptops" className="hover:underline text-primary">
+        Buy Best Laptops & Desktops Online – Shop Now
+        </a>
       </h3>
       <p>
         Find high-performance laptops and desktops for work, gaming, and study.
@@ -522,7 +526,9 @@ const getCategoryBrands = (category) => {
     {/* Smart TV */}
     <div>
       <h3 className="font-semibold mb-2">
-        Buy Smart TVs at Best Prices Online
+        <a href="/category/smart-tv" className="hover:underline text-primary">
+        Buy Smart TVs at Best Prices Online – Shop Now
+        </a>
       </h3>
       <p>
         Upgrade your home entertainment with Smart TVs featuring 4K Ultra HD,
@@ -534,7 +540,9 @@ const getCategoryBrands = (category) => {
     {/* Air Conditioner */}
     <div>
       <h3 className="font-semibold mb-2">
+        <a href="/category/air-conditioner" className="hover:underline text-primary">
         Buy Air Conditioners Online – Shop Now
+        </a>
       </h3>
       <p>
         Stay cool with energy-efficient Split and Window Air Conditioners.
@@ -547,7 +555,9 @@ const getCategoryBrands = (category) => {
     {/* Tablets */}
     <div>
       <h3 className="font-semibold mb-2">
-        Buy Tablets Online at Best Deals
+      <a href="/category/tablets" className="hover:underline text-primary">
+        Buy Tablets Online at Best Deals – Shop Now
+        </a>
       </h3>
       <p>
         Shop the latest tablets designed for productivity, entertainment,
