@@ -91,6 +91,33 @@ const groupedStores = stores.reduce((acc, store) => {
   return acc;
 }, {});
 
+const categoriesdescription = [
+  {
+    name: "Mobiles",
+    description:
+      "Explore the latest smartphones with powerful processors, advanced cameras, and 5G connectivity. Best deals and EMI options available."
+  },
+  {
+    name: "Air Conditioner",
+    description:
+      "Energy-efficient Split and Window ACs with inverter technology and installation support at the best prices."
+  },
+  {
+    name: "Laptop & Desktops",
+    description:
+      "High-performance laptops and desktops for work, gaming, and study with SSD storage and latest processors."
+  },
+  {
+    name: "Smart TV",
+    description:
+      "4K Ultra HD Smart TVs with OTT apps, Dolby Audio, and Android/Google TV support."
+  },
+  {
+    name: "Tablets",
+    description:
+      "Latest Android and iPad tablets for productivity, study, and entertainment with EMI options."
+  }
+];
 
   useEffect(() => {
    const fetchCategories = async () => {
@@ -429,22 +456,108 @@ const getCategoryBrands = (category) => {
                         </div>
                       ))} */}
 
-                      {Object.entries(groupedStores).map(([city, orgList], index) => (
-                        <div key={index}>
-                          {orgList.map((org, i) => (
-                            <a
-                              key={i}
-                              href={`/store/${org.slug}`}   // ✅ FIXED — add leading slash
-                              className="hover:text-white hover:underline"
-                            >
-                              <p className="text-sm text-white-400">{org.name}</p>
-                            </a>
-                          ))}
-                        </div>
-                      ))}
+                      <p className="text-gray-600 leading-7 text-sm">
+                        {Object.entries(groupedStores).map(([city, orgList]) =>
+                          orgList.map((org, index) => (
+                            <span key={org.slug}>
+                              <a
+                                href={`/store/${org.slug}`}
+                                className="hover:text-red-600 hover:underline"
+                              >
+                                {org.name}
+                              </a>
+                              {", "}
+                            </span>
+                          ))
+                        )}
+                      </p>
                </div>
               </div>
           </div>
+
+          <section className="py-10  md:px-2">
+  <div className="max-w-7xl mx-auto space-y-8 text-sm leading-7">
+
+    {/* Main Heading */}
+    <div>
+      <h2 className="font-semibold text-lg mb-3">
+        Buy Electronics Online at Sathya Mobiles – Tamil Nadu's Trusted Electronics Store
+      </h2>
+      <p>
+        Transform your home and lifestyle with the latest electronics from Sathya Mobiles.
+        Discover a wide range of smartphones, laptops, smart TVs, air conditioners,
+        tablets, and home appliances from top brands. Shop online or visit our stores
+        across Tamil Nadu for the best deals, easy EMI options, exchange offers,
+        and genuine warranty products.
+      </p>
+    </div>
+
+    {/* Mobiles */}
+    <div>
+      <h3 className="font-semibold mb-2">
+        Buy Latest Mobiles Online
+      </h3>
+      <p>
+        Explore the newest smartphones with advanced cameras, powerful processors,
+        long-lasting batteries, and 5G connectivity. Choose from top brands offering
+        budget, mid-range, and flagship devices. Sathya Mobiles ensures competitive
+        pricing, exchange offers, and secure online shopping for a seamless
+        mobile buying experience.
+      </p>
+    </div>
+
+    {/* Laptops */}
+    <div>
+      <h3 className="font-semibold mb-2">
+        Buy Best Laptops & Desktops Online
+      </h3>
+      <p>
+        Find high-performance laptops and desktops for work, gaming, and study.
+        Shop from leading brands with SSD storage, high RAM capacity, latest processors,
+        and dedicated graphics options. Sathya Mobiles provides reliable products,
+        warranty support, and flexible EMI plans.
+      </p>
+    </div>
+
+    {/* Smart TV */}
+    <div>
+      <h3 className="font-semibold mb-2">
+        Buy Smart TVs at Best Prices Online
+      </h3>
+      <p>
+        Upgrade your home entertainment with Smart TVs featuring 4K Ultra HD,
+        Dolby Audio, Android TV, and OTT app support. Choose from LED, QLED,
+        and large-screen models with stunning picture clarity and immersive sound.
+      </p>
+    </div>
+
+    {/* Air Conditioner */}
+    <div>
+      <h3 className="font-semibold mb-2">
+        Buy Air Conditioners Online – Shop Now
+      </h3>
+      <p>
+        Stay cool with energy-efficient Split and Window Air Conditioners.
+        Explore inverter ACs with fast cooling technology and lower power
+        consumption. Get installation support and seasonal offers at
+        Sathya Mobiles.
+      </p>
+    </div>
+
+    {/* Tablets */}
+    <div>
+      <h3 className="font-semibold mb-2">
+        Buy Tablets Online at Best Deals
+      </h3>
+      <p>
+        Shop the latest tablets designed for productivity, entertainment,
+        and online learning. Choose from high-resolution displays, long battery
+        life, and powerful processors. Enjoy affordable pricing and EMI options.
+      </p>
+    </div>
+
+  </div>
+</section>
           
           {/* Categories Section with Brands */}
           <div className="bg-[#222529]">
