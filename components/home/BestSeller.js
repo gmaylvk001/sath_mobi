@@ -230,7 +230,7 @@ const BestSellers = () => {
       </div>
 </>
         )}
-        {categoryName === "Laptop& Desktops" && (
+        {categoryName === "Laptop & Desktops" && (
           <> 
       {/* ---------------- LAPTOP & DESKTOP GRID ---------------- */}
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
