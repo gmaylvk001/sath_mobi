@@ -70,6 +70,13 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
       setLoading(true);
       const categoryRes = await fetch(`/api/categories/${slug}`);
       const categoryData = await categoryRes.json();
+     // console.log('categoryData : ',categoryData);
+      if (categoryData.products.length === 0) {
+        console.log('categoryData : ',categoryData);
+        setNofound(true);
+        setLoading(false);
+        return;
+      }
       const banners = categoryData.main_category?.banners || [];
       setCategoryData({
         ...categoryData,
@@ -77,6 +84,8 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
         allCategoryIds: categoryData.allCategoryIds,
          banners: banners
       });
+
+      
 
       if (categoryData.products?.length > 0) {
         const prices = categoryData.products.map(p => p.special_price);
@@ -94,6 +103,8 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
           ...prev,
           price: { min: minPrice, max: maxPrice }
         }));
+      } else {
+        setNofound(true);
       }
 
       const groups = {};
@@ -453,6 +464,18 @@ useEffect(() => {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
         </div>
       </div>
+    );
+  }
+
+  if (!categoryData.products) {
+    return (
+      <div className="text-center py-10">
+                  <img 
+                    src="/images/no-productbox.png" 
+                    alt="No Products" 
+                    className="mx-auto mb-4 w-32 h-32 md:w-40 md:h-40 object-contain" 
+                  />
+                </div>
     );
   }
 
