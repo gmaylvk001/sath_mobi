@@ -45,6 +45,10 @@ export default function ProductClient() {
     const [showNoWarrantyModal, setShowNoWarrantyModal] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [slug]);
+
     const handleDecrease = () => {
         setQuantity(Math.max(1, quantity - 1));
         setQuantityWarning(false); // clear warning when decreasing
