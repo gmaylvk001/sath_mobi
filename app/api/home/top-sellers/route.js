@@ -39,6 +39,7 @@ export async function GET() {
           _id: 0,
           item_code: "$_id",
           name: "$product.name",
+          slug: "$product.slug",
           brand: "$product.brand",
           price: "$product.price",
           special_price: "$product.special_price",
