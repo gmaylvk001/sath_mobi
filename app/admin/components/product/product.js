@@ -622,7 +622,7 @@ if (stockFilter) {
   );
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 max-w-full overflow-x-hidden">
       {showAlert && (
         <div className="bg-green-500 text-white px-4 py-2 rounded-md mb-4">
           {alertMessage}
@@ -744,8 +744,8 @@ if (stockFilter) {
           <hr className="border-t border-gray-200 mb-4" />
 
           {/* Products Table */}
-          <div className="overflow-x-auto ">
-          <table className="w-full border border-gray-300">
+          <div className="overflow-x-auto w-full max-w-full">
+          <table className="w-full border border-gray-300" style={{minWidth: '900px'}}>
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-2">Item Code</th>

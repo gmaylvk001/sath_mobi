@@ -93,7 +93,7 @@ export default function TopSellersSection() {
                     <Link href={`/product/${product.slug}`}>
                       <Image
                         src={`/uploads/products/${product.images?.[0]}`}
-                        alt={product.name}
+                        alt="Product Image"
                         width={100}
                         height={100}
                       />

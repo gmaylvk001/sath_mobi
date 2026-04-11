@@ -109,7 +109,7 @@ export default function LatestProducts() {
                   </Link>
 
                   {/* Product Info */}
-                  <div className="grid grid-rows-[auto_auto_1fr_auto]">
+                  <div className="grid min-w-0 grid-rows-[auto_auto_1fr_auto]">
                     {/* Brand */}
                     <div className="mb-1">
                       <Link
@@ -136,9 +136,9 @@ export default function LatestProducts() {
                     </div>
                     
                   {/*Prouct Name */}
-                   <Link href={`/product/${product.slug}`}>
-                      <p className="font-semibold text-sm mb-2 truncate antialiased">
-                        {product.name.slice(0, 33)}{product.name.length > 33 ? "…" : ""}
+                   <Link href={`/product/${product.slug}`} className="min-w-0">
+                      <p className="mb-2 min-w-0 break-words font-semibold text-sm antialiased line-clamp-2">
+                        {product.name}
                       </p>
                     </Link>
 

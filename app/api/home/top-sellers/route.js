@@ -33,6 +33,7 @@ export async function GET() {
         },
       },
       { $unwind: "$product" },
+      { $match: { "product.quantity": { $gt: 0 } } },
 
       {
         $project: {
@@ -43,6 +44,7 @@ export async function GET() {
           brand: "$product.brand",
           price: "$product.price",
           special_price: "$product.special_price",
+          quantity: "$product.quantity",
           images: "$product.images",
           totalSold: 1,
         },
