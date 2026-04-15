@@ -77,10 +77,13 @@ export async function POST(req) {
       if (isDemoTitle) {
         Status = "Inactive";
       }
+      const stock_status = parseFloat(item.quantity) > 0 ? "In Stock" : "Out of Stock";
+   
 
       if (existingProduct) {
         const updateFields = {
           quantity: parseFloat(item.quantity),
+          stock_status: stock_status,
           store_price: item.branch_price,
           brand_code: item.brand_code,
           movement: item.movement,
