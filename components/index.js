@@ -118,6 +118,7 @@ function CategoryCard({ image, title, bg }) {
           speed={800}
           className="bannerSwiper"
         >
+          {/*
           <SwiperSlide>
             <Image
               src="/assets/images/main-banner-1.webp"
@@ -127,7 +128,7 @@ function CategoryCard({ image, title, bg }) {
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
-
+*/}
           <SwiperSlide>
             <Image
               src="/assets/images/main-banner-2.png"
@@ -137,7 +138,7 @@ function CategoryCard({ image, title, bg }) {
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
-
+{/*
           <SwiperSlide>
             <Image
               src="/assets/images/main-banner-3.webp"
@@ -147,11 +148,11 @@ function CategoryCard({ image, title, bg }) {
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
-
+*/}
         </Swiper>
 
         <div className="swiper-pagination banner-pagination" style={{ 
-              width: `7%`,
+              width: `2%`,
             }}></div>
       </section>
 
