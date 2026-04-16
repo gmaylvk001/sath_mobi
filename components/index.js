@@ -130,17 +130,28 @@ function CategoryCard({ image, title, bg }) {
 
           <SwiperSlide>
             <Image
-              src="/assets/images/main-banner-3.webp"
+              src="/assets/images/main-banner-2.png"
               alt="Banner 2"
               width={1920}
               height={600}
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
+
+          <SwiperSlide>
+            <Image
+              src="/assets/images/main-banner-3.webp"
+              alt="Banner 3"
+              width={1920}
+              height={600}
+              className="w-full h-full object-cover"
+            />
+          </SwiperSlide>
+
         </Swiper>
 
         <div className="swiper-pagination banner-pagination" style={{ 
-              width: `5%`,
+              width: `7%`,
             }}></div>
       </section>
 
