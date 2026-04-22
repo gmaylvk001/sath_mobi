@@ -170,7 +170,7 @@ export default function CheckoutPage() {
   const [useraddress, setUseraddress] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [useSavedAddress, setUseSavedAddress] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+  const [paymentMethod, setPaymentMethod] = useState("online");
   const [error, setError] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -535,11 +535,7 @@ const grandTotal = subtotal - totalDiscount;
       let paymentStatus = "";
       let paymentMode = "";
   
-      if (paymentMethod === 'Cash on Delivery') {
-        paymentId = "COD_" + Date.now();
-        paymentStatus = "pending";
-        paymentMode = "Cash on Delivery";
-      } else if (paymentMethod === 'online') {
+      if (paymentMethod === 'online') {
         try {
           const result = await handleOnlinePayment(totalAmount);
           paymentId = result.paymentId;
@@ -716,7 +712,7 @@ const grandTotal = subtotal - totalDiscount;
           orderDetails: {
             order_number: orderData.order.order_number || "ORD" + Date.now(),
             order_amount: totalAmount,
-            payment_method: paymentMethod === 'Cash on Delivery' ? 'Cash on Delivery' : 'Online Payment',
+            payment_method: 'Online Payment',
             order_item: cartItems,
             order_username: `${addressData.firstName} ${addressData.lastName}`,
             order_phonenumber: addressData.phonenumber,
@@ -1325,26 +1321,15 @@ const grandTotal = subtotal - totalDiscount;
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">Payment Method</h3>
                 <div className="space-y-2">
                   <label className="flex items-center space-x-2">
-                    <input 
-                      type="radio" 
-                      name="payment" 
-                      value="online" 
-                      checked={paymentMethod === "online"} 
-                      onChange={handlePaymentChange} 
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="online"
+                      checked={paymentMethod === "online"}
+                      onChange={handlePaymentChange}
                       className="w-4 h-4 text-orange-500"
                     />
                     <span>Online Payment</span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                    <input 
-                      type="radio" 
-                      name="payment" 
-                      value="Cash on Delivery" 
-                      checked={paymentMethod === "Cash on Delivery"} 
-                      onChange={handlePaymentChange} 
-                      className="w-4 h-4 text-orange-500"
-                    />
-                    <span>Cash on Delivery</span>
                   </label>
                 </div>
               </div>
