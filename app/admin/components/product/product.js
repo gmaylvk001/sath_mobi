@@ -748,6 +748,7 @@ if (stockFilter) {
           <table className="w-full border border-gray-300" style={{minWidth: '900px'}}>
             <thead>
               <tr className="bg-gray-200">
+                <th className="p-2">Action</th>
                 <th className="p-2">Item Code</th>
                 <th className="p-2">Ean</th>
                 <th className="p-2">Image</th>
@@ -756,13 +757,35 @@ if (stockFilter) {
                 <th className="p-2 whitespace-nowrap">Spl Price</th>
                 <th className="p-2">Quantity</th>
                 <th className="p-2">Status</th>
-                <th className="p-2">Action</th>
               </tr>
             </thead>
             <tbody>
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map((product, index) => (
                   <tr key={product._id} className="text-center border-b">
+                    {/* Action Column */}
+                    <td>
+                      <div className="flex items-center gap-2 justify-center">
+                        <button
+                          onClick={() => handleEditProduct(product)}
+                          className="w-7 h-7 bg-red-100 text-red-600 rounded-full inline-flex items-center justify-center"
+                          title="Edit"
+                        >
+                          <FaEdit className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setProductToDelete(product._id);
+                            setShowConfirmationModal(true);
+                          }}
+                          className="w-7 h-7 bg-pink-100 text-pink-600 rounded-full inline-flex items-center justify-center"
+                          title="Delete"
+                        >
+                          <Icon icon="mingcute:delete-2-line" />
+                        </button>
+                      </div>
+                    </td>
+                    
                     {/* Item Code Column */}
                     <td className="p-2 text-center align-middle">
                       {product.item_code}
@@ -823,28 +846,7 @@ if (stockFilter) {
                       )}
                     </td>
                     
-                    {/* Action Column */}
-                    <td>
-                      <div className="flex items-center gap-2 justify-center">
-                        <button
-                          onClick={() => handleEditProduct(product)}
-                          className="w-7 h-7 bg-red-100 text-red-600 rounded-full inline-flex items-center justify-center"
-                          title="Edit"
-                        >
-                          <FaEdit className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setProductToDelete(product._id);
-                            setShowConfirmationModal(true);
-                          }}
-                          className="w-7 h-7 bg-pink-100 text-pink-600 rounded-full inline-flex items-center justify-center"
-                          title="Delete"
-                        >
-                          <Icon icon="mingcute:delete-2-line" />
-                        </button>
-                      </div>
-                    </td>
+                    
                   </tr>
                 ))
               ) : (
