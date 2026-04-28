@@ -804,27 +804,29 @@ const grandTotal = subtotal - totalDiscount;
       <ToastContainer position="top-right" autoClose={5000} />
       
       {/* Checkout Header Bar */}
-      <div className="bg-red-50 py-6 px-8 flex justify-between items-center">
+      <div className="bg-red-50 px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-bold text-gray-800">Checkout</h2>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
           <span className="text-gray-600">🏠 Home</span>
           <span className="text-gray-500">›</span>
           <span className="text-orange-500 font-semibold">Checkout</span>
         </div>
+        </div>
       </div>
 
       {/* <div className="max-w-9xl mx-auto rounded-lg p-8 pt-0  container"> */}
-        <div className="w-full  rounded-lg  pt-0">
+        <div className="w-full rounded-lg pt-0">
 
-        <div className="flex flex-col lg:flex-row " style={{marginLeft: "100px"}}>
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:flex-row lg:items-start lg:gap-10 lg:px-8">
           {/* Left - Checkout Form */}
-         <div className="w-full lg:w-2/4 bg-white p-0 pt-6">
+         <div className="w-full bg-white pt-2 lg:w-[min(100%,42rem)] lg:pt-6 xl:flex-1">
 
     {error && <p className="text-red-500 text-bold-sm mb-4">{error}</p>}
 
     {useSavedAddress && selectedAddress !== null ? (
       <div className="bg-gray-50 p-4 rounded-lg">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <p><span className="font-medium">Name:</span> {useraddress[selectedAddress].firstName} {useraddress[selectedAddress].lastName}</p>
           <p><span className="font-medium">Phone:</span> {useraddress[selectedAddress].phonenumber}</p>
           <p><span className="font-medium">Address:</span> {useraddress[selectedAddress].address}</p>
@@ -836,13 +838,13 @@ const grandTotal = subtotal - totalDiscount;
       </div>
     ) : (
       
-      <form onSubmit={handleSubmit} className="mr-2">
+      <form onSubmit={handleSubmit} className="w-full">
   {/* Contact Section */}
   <div className="mb-8">
     <h2 className="text-xl font-semibold text-black mb-3">
       Contact
     </h2>
-   <div className="grid grid-cols-2 gap-4 mt-3">
+   <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="relative mt-3">
   <input
     type="text"
@@ -903,7 +905,7 @@ const grandTotal = subtotal - totalDiscount;
   </span>
 </div>
 
-    <div className="grid grid-cols-2 gap-4 mt-3">
+    <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="relative mt-3">
   <input
     type="text"
@@ -996,7 +998,7 @@ const grandTotal = subtotal - totalDiscount;
   </span>
 </div>
 
-    <div className="grid grid-cols-2 gap-4 mt-3">
+    <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
      {/* <div className="relative mt-3 w-full">
       <select
         name="state"
@@ -1151,7 +1153,7 @@ const grandTotal = subtotal - totalDiscount;
       className="border p-2 rounded-md w-full h-20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-200"
     ></textarea>
   </div>
- <div className="mt-3 mb-4 text-sm">
+ <div className="mb-4 mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
   <a
     href="/privacypolicy"
     className="text-orange-500 hover:underline mr-4 underline"
@@ -1194,8 +1196,8 @@ const grandTotal = subtotal - totalDiscount;
   </div>
 
           {/* Right - Order Summary */}
-          <div className="w-full lg:w-2/4 p-6 sticky top-6 self-start" style={{backgroundColor: "#F7F4F2", height: "100vh"}}>
-            <div className="mt-1" style={{marginRight: "100px"}}>
+          <div className="w-full lg:w-[min(100%,28rem)] xl:w-[30rem] lg:sticky lg:top-6 lg:self-start">
+            <div className="mt-1 rounded-2xl p-4 sm:p-6 lg:p-8" style={{backgroundColor: "#F7F4F2"}}>
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Your Orders</h3>
 
               {/* <div className="border-b pb-3 mb-3">
@@ -1214,12 +1216,12 @@ const grandTotal = subtotal - totalDiscount;
               <div className="relative border-b pb-3 mb-3">
                 {/* Scrollable List */}
                 <div
-                  className="max-h-64 overflow-y-auto pr-2 scroll-smooth"
+                  className="max-h-64 overflow-y-auto pr-1 scroll-smooth sm:pr-2"
                 >
                   {cartItems.map((item) => (
                     <div
                       key={`order-item-${item.productId}`}
-                      className="flex items-start justify-between gap-3 text-gray-700 mb-4"
+                      className="mb-4 flex items-start justify-between gap-3 text-gray-700"
                     >
 
                       {/* Product Image */}
@@ -1250,7 +1252,7 @@ const grandTotal = subtotal - totalDiscount;
                       </div>
 
                       {/* Price */}
-                      <div className="text-sm whitespace-nowrap text-base font-semibold text-red-600">
+                      <div className="whitespace-nowrap text-sm font-semibold text-red-600 sm:text-base">
                         ₹{((item.price > 0 ? item.price : item.actual_price) * item.quantity).toLocaleString('en-IN')}
                       </div>
                     </div>
@@ -1282,7 +1284,7 @@ const grandTotal = subtotal - totalDiscount;
               {cartItems.some(item => item.warranty > 0) && (
                 <div className="flex justify-between text-gray-800 font-semibold">
                   <span className="text-[#0069c6] hover:text-[#00badb] text-xs sm:text-sm font-medium">Warranty:</span>
-                  <span className="text-sm whitespace-nowrap text-base font-semibold text-red-600">
+                  <span className="whitespace-nowrap text-sm font-semibold text-red-600 sm:text-base">
                     ₹{cartItems.reduce((sum, item) => sum + (item.warranty || 0), 0).toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -1290,7 +1292,7 @@ const grandTotal = subtotal - totalDiscount;
               {cartItems.some(item => item.extendedWarranty > 0) && (
                 <div className="flex justify-between text-gray-800 font-semibold pt-2 mt-2">
                   <span className="text-[#0069c6] hover:text-[#00badb] text-xs sm:text-sm font-medium">Extended Warranty:</span>
-                  <span className="text-sm whitespace-nowrap text-base font-semibold text-red-600">
+                  <span className="whitespace-nowrap text-sm font-semibold text-red-600 sm:text-base">
                     ₹{cartItems.reduce((sum, item) => sum + (item.extendedWarranty || 0), 0).toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -1336,14 +1338,14 @@ const grandTotal = subtotal - totalDiscount;
              <button 
   onClick={handleSubmit} 
   disabled={isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved}
-  className={`mt-6 w-1/2 md:w-1/3 text-white font-semibold py-2 rounded-lg transition ${
+  className={`mt-6 w-full max-w-full rounded-lg py-3 text-white font-semibold transition ${
     isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved
       ? 'bg-gray-400 cursor-not-allowed' 
       : 'bg-red-500 hover:bg-red-600'
   }`}
 >
   {isSubmitting ? (
-    <span className="flex items-center justify-center">
+    <span className="flex w-full items-center justify-center">
       <svg
         className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
         xmlns="http://www.w3.org/2000/svg"
