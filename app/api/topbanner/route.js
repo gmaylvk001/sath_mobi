@@ -27,7 +27,7 @@ async function saveFile(file) {
     //   );
     // }
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "topbanner");
+    const uploadDir = path.join(process.cwd(), "public", "assets", "images");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -37,7 +37,7 @@ async function saveFile(file) {
 
     await sharp(buffer).toFile(filepath);
 
-    return "/uploads/topbanner/" + filename;
+    return "/assets/images/" + filename;
   } catch (err) {
     console.error("Save file error:", err);
     throw err;

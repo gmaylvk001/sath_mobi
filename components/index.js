@@ -56,7 +56,15 @@ export default function HomePage() {
 
 const [activeVideo, setActiveVideo] = useState(null);
 const [isBrandsLoading, setIsBrandsLoading] = useState(true);
-const displayedHeroBanners = heroBanners;
+const defaultHeroBanners = [
+  {
+    _id: "default-main-banner-2",
+    banner_image: "/assets/images/main-banner-2.png",
+    redirect_url: "",
+    status: "Active",
+  },
+];
+const displayedHeroBanners = isHeroLoading ? defaultHeroBanners : heroBanners;
 const bannerPaginationWidth = `${Math.max(displayedHeroBanners.length * 2.5, 2.5)}%`;
 
 const fetchHeroBanners = async () => {
@@ -73,13 +81,13 @@ const fetchHeroBanners = async () => {
         (banner) => banner.status === "Active" && banner.banner_image
       );
 
-      setHeroBanners(activeBanners);
+      setHeroBanners(activeBanners.length > 0 ? activeBanners : defaultHeroBanners);
     } else {
-      setHeroBanners([]);
+      setHeroBanners(defaultHeroBanners);
     }
   } catch (error) {
     console.error("Error fetching hero banners:", error);
-    setHeroBanners([]);
+    setHeroBanners(defaultHeroBanners);
   } finally {
     setIsHeroLoading(false);
   }
@@ -144,7 +152,6 @@ function CategoryCard({ image, title, bg }) {
     
     <>
       {/* ================= FULL IMAGE BANNER ================= */}
-      {!isHeroLoading && displayedHeroBanners.length > 0 && (
       <section className="w-full overflow-hidden relative">
         <Swiper
           modules={[Autoplay, Pagination]}
@@ -195,7 +202,6 @@ function CategoryCard({ image, title, bg }) {
           }}
         ></div>
       </section>
-      )}
 
       {/* ================= BANK OFFER STRIP ================= */}
       <section className="w-full bg-white border-dotted border-b">
