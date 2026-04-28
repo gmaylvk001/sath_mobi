@@ -178,22 +178,34 @@ export async function GET(req) {
       );
     }
 
-      const items = await Promise.all(
+    const validCartItems = cart.items.filter((item) => item.productId);
+
+    if (validCartItems.length !== cart.items.length) {
+      cart.items = validCartItems;
+      const totals = calculateCartTotals(cart.items);
+      cart.totalItems = totals.totalItems;
+      cart.totalPrice = totals.totalPrice;
+      await cart.save();
+    }
+
+    const items = await Promise.all(
       cart.items.map(async (item) => {
-       // console.log(item);
-        const original_quantity = await getQuantity(item.productId.item_code);
+        const productDoc = item.productId;
+        const itemCode = productDoc?.item_code || item.item_code || null;
+        const original_quantity = itemCode ? await getQuantity(itemCode) : null;
+
         return {
           original_quantity,
-          item_code: item.productId.item_code,
-          productId: item.productId._id,
+          item_code: itemCode,
+          productId: productDoc?._id || item.productId,
           category: item.category,
-          name: item.productId.name,
+          name: productDoc?.name || item.name,
           price: item.price,
-          image: item.productId.images[0],
+          image: productDoc?.images?.[0] || item.image,
           quantity: item.quantity,
           warranty: item.warranty || 0,
           extendedWarranty: item.extendedWarranty || 0,
-          actual_price: item.productId.price,
+          actual_price: productDoc?.price ?? item.actual_price ?? item.price,
         };
       })
     );
@@ -287,17 +299,17 @@ console.log(cart.items);
     
     await cart.save();
 
-cart.items.forEach((item) => {
+    cart.items.forEach((item) => {
   console.log(item);
 });
     const items = cart.items.map((item) => ({
-      productId: item.productId._id,
+      productId: item.productId,
       name: item.name,
       category: item.category,
       price: item.price,
-      image: item.productId.images,
+      image: item.image,
       quantity: item.quantity,
-      item_code: item.productId.item_code,
+      item_code: item.item_code,
       original_quantity: item.original_quantity ?? null, // dynamically attach
     }));
 

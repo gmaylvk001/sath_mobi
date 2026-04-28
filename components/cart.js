@@ -382,20 +382,22 @@ export default function CartComponent() {
           });
         }
 
+        const data = await response.json();
+
         if (!response.ok) {
-          const datares = await response.json();
           if (
-            datares.error === "Token has expired" ||
-            datares.error === "Invalid token" ||
-            datares.error === "Authorization token required"
+            data.error === "Token has expired" ||
+            data.error === "Invalid token" ||
+            data.error === "Authorization token required"
           ) {
             localStorage.removeItem("token");
             window.location.reload();
             return;
           }
+
+          throw new Error(data.error || "Failed to fetch cart data");
         }
 
-        const data = await response.json();
         const itemsWithDiscount = data.cart.items.map(item => ({
           ...item,
           discount: 0
