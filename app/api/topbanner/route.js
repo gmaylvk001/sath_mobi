@@ -5,6 +5,9 @@ import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // ✅ Save File Function with Dimension Validation
 async function saveFile(file) {
   try {
@@ -72,13 +75,6 @@ export async function POST(req) {
       );
     }
 
-    if (!redirect_url) {
-      return NextResponse.json(
-        { success: false, message: "Redirect URL is required" },
-        { status: 400 }
-      );
-    }
-
     let filePath;
     try {
       filePath = await saveFile(file);
@@ -95,7 +91,7 @@ export async function POST(req) {
 
     const newBanner = new TopBanner({
       banner_image: filePath,
-      redirect_url,
+      redirect_url: redirect_url || "",
       status,
       order: newOrder,
     });

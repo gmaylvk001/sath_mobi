@@ -40,6 +40,8 @@ const videos = [
 
 
 export default function HomePage() {
+  const [heroBanners, setHeroBanners] = useState([]);
+  const [isHeroLoading, setIsHeroLoading] = useState(true);
 
   const brands = [
   "daikin",
@@ -54,6 +56,35 @@ export default function HomePage() {
 
 const [activeVideo, setActiveVideo] = useState(null);
 const [isBrandsLoading, setIsBrandsLoading] = useState(true);
+const displayedHeroBanners = heroBanners;
+const bannerPaginationWidth = `${Math.max(displayedHeroBanners.length * 2.5, 2.5)}%`;
+
+const fetchHeroBanners = async () => {
+  setIsHeroLoading(true);
+
+  try {
+    const response = await fetch(`/api/topbanner?ts=${Date.now()}`, {
+      cache: "no-store",
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      const activeBanners = (data.banners || []).filter(
+        (banner) => banner.status === "Active" && banner.banner_image
+      );
+
+      setHeroBanners(activeBanners);
+    } else {
+      setHeroBanners([]);
+    }
+  } catch (error) {
+    console.error("Error fetching hero banners:", error);
+    setHeroBanners([]);
+  } finally {
+    setIsHeroLoading(false);
+  }
+};
+
 const fetchBrands = async () => {
         setIsBrandsLoading(true);
         try {
@@ -76,6 +107,10 @@ const fetchBrands = async () => {
 const openVideo = (videoId) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
   };
+
+   useEffect(() => {
+    fetchHeroBanners();
+  }, []);
 
    useEffect(() => {
     new Swiperr(".onsale-product-swiper", {
@@ -109,6 +144,7 @@ function CategoryCard({ image, title, bg }) {
     
     <>
       {/* ================= FULL IMAGE BANNER ================= */}
+      {!isHeroLoading && displayedHeroBanners.length > 0 && (
       <section className="w-full overflow-hidden relative">
         <Swiper
           modules={[Autoplay, Pagination]}
@@ -118,43 +154,48 @@ function CategoryCard({ image, title, bg }) {
           speed={800}
           className="bannerSwiper"
         >
-          {/*
-          <SwiperSlide>
-            <Image
-              src="/assets/images/main-banner-1.webp"
-              alt="Banner 1"
-              width={1920}
-              height={600}
-              className="w-full h-full object-cover"
-            />
-          </SwiperSlide>
-*/}
-          <SwiperSlide>
-            <Image
-              src="/assets/images/main-banner-2.png"
-              alt="Banner 2"
-              width={1920}
-              height={600}
-              className="w-full h-full object-cover"
-            />
-          </SwiperSlide>
-{/*
-          <SwiperSlide>
-            <Image
-              src="/assets/images/main-banner-3.webp"
-              alt="Banner 3"
-              width={1920}
-              height={600}
-              className="w-full h-full object-cover"
-            />
-          </SwiperSlide>
-*/}
+          {displayedHeroBanners.map((banner, index) => {
+            const image = (
+              <Image
+                src={banner.banner_image}
+                alt={`Banner ${index + 1}`}
+                width={1920}
+                height={600}
+                className="w-full h-full object-cover"
+                priority={index === 0}
+              />
+            );
+
+            const isExternal = banner.redirect_url?.startsWith("http");
+
+            return (
+              <SwiperSlide key={banner._id || index}>
+                {banner.redirect_url ? (
+                  isExternal ? (
+                    <a href={banner.redirect_url} target="_blank" rel="noreferrer">
+                      {image}
+                    </a>
+                  ) : (
+                    <Link href={banner.redirect_url}>
+                      {image}
+                    </Link>
+                  )
+                ) : (
+                  image
+                )}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
 
-        <div className="swiper-pagination banner-pagination" style={{ 
-              width: `2%`,
-            }}></div>
+        <div
+          className="swiper-pagination banner-pagination"
+          style={{
+            width: bannerPaginationWidth,
+          }}
+        ></div>
       </section>
+      )}
 
       {/* ================= BANK OFFER STRIP ================= */}
       <section className="w-full bg-white border-dotted border-b">
