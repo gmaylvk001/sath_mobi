@@ -8,48 +8,104 @@ import sharp from "sharp";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-// ✅ Save File Function with Dimension Validation
+const TOP_BANNER_UPLOAD_SEGMENTS = ["uploads", "topbanner"];
+
+function getPublicDir() {
+  return path.join(process.cwd(), "public");
+}
+
+function getTopBannerUploadDir() {
+  return path.join(getPublicDir(), ...TOP_BANNER_UPLOAD_SEGMENTS);
+}
+
+function toPublicUrl(...segments) {
+  return `/${segments.join("/")}`;
+}
+
+function normalizeUrlPath(fileUrl = "") {
+  if (!fileUrl) return "";
+  return fileUrl.startsWith("/") ? fileUrl : `/${fileUrl}`;
+}
+
+function getFilenameFromUrl(fileUrl = "") {
+  return normalizeUrlPath(fileUrl).split("/").filter(Boolean).pop() || "";
+}
+
+function getBannerPathCandidates(fileUrl = "") {
+  const normalizedUrl = normalizeUrlPath(fileUrl);
+  if (!normalizedUrl) return [];
+
+  const filename = getFilenameFromUrl(normalizedUrl);
+  const dePrefixedName = filename.replace(/^\d+-/, "");
+
+  const urlCandidates = [
+    normalizedUrl,
+    filename ? toPublicUrl(...TOP_BANNER_UPLOAD_SEGMENTS, filename) : "",
+    filename ? toPublicUrl("assets", "images", filename) : "",
+    dePrefixedName && dePrefixedName !== filename
+      ? toPublicUrl(...TOP_BANNER_UPLOAD_SEGMENTS, dePrefixedName)
+      : "",
+    dePrefixedName && dePrefixedName !== filename
+      ? toPublicUrl("assets", "images", dePrefixedName)
+      : "",
+  ].filter(Boolean);
+
+  return [...new Set(urlCandidates)].map((urlPath) => ({
+    urlPath,
+    filePath: path.join(getPublicDir(), urlPath.replace(/^\/+/, "")),
+  }));
+}
+
+function resolveExistingBannerUrl(fileUrl = "") {
+  const normalizedUrl = normalizeUrlPath(fileUrl);
+  const candidates = getBannerPathCandidates(normalizedUrl);
+  const match = candidates.find(({ filePath }) => fs.existsSync(filePath));
+  return match?.urlPath || normalizedUrl;
+}
+
+function resolveExistingBannerFile(fileUrl = "") {
+  const candidates = getBannerPathCandidates(fileUrl);
+  return candidates.find(({ filePath }) => fs.existsSync(filePath))?.filePath || null;
+}
+
 async function saveFile(file) {
   try {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    let metadata;
     try {
-      metadata = await sharp(buffer).metadata();
+      await sharp(buffer).metadata();
     } catch (err) {
       throw new Error("Invalid image file. Please upload a valid image.");
     }
 
-    // if (metadata.width !== 1920 || metadata.height !== 550) {
-    //   throw new Error(
-    //     `Image must be exactly 1920x550 pixels. Your image is ${metadata.width}x${metadata.height} pixels.`
-    //   );
-    // }
-
-    const uploadDir = path.join(process.cwd(), "public", "assets", "images");
+    const uploadDir = getTopBannerUploadDir();
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    const filename = Date.now() + "-" + file.name.replace(/\s/g, "_");
+    const filename = `${Date.now()}-${file.name.replace(/\s/g, "_")}`;
     const filepath = path.join(uploadDir, filename);
 
     await sharp(buffer).toFile(filepath);
 
-    return "/assets/images/" + filename;
+    return toPublicUrl(...TOP_BANNER_UPLOAD_SEGMENTS, filename);
   } catch (err) {
     console.error("Save file error:", err);
     throw err;
   }
 }
 
-// ✅ GET all banners
 export async function GET() {
   try {
     await dbConnect();
-    const banners = await TopBanner.find({}).sort({ order: 1 }); // 👈 sort by order
-    return NextResponse.json({ success: true, banners });
+    const banners = await TopBanner.find({}).sort({ order: 1 });
+    const normalizedBanners = banners.map((banner) => ({
+      ...banner.toObject(),
+      banner_image: resolveExistingBannerUrl(banner.banner_image),
+    }));
+
+    return NextResponse.json({ success: true, banners: normalizedBanners });
   } catch (err) {
     return NextResponse.json(
       { success: false, message: err.message },
@@ -58,7 +114,6 @@ export async function GET() {
   }
 }
 
-// ✅ POST add new banner
 export async function POST(req) {
   try {
     await dbConnect();
@@ -85,7 +140,6 @@ export async function POST(req) {
       );
     }
 
-    // 👇 find max order
     const lastBanner = await TopBanner.findOne().sort({ order: -1 });
     const newOrder = lastBanner ? lastBanner.order + 1 : 0;
 
@@ -108,7 +162,6 @@ export async function POST(req) {
   }
 }
 
-// ✅ PUT update banner (unchanged except we don't touch order)
 export async function PUT(req) {
   try {
     await dbConnect();
@@ -130,7 +183,7 @@ export async function PUT(req) {
       );
     }
 
-    let updateData = { updatedAt: new Date() };
+    const updateData = { updatedAt: new Date() };
 
     const redirect_url = formData.get("redirect_url");
     if (redirect_url !== null) updateData.redirect_url = redirect_url;
@@ -144,15 +197,9 @@ export async function PUT(req) {
         const filePath = await saveFile(file);
         updateData.banner_image = filePath;
 
-        if (existingBanner.banner_image) {
-          const oldFilePath = path.join(
-            process.cwd(),
-            "public",
-            existingBanner.banner_image
-          );
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-          }
+        const oldFilePath = resolveExistingBannerFile(existingBanner.banner_image);
+        if (oldFilePath && fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
         }
       } catch (err) {
         return NextResponse.json(
@@ -176,7 +223,6 @@ export async function PUT(req) {
   }
 }
 
-// ✅ PATCH reorder banners
 export async function PATCH(req) {
   try {
     await dbConnect();
@@ -189,7 +235,7 @@ export async function PATCH(req) {
       );
     }
 
-    for (let i = 0; i < orderedIds.length; i++) {
+    for (let i = 0; i < orderedIds.length; i += 1) {
       await TopBanner.findByIdAndUpdate(orderedIds[i], { order: i });
     }
 
@@ -202,7 +248,6 @@ export async function PATCH(req) {
   }
 }
 
-// ✅ DELETE banner (unchanged)
 export async function DELETE(req) {
   try {
     await dbConnect();
@@ -223,11 +268,9 @@ export async function DELETE(req) {
       );
     }
 
-    if (banner.banner_image) {
-      const filePath = path.join(process.cwd(), "public", banner.banner_image);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
+    const filePath = resolveExistingBannerFile(banner.banner_image);
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
     }
 
     await TopBanner.findByIdAndDelete(id);
