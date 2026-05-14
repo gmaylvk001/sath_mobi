@@ -5,8 +5,8 @@ export async function GET() {
   await connectDB(); // Connect to your database
 
   try {
-    // Fetch all stores from the database
-    const stores = await store.find({});
+    // Fetch only active stores from the database
+    const stores = await store.find({ status: "Active" });
 
     // Return the stores as a JSON response
     return new Response(JSON.stringify({ success: true, data: stores }), {
