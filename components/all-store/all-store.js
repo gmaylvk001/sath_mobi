@@ -37,13 +37,13 @@ const StoreList = () => {
             key={store._id || index}
             className="border border-gray-300 rounded-lg shadow-md bg-white p-4"
           >
-            <div className="bg-blue-200 h-40 mb-4 rounded-md flex items-center justify-center overflow-hidden">
-              {store.images && store.images.length > 0 ? (
+            <div className="bg-blue-200 h-64 mb-4 rounded-md flex items-center justify-center overflow-hidden">
+              {store.store_images && store.store_images.length > 0 ? (
                 <Image
-                  src={store.images[0]}
+                  src={store.store_images[0]}
                   alt={store.organisation_name}
                   width={200}
-                  height={150}
+                  height={350}
                   className="object-cover w-full h-full"
                 />
               ) : (
