@@ -24,7 +24,31 @@ function toPublicUrl(...segments) {
 
 function normalizeUrlPath(fileUrl = "") {
   if (!fileUrl) return "";
-  return fileUrl.startsWith("/") ? fileUrl : `/${fileUrl}`;
+
+  const rawValue = String(fileUrl).trim().replace(/\\/g, "/");
+  if (!rawValue) return "";
+
+  try {
+    if (/^https?:\/\//i.test(rawValue)) {
+      const parsedUrl = new URL(rawValue);
+      return parsedUrl.pathname || "";
+    }
+  } catch (err) {
+    console.warn("Failed to parse banner URL:", rawValue, err);
+  }
+
+  const publicDir = getPublicDir().replace(/\\/g, "/");
+  let normalizedPath = rawValue;
+
+  if (normalizedPath.startsWith(publicDir)) {
+    normalizedPath = normalizedPath.slice(publicDir.length);
+  }
+
+  if (!normalizedPath.startsWith("/")) {
+    normalizedPath = `/${normalizedPath}`;
+  }
+
+  return normalizedPath.replace(/\/{2,}/g, "/");
 }
 
 function getFilenameFromUrl(fileUrl = "") {
