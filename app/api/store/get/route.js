@@ -1,12 +1,15 @@
 import store from "@/models/store"; // Adjust path to your Store model as necessary
 import connectDB from "@/lib/db"; // Adjust path to your database connection utility
 
-export async function GET() {
+export async function GET(request) {
   await connectDB(); // Connect to your database
 
   try {
-    // Fetch only active stores from the database
-    const stores = await store.find({ status: "Active" });
+    const { searchParams } = new URL(request.url);
+    const includeAll = searchParams.get("includeAll") === "true";
+    const query = includeAll ? {} : { status: "Active" };
+
+    const stores = await store.find(query);
 
     // Return the stores as a JSON response
     return new Response(JSON.stringify({ success: true, data: stores }), {

@@ -48,7 +48,7 @@ export default function StoreComponent() {
 
   const fetchStores = async () => {
     try {
-      const res = await fetch("/api/store/get");
+      const res = await fetch("/api/store/get?includeAll=true");
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
