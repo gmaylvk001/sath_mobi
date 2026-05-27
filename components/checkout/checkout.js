@@ -328,7 +328,7 @@ const handleOnlinePayment = async (totalAmount) => {
 
     return new Promise((resolve, reject) => {
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY || process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
         amount: order.amount,
         currency: "INR",
         name: "Sathya Mobiles",

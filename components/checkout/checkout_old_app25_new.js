@@ -156,7 +156,7 @@ export default function CheckoutPage() {
         const { order } = orderResponse;
   
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
+          key: process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY || process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
           amount: order.amount,
           currency: "INR",
           name: "Your Company Name",
