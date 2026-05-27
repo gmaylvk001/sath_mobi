@@ -147,7 +147,6 @@ const DeliveryOptions = ({ formData, handleChange, isDeliverySaved, setIsDeliver
 };
 
 export default function CheckoutPage() {
-  const isPlaceOrderTemporarilyDisabled = true;
   const { cartCount, updateCartCount } = useCart();
   const router = useRouter();
   const [stores, setStores] = useState([]);
@@ -466,13 +465,9 @@ const handleOnlinePayment = async (totalAmount) => {
 // Calculate totals
 const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0), 0);
-const grandTotal = subtotal - totalDiscount;
+  const grandTotal = subtotal - totalDiscount;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isPlaceOrderTemporarilyDisabled) {
-      toast.info("Place order is temporarily unavailable.");
-      return;
-    }
     if (isSubmitting) return;
   
 
@@ -1342,9 +1337,9 @@ const grandTotal = subtotal - totalDiscount;
               </div>
              <button 
   onClick={handleSubmit} 
-  disabled={isPlaceOrderTemporarilyDisabled || isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved}
+  disabled={isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved}
   className={`mt-6 w-full max-w-full rounded-lg py-3 text-white font-semibold transition ${
-    isPlaceOrderTemporarilyDisabled || isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved
+    isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved
       ? 'bg-gray-400 cursor-not-allowed' 
       : 'bg-red-500 hover:bg-red-600'
   }`}
@@ -1373,7 +1368,7 @@ const grandTotal = subtotal - totalDiscount;
       </svg>
       Processing...
     </span>
-  ) : isPlaceOrderTemporarilyDisabled ? 'Place Order' : 'Place Order'}
+  ) : 'Place Order'}
 </button>
 
               {/* <button 
