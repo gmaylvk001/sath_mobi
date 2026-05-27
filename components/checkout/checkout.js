@@ -328,7 +328,7 @@ const handleOnlinePayment = async (totalAmount) => {
 
     return new Promise((resolve, reject) => {
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY || process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY || process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY,
         amount: order.amount,
         currency: "INR",
         name: "Sathya Mobiles",
@@ -529,7 +529,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
     setIsSubmitting(true);
       setError("");
   
-           const totalAmount = orderSummary.total;
+      const totalAmount = orderSummary.total || grandTotal;
 
       let paymentId = "";
       let paymentStatus = "";
@@ -551,6 +551,11 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
         return;
       }
  
+      const orderNumber = `ORD${Date.now()}`;
+      let deliveryAddressId = useSavedAddress && selectedAddress !== null
+        ? useraddress[selectedAddress]?._id
+        : useraddress[0]?._id;
+
       // Only save new address if not using saved address
       if (!useSavedAddress || selectedAddress === null) {
         const formDataToSend = new FormData();
@@ -581,6 +586,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
         }
         const newAddressData = await addressRes.json();
         setUseraddress(prev => [...prev, newAddressData.userAddress]);
+        deliveryAddressId = newAddressData.userAddress?._id;
       }
   
       // Save Payment
@@ -615,9 +621,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: userId,
-          user_adddeliveryid: useSavedAddress && selectedAddress !== null 
-            ? useraddress[selectedAddress]._id 
-            : useraddress[0]?._id,
+          user_adddeliveryid: deliveryAddressId,
           order_username: `${addressData.firstName} ${addressData.lastName}`,
           order_phonenumber: addressData.phonenumber,
           email_address: addressData.email,
@@ -627,13 +631,13 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
           payment_method: paymentMethod,
           payment_type: paymentMode,
           order_status: "pending",
-         delivery_type: formData.deliveryType === "store" ? "store_pickup" : "home",
-         pickup_store: formData.deliveryType === "store" 
-      ? stores.find(s => s._id === formData.selectedStore)?.organisation_name 
-      : undefined,
+          delivery_type: formData.deliveryType === "store" ? "store_pickup" : "home",
+          pickup_store: formData.deliveryType === "store"
+            ? stores.find(s => s._id === formData.selectedStore)?.organisation_name
+            : undefined,
           payment_id: paymentData._id,
           payment_status: paymentData.status,
-          order_number: "ORD" + Date.now(),
+          order_number: orderNumber,
           order_details: cartItems.map((item) => ({
             item_code: `ITEM${item.item_code}`,
             product_id: item.id,
@@ -646,7 +650,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
             updated_at: new Date(),
             quantity: 1,
             //store_id: formData.deliveryType === "store" ? formData.selectedStore : "STORE01",
-            orderNumber: "ORD" + Date.now(),
+            orderNumber,
           })),
         }),
       });
@@ -654,6 +658,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
       if (!orderRes.ok) {
         throw new Error('Order creation failed');
       }
+      const orderResult = await orderRes.json();
 
 
       // if(orderRes.ok){
@@ -704,13 +709,13 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
 
       if (cartdelte.status === 200) {
         localStorage.removeItem('checkoutData');
-        localStorage.removeItem('appliedCoupon')
-        const orderData = await orderRes.json()
-        // Prepare email data
-        console.log(orderData,orderData.order.order_number);
+        localStorage.removeItem('appliedCoupon');
+      }
+
+      try {
         const emailData = {
           orderDetails: {
-            order_number: orderData.order.order_number || "ORD" + Date.now(),
+            order_number: orderResult.order.order_number || orderNumber,
             order_amount: totalAmount,
             payment_method: 'Online Payment',
             order_item: cartItems,
@@ -719,50 +724,44 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
             order_deliveryaddress: deliveryAddress
           },
           customerEmail: addressData.email,
-          // adminEmail: 'msivaranjani2036@gmail.com'
           adminEmail : 'sorambeeviuit@gmail.com'
         };
- 
-       // console.log(cartItems);
- 
-        const proresponse = await fetch(`/api/product/get/${cartItems[0].productId}`);
-       
-        if (!proresponse.ok) {
-          throw new Error(`HTTP error! status: ${proresponse.status}`);
+
+        const firstProductId = cartItems[0]?.productId;
+        if (firstProductId) {
+          const proresponse = await fetch(`/api/product/get/${firstProductId}`);
+          if (proresponse.ok) {
+            const productData = await proresponse.json();
+            const authResponse = await fetch('/api/auth/check', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: token ? `Bearer ${token}` : '',
+              },
+            });
+            const authData = await authResponse.json();
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+            /*
+            trackCheckout({
+              user: {
+                name: authData.user.name,
+                phone: authData.phone,
+                email: authData.user.email,
+              },
+              product: {
+                id: cartItems[0].productId,
+                name: productData.data.name,
+                price: cartItems[0].price,
+                link: `${apiUrl}/product/${productData.data.slug}`,
+                image: `${apiUrl}/uploads/products/`+cartItems[0].image,
+                qty: cartItems[0].quantity,
+                currency: "INR",
+              },
+            });
+            */
+          }
         }
-       
-        const productData = await proresponse.json();
- 
-        const authResponse = await fetch('/api/auth/check', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : '',
-        },
-        });
-        const authData = await authResponse.json();
-        //console.log(cartItems);
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        /*
-        trackCheckout({
-          user: {
-            name: authData.user.name,
-            phone: authData.phone,
-            email: authData.user.email,
-          },
-          product: {
-            id: cartItems[0].productId,
-            name: productData.data.name,
-            price: cartItems[0].price,
-            link: `${apiUrl}/product/${productData.data.slug}`,
-            image: `${apiUrl}/uploads/products/`+cartItems[0].image,
-            qty: cartItems[0].quantity,
-            currency: "INR",
-          },
-        });
-       */
-       
-       // Send confirmation emails
+
         const emailResponse = await fetch('/api/send-order-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -773,9 +772,13 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
           const errorData = await emailResponse.json();
           console.error('Email sending failed:', errorData.error);
         }
+      } catch (postOrderError) {
+        console.error("Post-order follow-up failed:", postOrderError);
       }
-       toast.success("Order placed successfully!");
-            router.push('/order');
+
+      setIsSubmitting(false);
+      toast.success("Order placed successfully!");
+      router.push('/order');
     } catch (error) {
       console.error("Error submitting order:", error);
       toast.error("Failed to place order. Please try again.");
