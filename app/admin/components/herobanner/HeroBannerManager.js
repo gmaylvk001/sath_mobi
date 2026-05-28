@@ -8,6 +8,21 @@ const emptyBanner = {
   status: "Active",
 };
 
+const isUploadedHeroImage = (imageUrl = "") =>
+  String(imageUrl).startsWith("/uploads/topbanner/");
+
+const getHeroBannerImageSrc = (imageUrl = "", version = "") => {
+  if (!isUploadedHeroImage(imageUrl)) return imageUrl;
+
+  const filename = String(imageUrl).split("/").filter(Boolean).pop();
+  if (!filename) return imageUrl;
+
+  const dynamicImageUrl = `/api/topbanner/image/${encodeURIComponent(filename)}`;
+  if (!version) return dynamicImageUrl;
+
+  return `${dynamicImageUrl}?v=${encodeURIComponent(version)}`;
+};
+
 export default function HeroBannerManager() {
   const [banners, setBanners] = useState([]);
   const [newBanner, setNewBanner] = useState(emptyBanner);
@@ -21,7 +36,9 @@ export default function HeroBannerManager() {
 
   const fetchBanners = async () => {
     try {
-      const res = await fetch("/api/topbanner");
+      const res = await fetch(`/api/topbanner?ts=${Date.now()}`, {
+        cache: "no-store",
+      });
       const data = await res.json();
 
       if (!data.success) {
@@ -321,7 +338,10 @@ export default function HeroBannerManager() {
               <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
                 <div>
                   <img
-                    src={banner.banner_image}
+                    src={getHeroBannerImageSrc(
+                      banner.banner_image,
+                      banner.updatedAt || banner._id
+                    )}
                     alt={`Hero banner ${index + 1}`}
                     className="w-full h-32 object-cover rounded-lg border"
                   />

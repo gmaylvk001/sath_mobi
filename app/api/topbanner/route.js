@@ -9,6 +9,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const TOP_BANNER_UPLOAD_SEGMENTS = ["uploads", "topbanner"];
+const NO_STORE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+};
 
 function getPublicDir() {
   return path.join(process.cwd(), "public");
@@ -129,7 +134,10 @@ export async function GET() {
       banner_image: resolveExistingBannerUrl(banner.banner_image),
     }));
 
-    return NextResponse.json({ success: true, banners: normalizedBanners });
+    return NextResponse.json(
+      { success: true, banners: normalizedBanners },
+      { headers: NO_STORE_HEADERS }
+    );
   } catch (err) {
     return NextResponse.json(
       { success: false, message: err.message },

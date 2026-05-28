@@ -66,6 +66,19 @@ const defaultHeroBanners = [
 ];
 const displayedHeroBanners = isHeroLoading ? defaultHeroBanners : heroBanners;
 const bannerPaginationWidth = `${Math.max(displayedHeroBanners.length * 2.5, 2.5)}%`;
+const isUploadedHeroImage = (imageUrl = "") =>
+  String(imageUrl).startsWith("/uploads/topbanner/");
+const getVersionedHeroImage = (imageUrl = "", version = "") => {
+  if (!isUploadedHeroImage(imageUrl)) return imageUrl;
+
+  const filename = String(imageUrl).split("/").filter(Boolean).pop();
+  if (!filename) return imageUrl;
+
+  const dynamicImageUrl = `/api/topbanner/image/${encodeURIComponent(filename)}`;
+  if (!version) return dynamicImageUrl;
+
+  return `${dynamicImageUrl}?v=${encodeURIComponent(version)}`;
+};
 
 const fetchHeroBanners = async () => {
   setIsHeroLoading(true);
@@ -162,9 +175,22 @@ function CategoryCard({ image, title, bg }) {
           className="bannerSwiper"
         >
           {displayedHeroBanners.map((banner, index) => {
-            const image = (
+            const isUploadedBanner = isUploadedHeroImage(banner.banner_image);
+            const imageSrc = getVersionedHeroImage(
+              banner.banner_image,
+              banner.updatedAt || banner._id
+            );
+            const image = isUploadedBanner ? (
+              <img
+                src={imageSrc}
+                alt={`Banner ${index + 1}`}
+                className="w-full h-full object-cover"
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+              />
+            ) : (
               <Image
-                src={banner.banner_image}
+                src={imageSrc}
                 alt={`Banner ${index + 1}`}
                 width={1920}
                 height={600}
