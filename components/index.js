@@ -74,10 +74,10 @@ const getVersionedHeroImage = (imageUrl = "", version = "") => {
   const filename = String(imageUrl).split("/").filter(Boolean).pop();
   if (!filename) return imageUrl;
 
-  const dynamicImageUrl = `/api/topbanner/image/${encodeURIComponent(filename)}`;
+  const dynamicImageUrl = `/api/topbanner?image=${encodeURIComponent(filename)}`;
   if (!version) return dynamicImageUrl;
 
-  return `${dynamicImageUrl}?v=${encodeURIComponent(version)}`;
+  return `${dynamicImageUrl}&v=${encodeURIComponent(version)}`;
 };
 
 const fetchHeroBanners = async () => {

@@ -14,6 +14,14 @@ const NO_STORE_HEADERS = {
   Pragma: "no-cache",
   Expires: "0",
 };
+const IMAGE_CONTENT_TYPES = {
+  ".avif": "image/avif",
+  ".gif": "image/gif",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+};
 
 function getPublicDir() {
   return path.join(process.cwd(), "public");
@@ -97,6 +105,43 @@ function resolveExistingBannerFile(fileUrl = "") {
   return candidates.find(({ filePath }) => fs.existsSync(filePath))?.filePath || null;
 }
 
+function getSafeImageFilename(filename = "") {
+  const decodedFilename = decodeURIComponent(String(filename || ""));
+  const safeFilename = path.basename(decodedFilename);
+  return safeFilename && safeFilename === decodedFilename ? safeFilename : "";
+}
+
+function getImageResponse(filename = "") {
+  const safeFilename = getSafeImageFilename(filename);
+  if (!safeFilename) {
+    return NextResponse.json(
+      { success: false, message: "Invalid image filename" },
+      { status: 400, headers: NO_STORE_HEADERS }
+    );
+  }
+
+  const filePath = resolveExistingBannerFile(
+    toPublicUrl(...TOP_BANNER_UPLOAD_SEGMENTS, safeFilename)
+  );
+
+  if (!filePath) {
+    return NextResponse.json(
+      { success: false, message: "Hero banner image not found" },
+      { status: 404, headers: NO_STORE_HEADERS }
+    );
+  }
+
+  const imageBuffer = fs.readFileSync(filePath);
+  const extension = path.extname(safeFilename).toLowerCase();
+
+  return new Response(imageBuffer, {
+    headers: {
+      ...NO_STORE_HEADERS,
+      "Content-Type": IMAGE_CONTENT_TYPES[extension] || "application/octet-stream",
+    },
+  });
+}
+
 async function saveFile(file) {
   try {
     const bytes = await file.arrayBuffer();
@@ -125,8 +170,13 @@ async function saveFile(file) {
   }
 }
 
-export async function GET() {
+export async function GET(req) {
   try {
+    const imageFilename = new URL(req.url).searchParams.get("image");
+    if (imageFilename) {
+      return getImageResponse(imageFilename);
+    }
+
     await dbConnect();
     const banners = await TopBanner.find({}).sort({ order: 1 });
     const normalizedBanners = banners.map((banner) => ({
