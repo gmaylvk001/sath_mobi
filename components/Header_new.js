@@ -638,6 +638,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
 
     // Memoized sorted products using existing getSortedProducts flow
     const sortedProducts = useMemo(() => getSortedProducts(), [products, sortOption]);
+    const isActiveProduct = useCallback((product) => product?.status === "Active", []);
 
     // ADD: clearSearch helper for new mobile search design (from reference mobile view)
     const clearSearch = useCallback(() => {
@@ -660,6 +661,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
         if (Array.isArray(sortedProducts) && sortedProducts.length > 0) {
           const ql = q.toLowerCase();
           const filtered = sortedProducts.filter(p => {
+            if (!isActiveProduct(p)) return false;
             const name = (p.name || '').toLowerCase();
             const code = (p.item_code || '').toLowerCase();
             const brand = ((p.brand_name || p.brand || '') + '').toLowerCase();
@@ -693,7 +695,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
         let data;
         try { data = JSON.parse(text); } catch { setSuggestions([]); return; }
         const items = Array.isArray(data) ? data : (data?.results || []);
-        setSuggestions(items.slice(0, 12));
+        setSuggestions(items.filter(isActiveProduct).slice(0, 12));
         setSearchDropdownVisible(true);
 
         if (searchInputRef.current) {
@@ -706,7 +708,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
         console.error('Error fetching suggestions:', err);
         setSuggestions([]);
       }
-    }, [sortedProducts]);
+    }, [sortedProducts, isActiveProduct]);
   
     // Debounced effect: call fetchSuggestions while typing
     useEffect(() => {

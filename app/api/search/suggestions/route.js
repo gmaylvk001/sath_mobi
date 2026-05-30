@@ -22,10 +22,11 @@ export async function GET(req) {
     const safeQuery = escapeRegex(q);
 
     const results = await Product.find({
+      status: "Active",
       name: { $regex: safeQuery, $options: "i" },
     })
       .limit(5)
-      .select("name price special_price slug images");
+      .select("name price special_price slug images status");
 
     return NextResponse.json(results);
   } catch (error) {
