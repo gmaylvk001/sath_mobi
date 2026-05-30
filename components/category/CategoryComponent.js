@@ -948,6 +948,11 @@ useEffect(() => {
                     {/* Product Image */}
                     <div className="relative aspect-square bg-white">
                       {product.images?.[0] && (
+                        <Link
+                        href={`/product/${product.slug}`}
+                        className="block mb-2"
+                        onClick={() => handleProductClick(product)}
+                      >
                         <Image
                           src={
                             product.images[0].startsWith("http")
@@ -960,6 +965,7 @@ useEffect(() => {
                           sizes="(max-width: 640px) 50vw, 33vw, 25vw"
                           unoptimized
                         />
+                        </Link>
                       )}
  
                       {/* Discount Badge */}
