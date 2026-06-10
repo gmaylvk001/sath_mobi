@@ -30,8 +30,11 @@ export async function POST(req) {
       email_address,
     } = body;
 
+    const safeOrderItem = Array.isArray(order_item) ? order_item : [];
+    const safeOrderDetails = Array.isArray(order_details) ? order_details : [];
+
     // Validate required fields
-    if (!user_id || !email_address || !order_phonenumber || (order_item.length == 0) || !order_amount) {
+    if (!user_id || !email_address || !order_phonenumber || safeOrderItem.length === 0 || !order_amount) {
       return Response.json({ success: false, message: "Missing required fields" }, { status: 400 });
     }
 
@@ -39,50 +42,52 @@ export async function POST(req) {
       user_id,
       order_username,
       order_phonenumber,
-      order_item,
+      order_item: safeOrderItem,
       order_amount,
       order_deliveryaddress,
       payment_method,
       payment_type,
       delivery_type,
       payment_id,
-      order_number,
-      order_details,
+      order_number: order_number || `ORD${Date.now()}`,
+      order_details: safeOrderDetails,
       user_adddeliveryid,
       email_address,
       order_status: order_status || "pending",
-      payment_status: payment_status || "unpaid"
+      payment_status: payment_status || "pending"
     });
 
     await newOrder.save();
-    if(newOrder){
-        for(const item of  order_item){
-          if(item.productId){
-            const productId = item.productId;
-              const product = await Product.findById(item.productId);
-              const coupon  = item.discount;
-              if(coupon > 0){
-                const userObjectId = new mongoose.Types.ObjectId(user_id);
-                const couponid = new mongoose.Types.ObjectId(item.coupondetails[0]._id);
-                const coupon_track = new Usedcoupon({coupon_id:couponid,user_id:userObjectId})
-                await coupon_track.save();
-                if(couponid){
-                  const updatecoupon = await Coupon.findOne({couponid});
-                  console.log(updatecoupon);
-                  if(updatecoupon){
-                    updatecoupon.used_by +=1;
-                    updatecoupon.save();
-                  }
-                }
+    if (newOrder) {
+      for (const item of safeOrderItem) {
+        try {
+          if (!item?.productId) continue;
 
-              }
-              console.log(product);
-              if (product && product.quantity > 0) {
-                product.quantity = product.quantity - item.quantity;
-                await product.save();
-              }
+          const product = await Product.findById(String(item.productId));
+          const itemQuantity = Number(item.quantity || 0);
+          const coupon = Number(item.discount || 0);
+
+          if (coupon > 0 && item.coupondetails?.[0]?._id) {
+            const userObjectId = new mongoose.Types.ObjectId(user_id);
+            const couponid = new mongoose.Types.ObjectId(item.coupondetails[0]._id);
+            const coupon_track = new Usedcoupon({ coupon_id: couponid, user_id: userObjectId });
+            await coupon_track.save();
+
+            const updatecoupon = await Coupon.findOne({ couponid });
+            if (updatecoupon) {
+              updatecoupon.used_by += 1;
+              await updatecoupon.save();
+            }
           }
+
+          if (product && product.quantity > 0 && itemQuantity > 0) {
+            product.quantity = Math.max(product.quantity - itemQuantity, 0);
+            await product.save();
+          }
+        } catch (itemError) {
+          console.error("Order side-effect failed for item:", item?.productId, itemError);
         }
+      }
     }
     // Create notification after order is placed
     try {
@@ -100,6 +105,7 @@ export async function POST(req) {
     return Response.json({ success: true, message: "Order added successfully", order: newOrder }, { status: 201 });
 
   } catch (error) {
-    return Response.json({ success: false, message: "Server error", error: error.message }, { status: 500 });
+    console.error("Order creation failed:", error);
+    return Response.json({ success: false, message: error.message, error: error.message }, { status: 500 });
   }
 }

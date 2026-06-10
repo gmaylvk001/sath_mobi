@@ -314,82 +314,148 @@ const [isSubmitting, setIsSubmitting] = useState(false);
       throw new Error('Failed to create Razorpay order');
     }
   };
-const handleOnlinePayment = async (totalAmount) => {
-  try {
-    const razorpayLoaded = await initializeRazorpay();
-    if (!razorpayLoaded) {
-      toast.error('Razorpay SDK failed to load');
-      setIsSubmitting(false);
-      return;
+  const updateOrderPaymentStatus = async ({
+    orderId,
+    orderNumber,
+    paymentStatus,
+    paymentId = "",
+    orderStatus = undefined,
+  }) => {
+    const res = await fetch('/api/orders/update-payment-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_id: orderId,
+        order_number: orderNumber,
+        payment_status: paymentStatus,
+        payment_id: paymentId,
+        order_status: orderStatus,
+      }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData?.message || 'Failed to update order payment status');
     }
 
-    const orderResponse = await createRazorpayOrder(totalAmount);
-    const { order } = orderResponse;
+    return res.json();
+  };
 
-    return new Promise((resolve, reject) => {
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY || process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
-        amount: order.amount,
-        currency: "INR",
-        name: "Sathya Mobiles",
-        description: "Product Purchase",
-        order_id: order.id,
-        handler: async function (response) {
+  const handleOnlinePayment = async ({ totalAmount, orderId, orderNumber }) => {
+    try {
+      const razorpayLoaded = await initializeRazorpay();
+      if (!razorpayLoaded) {
+        throw new Error('Razorpay SDK failed to load');
+      }
+
+      const orderResponse = await createRazorpayOrder(totalAmount);
+      const { order } = orderResponse;
+
+      return new Promise((resolve, reject) => {
+        const markFailed = async (reason) => {
           try {
-            const verificationRes = await fetch('/api/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature
-              })
+            await updateOrderPaymentStatus({
+              orderId,
+              orderNumber,
+              paymentStatus: "failed",
+              orderStatus: "Failure",
             });
+          } catch (updateError) {
+            console.error("Failed to mark order as failed:", updateError);
+          }
 
-            if (verificationRes.ok) {
+          reject(reason instanceof Error ? reason : new Error(reason));
+        };
+
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY || process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
+          amount: order.amount,
+          currency: "INR",
+          name: "Sathya Mobiles",
+          description: "Product Purchase",
+          order_id: order.id,
+          handler: async function (response) {
+            try {
+              const verificationRes = await fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+
+              if (!verificationRes.ok) {
+                await markFailed(new Error('Payment verification failed'));
+                return;
+              }
+
+              try {
+                await updateOrderPaymentStatus({
+                  orderId,
+                  orderNumber,
+                  paymentStatus: "paid",
+                  paymentId: response.razorpay_payment_id,
+                  orderStatus: "Order Placed",
+                });
+              } catch (updateError) {
+                console.error("Payment succeeded but order status update failed:", updateError);
+              }
+
               resolve({
                 paymentId: response.razorpay_payment_id,
                 status: "paid",
                 mode: "online"
               });
-            } else {
-              reject(new Error('Payment verification failed'));
+            } catch (err) {
+              await markFailed(err);
             }
-          } catch (err) {
-            reject(err);
+          },
+          prefill: {
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            contact: formData.phonenumber
+          },
+          notes: {
+            order_id: orderId || "",
+            order_number: orderNumber || "",
+          },
+          theme: {
+            color: "#F37254"
+          },
+          modal: {
+            ondismiss: () => {
+              router.push('/order');
+              reject(new Error('PAYMENT_CANCELLED'));
+            }
           }
-        },
-        prefill: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          contact: formData.phonenumber
-        },
-        theme: {
-          color: "#F37254"
-        },
-        modal: {
-          ondismiss: () => {
-            setIsSubmitting(false);
-            reject(new Error('Payment window closed'));
-          }
-        }
-      };
+        };
 
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
 
-      razorpay.on('payment.failed', function (response) {
-        setIsSubmitting(false);
-        reject(new Error(response.error.description));
+        razorpay.on('payment.failed', function (response) {
+          markFailed(new Error(response?.error?.description || 'Payment failed'));
+        });
       });
-    });
-  } catch (error) {
-    console.error('Razorpay error:', error);
-    toast.error('Payment processing failed');
-    setIsSubmitting(false);
-    throw error;
-  }
-};
+    } catch (error) {
+      console.error('Razorpay error:', error);
+      try {
+        if (orderId) {
+          await updateOrderPaymentStatus({
+            orderId,
+            orderNumber,
+            paymentStatus: "failed",
+            orderStatus: "Failure",
+          });
+        }
+      } catch (updateError) {
+        console.error("Failed to update failed payment status:", updateError);
+      }
+      throw error;
+    }
+  };
   // const handleOnlinePayment = async (totalAmount) => {
   //   try {
   //     const razorpayLoaded = await initializeRazorpay();
@@ -530,27 +596,10 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
       setError("");
   
       const totalAmount = orderSummary.total || grandTotal;
-
-      let paymentId = "";
-      let paymentStatus = "";
-      let paymentMode = "";
-  
-      if (paymentMethod === 'online') {
-        try {
-          const result = await handleOnlinePayment(totalAmount);
-          paymentId = result.paymentId;
-          paymentStatus = result.status;
-          paymentMode = result.mode;
-        } catch (error) {
-          toast.error(`Payment failed: ${error.message}`);
-          setIsSubmitting(false);
-          return;
-        }
-      } else {
-        console.log("Invalid Payment Method");
-        return;
+      if (paymentMethod !== 'online') {
+        throw new Error("Invalid Payment Method");
       }
- 
+
       const orderNumber = `ORD${Date.now()}`;
       let deliveryAddressId = useSavedAddress && selectedAddress !== null
         ? useraddress[selectedAddress]?._id
@@ -585,31 +634,12 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
           throw new Error('Failed to save address');
         }
         const newAddressData = await addressRes.json();
-        setUseraddress(prev => [...prev, newAddressData.userAddress]);
+        setUseraddress([newAddressData.userAddress]);
+        setSelectedAddress(0);
+        setUseSavedAddress(true);
         deliveryAddressId = newAddressData.userAddress?._id;
       }
   
-      // Save Payment
-      const paymentRes = await fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: userId,
-          payment_mode: paymentMode,
-          status: paymentStatus,
-          modevalue: totalAmount,
-          payment_id: paymentId,
-          payment_Date: new Date(),
-        }),
-      });
-  
-      if (!paymentRes.ok) {
-        throw new Error('Payment processing failed');
-      }
-  
-      const res = await paymentRes.json();
-      const paymentData = res.paymentData;
-      
       // Prepare delivery address string
       const deliveryAddress = useSavedAddress && selectedAddress !== null
         ? `${useraddress[selectedAddress].address}, ${useraddress[selectedAddress].city}, ${useraddress[selectedAddress].state}, ${useraddress[selectedAddress].country}, ${useraddress[selectedAddress].postCode}`
@@ -629,18 +659,18 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
           order_amount: totalAmount,
           order_deliveryaddress: deliveryAddress,
           payment_method: paymentMethod,
-          payment_type: paymentMode,
+          payment_type: "online",
           order_status: "pending",
           delivery_type: formData.deliveryType === "store" ? "store_pickup" : "home",
           pickup_store: formData.deliveryType === "store"
             ? stores.find(s => s._id === formData.selectedStore)?.organisation_name
             : undefined,
-          payment_id: paymentData._id,
-          payment_status: paymentData.status,
+          payment_id: "",
+          payment_status: "pending",
           order_number: orderNumber,
           order_details: cartItems.map((item) => ({
-            item_code: `ITEM${item.item_code}`,
-            product_id: item.id,
+            item_code: `ITEM${item.item_code || item.productId || item.id}`,
+            product_id: item.id || item.productId,
             product_name: item.name,
             product_price: item.price,
             model: "N/A",
@@ -648,7 +678,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
             coupondiscount: 0,
             created_at: new Date(),
             updated_at: new Date(),
-            quantity: 1,
+            quantity: item.quantity,
             //store_id: formData.deliveryType === "store" ? formData.selectedStore : "STORE01",
             orderNumber,
           })),
@@ -656,9 +686,42 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
       });
       
       if (!orderRes.ok) {
-        throw new Error('Order creation failed');
+        const errorData = await orderRes.json().catch(() => ({}));
+        throw new Error(errorData?.message || 'Order creation failed');
       }
       const orderResult = await orderRes.json();
+      const createdOrder = orderResult?.order;
+      const createdOrderId = createdOrder?._id;
+      const createdOrderNumber = createdOrder?.order_number || orderNumber;
+
+      if (!createdOrderId) {
+        throw new Error('Order was created but no order ID was returned');
+      }
+
+      const cartdelte = await fetch('/api/cart', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ clearAll: true })
+      });
+
+      if (cartdelte.status === 200) {
+        localStorage.removeItem('checkoutData');
+        localStorage.removeItem('appliedCoupon');
+      } else if (cartdelte.status === 401) {
+        localStorage.removeItem('token');
+        console.warn('Cart could not be cleared because the session expired after order creation.');
+      } else if (!cartdelte.ok) {
+        console.warn('Cart clear failed after order creation.');
+      }
+
+      await handleOnlinePayment({
+        totalAmount,
+        orderId: createdOrderId,
+        orderNumber: createdOrderNumber,
+      });
 
 
       // if(orderRes.ok){
@@ -690,32 +753,10 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
         // }
       // }
 
-      // Clear cart after successful order
-      const cartdelte = await fetch('/api/cart', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ clearAll: true })
-      });
-
-
-      if (cartdelte.status === 401) {
-        localStorage.removeItem('token');
-        router.push('/login');
-        return;
-      }
-
-      if (cartdelte.status === 200) {
-        localStorage.removeItem('checkoutData');
-        localStorage.removeItem('appliedCoupon');
-      }
-
       try {
         const emailData = {
           orderDetails: {
-            order_number: orderResult.order.order_number || orderNumber,
+            order_number: createdOrderNumber,
             order_amount: totalAmount,
             payment_method: 'Online Payment',
             order_item: cartItems,
@@ -780,8 +821,12 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
       toast.success("Order placed successfully!");
       router.push('/order');
     } catch (error) {
+      if (error?.message === 'PAYMENT_CANCELLED') {
+        setIsSubmitting(false);
+        return;
+      }
       console.error("Error submitting order:", error);
-      toast.error("Failed to place order. Please try again.");
+      toast.error(error?.message || "Failed to place order. Please try again.");
       setIsSubmitting(false);
     }
   };

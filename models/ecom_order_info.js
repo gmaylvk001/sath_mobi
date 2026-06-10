@@ -42,7 +42,7 @@ const OrderSchema = new mongoose.Schema(
     }],
   order_details: [{
     item_code: String,
-    product_id: Number,
+    product_id: String,
     product_name: String,
     product_price: Number,
     model: String,
@@ -76,8 +76,8 @@ const OrderSchema = new mongoose.Schema(
   },
   payment_status: {
     type: String,
-    enum: ["paid", "pending"],
-    default: "unpaid",
+    enum: ["paid", "pending", "failed"],
+    default: "pending",
   },
   api_status: {
     type: String,

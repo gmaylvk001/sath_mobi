@@ -21,7 +21,149 @@ export default function Order() {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showEmailConfirm, setShowEmailConfirm] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [payingOrderId, setPayingOrderId] = useState(null);
   const router = useRouter();
+
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      if (typeof window === 'undefined') {
+        resolve(false);
+        return;
+      }
+
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const createRazorpayOrder = async (amount) => {
+    const res = await fetch('/api/create-razorpay-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: amount * 100 }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data?.error || 'Failed to create Razorpay order');
+    }
+
+    return data.order;
+  };
+
+  const updateOrderPaymentStatus = async ({ orderId, orderNumber, paymentStatus, paymentId = "", orderStatus = undefined }) => {
+    const res = await fetch('/api/orders/update-payment-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_id: orderId,
+        order_number: orderNumber,
+        payment_status: paymentStatus,
+        payment_id: paymentId,
+        order_status: orderStatus,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data?.message || 'Failed to update order payment status');
+    }
+
+    return data.order;
+  };
+
+  const handlePayNow = async (order) => {
+    try {
+      setPayingOrderId(order._id);
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setShowAuthModal(true);
+        return;
+      }
+
+      const razorpayLoaded = await loadRazorpay();
+      if (!razorpayLoaded) {
+        throw new Error('Razorpay SDK failed to load');
+      }
+
+      const razorpayOrder = await createRazorpayOrder(Number(order.order_amount || 0));
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_LIVE_KEY || process.env.NEXT_PUBLIC_RAZORPAY_TEST_KEY,
+        amount: razorpayOrder.amount,
+        currency: "INR",
+        name: "Sathya Mobiles",
+        description: `Payment for order ${order.order_number}`,
+        order_id: razorpayOrder.id,
+        prefill: {
+          name: order.order_username || "",
+          email: order.email_address || "",
+          contact: order.order_phonenumber || "",
+        },
+        theme: { color: "#F37254" },
+        handler: async function (response) {
+          const verificationRes = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+
+          if (!verificationRes.ok) {
+            throw new Error('Payment verification failed');
+          }
+
+          await updateOrderPaymentStatus({
+            orderId: order._id,
+            orderNumber: order.order_number,
+            paymentStatus: "paid",
+            paymentId: response.razorpay_payment_id,
+            orderStatus: "Order Placed",
+          });
+
+          setFilteredOrders((prev) =>
+            prev.map((item) =>
+              item._id === order._id
+                ? { ...item, payment_status: 'paid', order_status: 'Order Placed', payment_id: response.razorpay_payment_id }
+                : item
+            )
+          );
+          toast.success("Payment completed successfully");
+        },
+        modal: {
+          ondismiss: () => {
+            setPayingOrderId(null);
+            toast.info("Payment cancelled. You can complete payment later from My Orders.");
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+      razorpay.on('payment.failed', function () {
+        setPayingOrderId(null);
+        toast.error("Payment failed. You can retry from My Orders.");
+      });
+    } catch (error) {
+      console.error("Retry payment failed:", error);
+      toast.error(error.message || "Unable to start payment");
+    } finally {
+      setPayingOrderId(null);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,6 +265,13 @@ export default function Order() {
     setShowCancelConfirm(false);
     setSelectedOrder(null);
   };
+
+  const getPaymentStatus = (order) => (order?.payment_status || '').toLowerCase();
+  const isPaidOrder = (order) => getPaymentStatus(order) === 'paid';
+  const canRetryPayment = (order) =>
+    order?.order_status === 'pending' &&
+    order?.payment_type === 'online' &&
+    !isPaidOrder(order);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -300,9 +449,15 @@ export default function Order() {
                             <div className="text-gray-600 flex items-center gap-1 sm:gap-2">
                               <span>Payment:</span>
                               {order.payment_type === 'online' ? (
-                                <span className="inline-flex items-center px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
-                                  <FiCheckCircle className="mr-1 text-xs" /> Paid
-                                </span>
+                                isPaidOrder(order) ? (
+                                  <span className="inline-flex items-center px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                                    <FiCheckCircle className="mr-1 text-xs" /> Paid
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center px-2 py-0.5 sm:py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">
+                                    <FiClock className="mr-1 text-xs" /> Pending
+                                  </span>
+                                )
                               ) : (
                                 <span className="text-gray-700 capitalize">{order.payment_type || 'Not specified'}</span>
                               )}
@@ -324,6 +479,20 @@ export default function Order() {
                                 className="px-3 sm:px-4 py-1 sm:py-2 border border-gray-300 text-gray-600 rounded-md hover:bg-gray-50 transition-colors text-xs sm:text-sm"
                               >
                                 Cancel Order
+                              </button>
+                            )}
+
+                            {canRetryPayment(order) && (
+                              <button
+                                onClick={() => handlePayNow(order)}
+                                disabled={payingOrderId === order._id}
+                                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md transition-colors text-xs sm:text-sm ${
+                                  payingOrderId === order._id
+                                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                    : 'bg-green-600 text-white hover:bg-green-700'
+                                }`}
+                              >
+                                {payingOrderId === order._id ? 'Opening...' : 'Pay Now'}
                               </button>
                             )}
 
