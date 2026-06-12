@@ -20,20 +20,20 @@ import BrandSlider from '@/components/home/BrandSlider';
 
 const videos = [
   {
-    id: "vtSFhuZCde4",
-    title: "Mobileனா நம்ம சத்யாதான்! | Buy the Latest Mobiles at SATHYA!",
+    id: "E62B6Jjfy4s",
+    title: "சத்யா மொபைல்ஸ்ன் புதிய ஷோரூம் ... at Tirupur ( (palladam main Road ) அக்டோபர் 14 முதல்",
   },
   {
-    id: "XmgjuO14qdM",
-    title: "Sathya Tirupati 2nd Anniversary Super Sale 🎁 Assured Gifts + Chairs Offer | Jan 26",
+    id: "gMrwZ8qaxMM",
+    title: "சத்யா மொபைல்ஸ்ன் புதிய ஷோரூம் ...@ Tirupur (palladam main Road ) அக்டோபர் 14 முதல்",
   },
   {
-    id: "aOTjbRi4yDY",
-    title: "உங்கள் சத்யா பொம்மிடியில் , ஷோரூமின் 2ஆம் ஆண்டு துவக்க விழா சிறப்பு விற்பனை",
+    id: "NkOcJ91TqNQ",
+    title: "🛍️🎁 Sathya Mobiles now @ Nagercoil. Buy #Smartphone & Get #Smartwatch @ just ₹500 only",
   },
   {
-    id: "iZMbSWuTlV0",
-    title: "🪁✨ Biggest Sankranthi Sale at Sathya | Up to 70% OFF 🛍️🎁",
+    id: "12KTBPkoJs0",
+    title: "🪁✨ Sathya Mobiles now @ Nagercoil. Buy #Smartphone & Get #Smartwatch @ just ₹500 only",
   },
 ];
 
