@@ -76,7 +76,7 @@ export default function TopSellersSection() {
         {/* LEFT LIST */}
         <div className="space-y-4 text-center md:col-span-2 lg:col-span-1 lg:text-left z-40">
           <h2 className="text-2xl text-primary font-bold">
-            New Trending&apos;s of Sathya
+            New Trending&apos;s of Sathya Mobiles
           </h2>
 
           <div className="grid grid-rows-3 gap-y-2.5">
