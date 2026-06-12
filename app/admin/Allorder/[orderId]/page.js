@@ -20,6 +20,19 @@ const OrderDetails = () => {
   const [comment, setComment] = useState("");
 
   const [order, setOrder] = useState(null);
+  const paymentStatus = (order?.payment_status || "pending").toLowerCase();
+
+  const paymentStatusStyles = {
+    paid: "bg-green-100 text-green-700 border-green-200",
+    pending: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    failed: "bg-red-100 text-red-700 border-red-200",
+  };
+
+  const paymentStatusLabel = {
+    paid: "Paid",
+    pending: "Pending",
+    failed: "Failed",
+  };
 
   // const orderr = {
   //   history: [
@@ -116,7 +129,18 @@ const addHistory = async () => {
             <IoWalletSharp className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
             Payment:
           </td>
-          <td className="p-2">{order.payment_method}</td>
+          <td className="p-2">
+            <div className="flex flex-col gap-2">
+              <span>{order.payment_method || "N/A"}</span>
+              <span
+                className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-semibold capitalize ${
+                  paymentStatusStyles[paymentStatus] || paymentStatusStyles.pending
+                }`}
+              >
+                {paymentStatusLabel[paymentStatus] || "Pending"}
+              </span>
+            </div>
+          </td>
         </tr>
         <tr className="border-b">
           <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
