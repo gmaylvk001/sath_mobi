@@ -18,9 +18,10 @@ const AddToCartButton = ({ productId, quantity = 1, warranty, additionalProducts
   const [cartSuccess, setCartSuccess] = useState(false);
   const isOutOfStock = stockQuantity <= 0;
     const isprice = special_price <= 0;
+  const isBlocked = special_price > 0 && special_price < 1000 && stockQuantity < 5;
   const { cartCount, updateCartCount } = useCart();
   const handleAddToCart = async () => {
-     if (isOutOfStock) return;
+     if (isOutOfStock || isBlocked) return;
 
      if(isprice){
       return;
@@ -143,10 +144,10 @@ if (selectedFrequentProducts?.length > 0) {
     <>
 <button
   onClick={handleAddToCart}
-  disabled={isLoading || isOutOfStock || isprice}
+  disabled={isLoading || isOutOfStock || isprice || isBlocked}
   className={`px-2 py-2 md:px-2 md:py-2 mr-1 rounded-md shadow-md transition duration-300 text-md flex items-center justify-center gap-x-1 w-full min-[1400px]:w-[185px] border text-center
     ${
-      isOutOfStock
+      isOutOfStock || isBlocked
         ? 'bg-gray-400 cursor-not-allowed text-white border-gray-300'
         : isLoading
           ? 'bg-red-700 cursor-not-allowed opacity-75 text-white border-red-700'
@@ -158,6 +159,8 @@ if (selectedFrequentProducts?.length > 0) {
 >
   {isOutOfStock ? (
     <span>Out of Stock</span>
+  ) : isBlocked ? (
+    <span>Not Available</span>
   ) : isLoading ? (
     <>
       <svg

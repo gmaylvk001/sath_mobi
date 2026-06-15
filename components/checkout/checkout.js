@@ -183,6 +183,11 @@ export default function CheckoutPage() {
     total: 0
   });
   console.log(cartItems);
+  const hasBlockedItems = cartItems.some(item => {
+    const itemPrice = item.price > 0 ? item.price : (item.actual_price || 0);
+    return itemPrice > 0 && itemPrice < 1000 && (item.original_quantity !== undefined && item.original_quantity < 5);
+  });
+
 const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     const fetchStores = async () => {
@@ -1383,11 +1388,20 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
                   </label>
                 </div>
               </div>
+
+              {hasBlockedItems && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-xs text-red-600 font-bold">
+                    Some items are not eligible for checkout (Price &lt; ₹1000 and Stock &lt; 5). Please return to cart and remove them.
+                  </p>
+                </div>
+              )}
+
              <button 
   onClick={handleSubmit} 
-  disabled={isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved}
+  disabled={isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved || hasBlockedItems}
   className={`mt-6 w-full max-w-full rounded-lg py-3 text-white font-semibold transition ${
-    isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved
+    isSubmitting || loading || cartItems.length === 0 || !isDeliverySaved || hasBlockedItems
       ? 'bg-gray-400 cursor-not-allowed' 
       : 'bg-red-500 hover:bg-red-600'
   }`}

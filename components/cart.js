@@ -157,6 +157,11 @@ export default function CartComponent() {
   
   // Coupon states
   const [couponCode, setCouponCode] = useState("");
+  const isItemBlocked = (item) => {
+    const itemPrice = item.price > 0 ? item.price : (item.actual_price || 0);
+    return itemPrice > 0 && itemPrice < 1000 && (item.original_quantity !== undefined && item.original_quantity < 5);
+  };
+
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState("");
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
@@ -815,6 +820,15 @@ export default function CartComponent() {
 
   if (!cartData) return;
 
+  // Check for blocked items: Price < 1000 and Stock (original_quantity) < 5
+  const blockedItems = cartData.items.filter(isItemBlocked);
+
+  if (blockedItems.length > 0) {
+    setErrorMessage("Some items in your cart are not eligible for checkout (Price < ₹1000 and Stock < 5). Please remove them to proceed. Please Go To Sathya Mobiles Nearby Store or Contact Support for Assistance.");
+    setShowErrorModal(true);
+    return;
+  }
+
   // Calculate totals
 
   const subtotal = calculateSubtotal();
@@ -850,6 +864,8 @@ export default function CartComponent() {
         extendedWarranty: item.extendedWarranty || 0,
 
         discount: item.discount || 0,
+
+        original_quantity: item.original_quantity,
 
         image: item.image
 
@@ -1062,6 +1078,7 @@ export default function CartComponent() {
         onConfirm={removeItem}
       />
       <SuccessModal
+
         show={showSuccessModal}
         message={successMessage}
         onClose={() => setShowSuccessModal(false)}
@@ -1125,6 +1142,9 @@ export default function CartComponent() {
                               <h3 className="text-base font-semibold text-red-600">₹{(item.actual_price ?? 0).toLocaleString('en-IN')}</h3>
                             )}
                           </div>
+                          {isItemBlocked(item) && (
+                            <p className="text-xs text-red-600 font-bold mt-1 bg-red-50 p-1 rounded border border-red-200 w-fit">Not eligible for checkout (Low Stock)</p>
+                          )}
                         </div>
                       </td>
                       <td className="py-4 px-4 text-center">
