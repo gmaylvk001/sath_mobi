@@ -1392,7 +1392,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
               {hasBlockedItems && (
                 <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
                   <p className="text-xs text-red-600 font-bold">
-                    Some items are not eligible for checkout (Price &lt; ₹1000 and Stock &lt; 5). Please return to cart and remove them.
+                    Some items are not eligible for checkout. Please return to cart and remove them.Please Go To Sathya Mobiles Nearby Store or Contact Support for Assistance.
                   </p>
                 </div>
               )}
