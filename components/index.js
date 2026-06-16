@@ -395,7 +395,7 @@ function CategoryCard({ image, title, bg }) {
       <div>
         <Link href="/aboutus">
           <Image
-            src="/assets/images/sathya-banner4.png"
+            src="/assets/images/sm-about-banner.png"
             alt="Sony Banner"
             width={1920}
             height={600}
