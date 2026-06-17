@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from 'next/link';
-import { FaTimesCircle } from "react-icons/fa";
+import { FaTimesCircle, FaCreditCard } from "react-icons/fa";
 import { FaRightLeft, FaArrowsRotate, FaRegHandshake } from "react-icons/fa6";
 
 import { FiRotateCcw, FiPackage, FiCheckCircle, FiClock, FiUser, FiMail, FiPhone } from 'react-icons/fi';
@@ -64,7 +64,36 @@ const CancellationRefundPolicy = () => {
           </li>
         </ul>
 
-     
+        <h2 className="text-2xl font-extrabold text-red-700 mb-6 pb-2 flex items-center border-b-2 border-red-200">
+          <FaCreditCard className="mr-3 text-red-600 text-3xl" /> Payment Gateway Charges on Order Cancellation & Refunds
+        </h2>
+        <div className="space-y-4 mb-8">
+          <p>
+            For orders paid online using credit cards, debit cards, UPI, net banking, wallets, or other digital payment methods through the Razorpay payment gateway, payment gateway processing charges and applicable taxes are charged by the payment service provider at the time of transaction.
+          </p>
+          <p>
+            If a customer cancels an order after the payment has been successfully processed, the refund amount will be calculated after deducting the non-refundable payment gateway processing charges and applicable taxes charged by the payment gateway provider.
+          </p>
+          <div className="bg-red-50 p-4 rounded-lg border border-red-100 text-center font-bold text-red-700 my-4">
+            Refund Amount = Order Amount – Payment Gateway Charges – Applicable Taxes (if any)
+          </div>
+          <p>
+            The deducted amount may vary depending on the payment method used and the charges levied by the payment gateway at the time of the transaction.
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-6">Examples</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>If the order value is ₹10,000 and the payment gateway charges (including applicable taxes) are ₹250, the refundable amount will be ₹9,750.</li>
+            <li>The exact deduction amount will be communicated to the customer at the time of refund processing.</li>
+          </ul>
+
+          <h3 className="text-xl font-bold text-gray-900 mt-6">Important Notes</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>No deduction will be made for refunds initiated due to product unavailability, seller-side cancellation, or any error attributable to Sathya Mobiles.</li>
+            <li>Refunds for customer-initiated cancellations will be processed only after deducting applicable payment gateway charges and taxes.</li>
+            <li>Refunds will be credited to the original payment source within 5–10 business days, subject to banking and payment gateway processing timelines.</li>
+          </ul>
+        </div>
 
         <h2 className="text-2xl font-extrabold text-red-700 mb-6 pb-2 flex items-center border-b-2 border-red-200">
           <FaArrowsRotate className="mr-3 text-red-600 text-3xl" /> The Return and Refund Policy
