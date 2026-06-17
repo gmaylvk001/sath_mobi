@@ -48,7 +48,7 @@ const CancellationRefundPolicy = () => {
             Cancellations will be taken into consideration at any time **before the delivery of the product**.
           </li>
           <li>
-            If you cancel your order **before it has been shipped**, we will refund the entire amount.
+            If you cancel your order **before it has been shipped**, the refund will be processed after deducting payment gateway (Razorpay) charges and applicable taxes.
           </li>
           <li>
             Cancellation will **not be accepted** for orders placed under the **Same Day Delivery** category.
@@ -84,10 +84,12 @@ const CancellationRefundPolicy = () => {
         <p>- Manufacturing defect</p>
         <p>Customers must inform us within 24 hours of receiving the product.</p>
         <p>Refunds will be processed within 5–7 business days after verification.</p>
-        <p>Refund amount will be credited back to the original payment method.</p>
+        <p>Refund amount will be credited back to the original payment method after deducting applicable payment gateway (Razorpay) fees and taxes.</p>
         <p>For refund support -  Email: <a className="text-red-600 font-semibold">support@sathyamobiles.com</a></p>
 
 
+        <br />
+        
 
         <h2 className="text-2xl font-extrabold text-red-700 mb-6 pb-2 flex items-center border-b-2 border-red-200">
           <FaRegHandshake className="mr-3 text-red-600 text-3xl" /> Grievance Officer
