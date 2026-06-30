@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { jsPDF } from "jspdf";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaPhoneAlt,  FaStore  } from "react-icons/fa";
 import { MdDateRange } from "react-icons/md";
@@ -21,6 +22,196 @@ const OrderDetails = () => {
 
   const [order, setOrder] = useState(null);
   const paymentStatus = (order?.payment_status || "pending").toLowerCase();
+  const orderProductsSubtotal = order?.order_details?.reduce(
+    (sum, item) => sum + Number(item.product_price || 0) * Number(item.quantity || 0),
+    0
+  ) || 0;
+  const orderShippingCost = Math.max(0, Number(order?.order_amount || 0) - orderProductsSubtotal);
+
+  const formatCurrency = (value) =>
+    `Rs. ${Number(value || 0).toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+  const formatDate = (value) =>
+    value ? new Date(value).toLocaleDateString("en-IN") : "N/A";
+
+  const getImageDataUrl = async (src) => {
+    const response = await fetch(src);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const generateInvoice = async () => {
+    try {
+      const doc = new jsPDF("p", "mm", "a4");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 14;
+      const rightEdge = pageWidth - margin;
+      let y = 16;
+
+      const drawHeader = async () => {
+        try {
+          const logo = await getImageDataUrl("/images/logo/sathyalogo.png");
+          doc.addImage(logo, "PNG", margin, y, 34, 17);
+        } catch (error) {
+          console.error("Logo load failed:", error);
+        }
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.setTextColor(220, 38, 38);
+        doc.text("SATHYA MOBILE", margin + 40, y + 8);
+        doc.setFontSize(10);
+        doc.setTextColor(80, 80, 80);
+        doc.text("Invoice", rightEdge, y + 8, { align: "right" });
+        doc.text(`Order #${order.order_number || orderId}`, rightEdge, y + 14, { align: "right" });
+
+        y += 25;
+        doc.setDrawColor(220, 38, 38);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, rightEdge, y);
+        y += 9;
+      };
+
+      const sectionTitle = (title) => {
+        doc.setFillColor(245, 245, 245);
+        doc.rect(margin, y, pageWidth - margin * 2, 8, "F");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(45, 45, 45);
+        doc.text(title, margin + 3, y + 5.5);
+        y += 12;
+      };
+
+      const detailRow = (label, value, x, rowY) => {
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(70, 70, 70);
+        doc.text(label, x, rowY);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(35, 35, 35);
+        doc.text(String(value || "N/A"), x + 28, rowY);
+      };
+
+      const ensureSpace = (neededHeight) => {
+        if (y + neededHeight <= pageHeight - margin) return;
+        doc.addPage();
+        y = margin;
+      };
+
+      await drawHeader();
+
+      sectionTitle("Customer Details");
+      detailRow("Name:", order.order_username, margin, y);
+      detailRow("Phone:", order.order_phonenumber, margin + 92, y);
+      y += 7;
+      detailRow("Email:", order.email_address, margin, y);
+      detailRow("Store:", order.order_details?.[0]?.store_id, margin + 92, y);
+      y += 7;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Address:", margin, y);
+      doc.setFont("helvetica", "normal");
+      const addressLines = doc.splitTextToSize(order.order_deliveryaddress || "N/A", pageWidth - margin * 2 - 28);
+      doc.text(addressLines, margin + 28, y);
+      y += Math.max(8, addressLines.length * 5 + 4);
+
+      sectionTitle("Order Details");
+      detailRow("Order No:", order.order_number || orderId, margin, y);
+      detailRow("Date:", formatDate(order.createdAt), margin + 92, y);
+      y += 7;
+      detailRow("Payment:", order.payment_method || "N/A", margin, y);
+      detailRow("Status:", paymentStatusLabel[paymentStatus] || "Pending", margin + 92, y);
+      y += 7;
+      detailRow("Delivery:", order.delivery_type || "N/A", margin, y);
+      detailRow("Shipping:", orderShippingCost > 0 ? formatCurrency(orderShippingCost) : "Free Shipping", margin + 92, y);
+      y += 12;
+
+      sectionTitle("Ordered Products");
+
+      const columns = [
+        { title: "Product", x: margin, width: 68 },
+        { title: "Model", x: margin + 70, width: 34 },
+        { title: "Qty", x: margin + 107, width: 14, align: "center" },
+        { title: "Unit Price", x: margin + 125, width: 28, align: "right" },
+        { title: "Total", x: margin + 158, width: 24, align: "right" },
+      ];
+
+      const drawTableHeader = () => {
+        doc.setFillColor(220, 38, 38);
+        doc.rect(margin, y, pageWidth - margin * 2, 8, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        columns.forEach((column) => {
+          const textX = column.align === "right" ? column.x + column.width : column.align === "center" ? column.x + column.width / 2 : column.x + 2;
+          doc.text(column.title, textX, y + 5.5, { align: column.align || "left" });
+        });
+        y += 8;
+      };
+
+      drawTableHeader();
+
+      doc.setTextColor(35, 35, 35);
+      doc.setFont("helvetica", "normal");
+
+      order.order_details?.forEach((item) => {
+        const unitPrice = Number(item.product_price || 0);
+        const quantity = Number(item.quantity || 0);
+        const total = unitPrice * quantity;
+        const productLabel = `${item.product_name || "N/A"}${item.item_code ? ` - (${String(item.item_code).replace(/^ITEM/, "")})` : ""}`;
+        const productLines = doc.splitTextToSize(productLabel, columns[0].width - 3);
+        const modelLines = doc.splitTextToSize(item.model || "N/A", columns[1].width - 3);
+        const rowHeight = Math.max(productLines.length, modelLines.length, 1) * 5 + 5;
+
+        ensureSpace(rowHeight + 18);
+        if (y === margin) drawTableHeader();
+
+        doc.setDrawColor(230, 230, 230);
+        doc.line(margin, y, rightEdge, y);
+        doc.setFontSize(8);
+        doc.text(productLines, columns[0].x + 2, y + 5);
+        doc.text(modelLines, columns[1].x + 2, y + 5);
+        doc.text(String(quantity), columns[2].x + columns[2].width / 2, y + 5, { align: "center" });
+        doc.text(formatCurrency(unitPrice), columns[3].x + columns[3].width, y + 5, { align: "right" });
+        doc.text(formatCurrency(total), columns[4].x + columns[4].width, y + 5, { align: "right" });
+        y += rowHeight;
+      });
+
+      y += 4;
+      ensureSpace(24);
+      const subTotal = orderProductsSubtotal;
+      const shippingCost = Math.max(0, Number(order.order_amount || 0) - subTotal);
+      const totalsX = rightEdge - 58;
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.text("Sub-Total:", totalsX, y, { align: "right" });
+      doc.text(formatCurrency(subTotal), rightEdge, y, { align: "right" });
+      y += 7;
+      doc.text("Shipping:", totalsX, y, { align: "right" });
+      doc.text(formatCurrency(shippingCost), rightEdge, y, { align: "right" });
+      y += 8;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text("Total:", totalsX, y, { align: "right" });
+      doc.text(formatCurrency(order.order_amount || subTotal), rightEdge, y, { align: "right" });
+
+      doc.save(`invoice-${order.order_number || orderId}.pdf`);
+    } catch (error) {
+      console.error("Invoice generation failed:", error);
+      toast.error("Failed to generate invoice");
+    }
+  };
 
   const paymentStatusStyles = {
     paid: "bg-green-100 text-green-700 border-green-200",
@@ -166,7 +357,7 @@ const addHistory = async () => {
           <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
             <MdOutlineLocalShipping className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
             Shipping:</td>
-          <td className="p-2"> Free Shipping</td>
+          <td className="p-2">{orderShippingCost > 0 ? `Rs. ${orderShippingCost.toLocaleString("en-IN")}` : "Free Shipping"}</td>
         </tr>
       </tbody>
     </table>
@@ -231,7 +422,10 @@ const addHistory = async () => {
         </tr>
         <tr>
           <td className="p-2" colSpan={2}>
-            <button className="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600 w-full">
+            <button
+              onClick={generateInvoice}
+              className="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600 w-full"
+            >
               Generate Invoice
             </button>
           </td>
@@ -302,12 +496,12 @@ const addHistory = async () => {
   <tr className="font-semibold">
     <td colSpan="4" className="p-2 text-right">Sub-Total:</td>
     {/* <td className="p-2 text-right">₹{order.sub_total}</td> */}
-    <td className="p-2 text-right">₹0.00</td>
+    <td className="p-2 text-right">Rs. {orderProductsSubtotal.toLocaleString("en-IN")}</td>
   </tr>
   <tr>
     <td colSpan="4" className="p-2 text-right">Shipping:</td>
     {/* <td className="p-2 text-right">₹{order.shipping_fee}</td> */}
-     <td className="p-2 text-right">₹0.00</td>
+     <td className="p-2 text-right">Rs. {orderShippingCost.toLocaleString("en-IN")}</td>
   </tr>
   <tr className="font-bold bg-gray-100">
     <td colSpan="4" className="p-2 text-right">Total:</td>
@@ -402,3 +596,4 @@ const addHistory = async () => {
 };
 
 export default OrderDetails;
+

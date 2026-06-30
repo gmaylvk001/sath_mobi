@@ -534,9 +534,15 @@ const [isSubmitting, setIsSubmitting] = useState(false);
   //   }
   // };
 // Calculate totals
-const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0), 0);
+  const getItemPrice = (item) => Number(item.price > 0 ? item.price : item.actual_price || 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
+  const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0), 0);
   const grandTotal = subtotal - totalDiscount;
+  const summarySubtotal = orderSummary.subtotal || subtotal;
+  const summaryDiscount = orderSummary.discount || totalDiscount;
+  const productsTotal = orderSummary.total || grandTotal;
+  const shippingCost = formData.deliveryType === "home" && productsTotal > 1000 ? 150 : 0;
+  const payableTotal = productsTotal + shippingCost;
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -600,7 +606,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
     setIsSubmitting(true);
       setError("");
   
-      const totalAmount = orderSummary.total || grandTotal;
+      const totalAmount = payableTotal;
       if (paymentMethod !== 'online') {
         throw new Error("Invalid Payment Method");
       }
@@ -677,7 +683,7 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
             item_code: `ITEM${item.item_code || item.productId || item.id}`,
             product_id: item.id || item.productId,
             product_name: item.name,
-            product_price: item.price,
+            product_price: getItemPrice(item),
             model: "N/A",
             user_id: userId,
             coupondiscount: 0,
@@ -1327,13 +1333,6 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
 
 
 
-              {/* Add Discount row if there's any discount */}
-              {totalDiscount > 0 && (
-                <div className="flex justify-between text-green-600 mb-2">
-                  <span>Discount:</span>
-                  <span>-₹{totalDiscount.toLocaleString('en-IN')}</span>
-                </div>
-              )}
               {cartItems.some(item => item.warranty > 0) && (
                 <div className="flex justify-between text-gray-800 font-semibold">
                   <span className="text-[#0069c6] hover:text-[#00badb] text-xs sm:text-sm font-medium">Warranty:</span>
@@ -1353,23 +1352,29 @@ const totalDiscount = cartItems.reduce((sum, item) => sum + (item.discount || 0)
 
 
               {/* Discount Row */}
-              {orderSummary.discount > 0 && (
+              {summaryDiscount > 0 && (
                 <div className="flex justify-between text-green-600 mb-2">
                   <span>Discount:</span>
-                  <span>-₹{orderSummary.discount.toLocaleString('en-IN')}</span>
+                  <span>-₹{summaryDiscount.toLocaleString('en-IN')}</span>
                 </div>
               )}
 
               {/* Subtotal */}
               <div className="flex justify-between text-gray-800 font-semibold  pt-2 mt-2">
                 <span>Subtotal:</span>
-                <span>₹{orderSummary.subtotal.toLocaleString('en-IN')}</span>
+                <span>₹{summarySubtotal.toLocaleString('en-IN')}</span>
+              </div>
+
+              {/* Shipping */}
+              <div className="flex justify-between text-gray-800 font-semibold pt-2 mt-2">
+                <span>Shipping:</span>
+                <span>₹{shippingCost.toLocaleString('en-IN')}</span>
               </div>
 
               {/* Total */}
               <div className="flex justify-between text-gray-800 font-semibold pt-2 mt-2">
                 <span>Total:</span>
-                <span>₹{orderSummary.total.toLocaleString('en-IN')}</span>
+                <span>₹{payableTotal.toLocaleString('en-IN')}</span>
               </div>
 
               <div className="mt-6">
