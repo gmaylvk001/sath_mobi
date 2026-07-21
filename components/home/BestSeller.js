@@ -338,8 +338,9 @@ const BestSellers = () => {
             prevEl: ".product-nav-prev",
           }}
           spaceBetween={16}
-          slidesPerView={2} // default for mobile
+          slidesPerView={1} // mobile: single product card per view
           breakpoints={{
+            640: { slidesPerView: 2 },  // large phones
             768: { slidesPerView: 3 },  // tablets
             1024: { slidesPerView: 4 }, // desktop
           }}
@@ -357,16 +358,16 @@ const BestSellers = () => {
                 );
 
                 return (
-                  <SwiperSlide key={product._id}>
-                    <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-auto flex flex-col">
-                      <div className="bg-white rounded-lg p-4 flex justify-center items-center  sm:h-[260px] md:h-[220px] lg:h-[260px]">
-                        <Link href={`/product/${product.slug}`}>
+                  <SwiperSlide key={product._id} className="!h-auto flex">
+                    <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-full w-full flex flex-col">
+                      <div className="bg-white rounded-lg p-3 sm:p-4 flex justify-center items-center h-[240px] sm:h-[260px] md:h-[220px] lg:h-[260px]">
+                        <Link href={`/product/${product.slug}`} className="flex h-full w-full items-center justify-center">
                           <Image
                               src={`/uploads/products/${product.images?.[0]}`}
                               alt={product.name}
-                              width={200}
-                              height={250}
-                              className="object-contain md:w-[200] md:h-[250] sm:w-[120px] sm:h-[150px]"
+                              width={300}
+                              height={300}
+                              className="object-contain max-h-full w-auto"
                             />
                         </Link>
                       </div>
