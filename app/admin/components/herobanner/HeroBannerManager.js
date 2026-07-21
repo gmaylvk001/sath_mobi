@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 const emptyBanner = {
   banner_image: null,
+  mobile_banner_image: null,
   redirect_url: "",
   status: "Active",
 };
@@ -54,6 +55,7 @@ export default function HeroBannerManager() {
           redirect_url: banner.redirect_url || "",
           status: banner.status || "Active",
           banner_image: null,
+          mobile_banner_image: null,
           error: "",
         };
       });
@@ -88,6 +90,9 @@ export default function HeroBannerManager() {
     try {
       const formData = new FormData();
       formData.append("banner_image", newBanner.banner_image);
+      if (newBanner.mobile_banner_image) {
+        formData.append("mobile_banner_image", newBanner.mobile_banner_image);
+      }
       formData.append("redirect_url", newBanner.redirect_url.trim());
       formData.append("status", newBanner.status);
 
@@ -137,6 +142,10 @@ export default function HeroBannerManager() {
 
       if (current.banner_image) {
         formData.append("banner_image", current.banner_image);
+      }
+
+      if (current.mobile_banner_image) {
+        formData.append("mobile_banner_image", current.mobile_banner_image);
       }
 
       const res = await fetch("/api/topbanner", {
@@ -262,7 +271,7 @@ export default function HeroBannerManager() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Banner Image
+                Desktop Banner Image <span className="text-red-600">*</span>
               </label>
               <input
                 type="file"
@@ -275,9 +284,29 @@ export default function HeroBannerManager() {
                 }
                 className="w-full border px-3 py-2 rounded"
               />
-              <p className="text-xs text-gray-500">Recommended size: 1920x600 or similar wide banner.</p>
+              <p className="text-xs text-gray-500">Shown on desktop / laptop. Recommended: 1920x600 wide banner.</p>
             </div>
 
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Mobile Banner Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) =>
+                  setNewBanner({
+                    ...newBanner,
+                    mobile_banner_image: e.target.files?.[0] || null,
+                  })
+                }
+                className="w-full border px-3 py-2 rounded"
+              />
+              <p className="text-xs text-gray-500">Shown on mobile devices. Recommended: square / portrait (e.g. 800x800). Falls back to the desktop image if empty.</p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Redirect URL
@@ -292,18 +321,18 @@ export default function HeroBannerManager() {
                 className="w-full border px-3 py-2 rounded"
               />
             </div>
-          </div>
 
-          <div className="max-w-xs space-y-2">
-            <label className="block text-sm font-medium text-gray-700">Status</label>
-            <select
-              value={newBanner.status}
-              onChange={(e) => setNewBanner({ ...newBanner, status: e.target.value })}
-              className="w-full border px-3 py-2 rounded"
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Status</label>
+              <select
+                value={newBanner.status}
+                onChange={(e) => setNewBanner({ ...newBanner, status: e.target.value })}
+                className="w-full border px-3 py-2 rounded"
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
           </div>
 
           <div className="flex gap-3">
@@ -336,15 +365,35 @@ export default function HeroBannerManager() {
               className="bg-white border border-gray-200 rounded-xl shadow-sm p-4"
             >
               <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
-                <div>
-                  <img
-                    src={getHeroBannerImageSrc(
-                      banner.banner_image,
-                      banner.updatedAt || banner._id
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Desktop</p>
+                    <img
+                      src={getHeroBannerImageSrc(
+                        banner.banner_image,
+                        banner.updatedAt || banner._id
+                      )}
+                      alt={`Hero banner ${index + 1} desktop`}
+                      className="w-full h-32 object-cover rounded-lg border"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Mobile</p>
+                    {banner.mobile_banner_image ? (
+                      <img
+                        src={getHeroBannerImageSrc(
+                          banner.mobile_banner_image,
+                          banner.updatedAt || banner._id
+                        )}
+                        alt={`Hero banner ${index + 1} mobile`}
+                        className="w-full h-32 object-contain rounded-lg border bg-gray-50"
+                      />
+                    ) : (
+                      <div className="w-full h-16 flex items-center justify-center rounded-lg border border-dashed border-gray-300 text-xs text-gray-400">
+                        No mobile image (uses desktop)
+                      </div>
                     )}
-                    alt={`Hero banner ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg border"
-                  />
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -410,10 +459,10 @@ export default function HeroBannerManager() {
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                  <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
-                        Replace Image
+                        Replace Desktop Image
                       </label>
                       <input
                         type="file"
@@ -427,13 +476,28 @@ export default function HeroBannerManager() {
                         }
                         className="w-full border px-3 py-2 rounded"
                       />
-                      {editingStates[banner._id]?.error && (
-                        <p className="text-sm text-red-600">
-                          {editingStates[banner._id].error}
-                        </p>
-                      )}
                     </div>
 
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Replace Mobile Image
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleExistingChange(
+                            banner._id,
+                            "mobile_banner_image",
+                            e.target.files?.[0] || null
+                          )
+                        }
+                        className="w-full border px-3 py-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleUpdate(banner._id)}
                       disabled={loading}
@@ -441,6 +505,11 @@ export default function HeroBannerManager() {
                     >
                       Update
                     </button>
+                    {editingStates[banner._id]?.error && (
+                      <p className="text-sm text-red-600">
+                        {editingStates[banner._id].error}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

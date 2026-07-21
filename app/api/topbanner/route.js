@@ -182,6 +182,9 @@ export async function GET(req) {
     const normalizedBanners = banners.map((banner) => ({
       ...banner.toObject(),
       banner_image: resolveExistingBannerUrl(banner.banner_image),
+      mobile_banner_image: banner.mobile_banner_image
+        ? resolveExistingBannerUrl(banner.mobile_banner_image)
+        : "",
     }));
 
     return NextResponse.json(
@@ -202,6 +205,7 @@ export async function POST(req) {
     const formData = await req.formData();
 
     const file = formData.get("banner_image");
+    const mobileFile = formData.get("mobile_banner_image");
     const redirect_url = formData.get("redirect_url");
     const status = formData.get("status") || "Active";
 
@@ -213,8 +217,12 @@ export async function POST(req) {
     }
 
     let filePath;
+    let mobileFilePath = "";
     try {
       filePath = await saveFile(file);
+      if (mobileFile && mobileFile.size > 0) {
+        mobileFilePath = await saveFile(mobileFile);
+      }
     } catch (err) {
       return NextResponse.json(
         { success: false, message: err.message },
@@ -227,6 +235,7 @@ export async function POST(req) {
 
     const newBanner = new TopBanner({
       banner_image: filePath,
+      mobile_banner_image: mobileFilePath,
       redirect_url: redirect_url || "",
       status,
       order: newOrder,
@@ -282,6 +291,26 @@ export async function PUT(req) {
         const oldFilePath = resolveExistingBannerFile(existingBanner.banner_image);
         if (oldFilePath && fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
+        }
+      } catch (err) {
+        return NextResponse.json(
+          { success: false, message: err.message },
+          { status: 400 }
+        );
+      }
+    }
+
+    const mobileFile = formData.get("mobile_banner_image");
+    if (mobileFile && mobileFile.size > 0) {
+      try {
+        const mobileFilePath = await saveFile(mobileFile);
+        updateData.mobile_banner_image = mobileFilePath;
+
+        const oldMobileFilePath = resolveExistingBannerFile(
+          existingBanner.mobile_banner_image
+        );
+        if (oldMobileFilePath && fs.existsSync(oldMobileFilePath)) {
+          fs.unlinkSync(oldMobileFilePath);
         }
       } catch (err) {
         return NextResponse.json(
@@ -353,6 +382,11 @@ export async function DELETE(req) {
     const filePath = resolveExistingBannerFile(banner.banner_image);
     if (filePath && fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
+    }
+
+    const mobileFilePath = resolveExistingBannerFile(banner.mobile_banner_image);
+    if (mobileFilePath && fs.existsSync(mobileFilePath)) {
+      fs.unlinkSync(mobileFilePath);
     }
 
     await TopBanner.findByIdAndDelete(id);

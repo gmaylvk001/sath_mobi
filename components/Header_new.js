@@ -1581,17 +1581,27 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
   return (
     <>
       {/* ================= HEADER ================= */}
-      <header className="bg-linear-to-r w-full from-linearyellow from-0% via-white via-50% to-linearyellow to-100%">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <header className="bg-linear-to-r w-full from-linearyellow from-0% via-white via-50% to-linearyellow to-100% sticky top-0 z-40 lg:static">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 lg:py-3 flex items-center justify-between gap-2">
 
-          {/* Logo */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Logo + Mobile Menu */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 min-w-0">
+            {/* Mobile Menu (Flipkart-style: left aligned) */}
+            <button
+              onClick={toggleMobileMenu}
+              aria-label="Menu"
+              className="lg:hidden flex h-9 w-9 items-center justify-center rounded-lg text-primary active:bg-red-50 -ml-1"
+            >
+              {isMobileMenuOpen ? <FiX size={24} /> : <FaBars size={22} />}
+            </button>
+
             <Link href="/">
             <Image
               src="/assets/images/sm-logo.png"
               alt="Sathya Mobiles"
               width={80}
               height={40}
+              className="w-[70px] sm:w-[80px] h-auto"
               priority
             />
             </Link>
@@ -1636,10 +1646,10 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
           </div>
 */}
           {/* Right Actions */}
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-4 shrink-0">
 
             {/* Store Locator */}
-            <div className="max-sm:hidden flex items-center gap-1 text-sm px-1.5 py-0.5 border-2 border-primary rounded-2xl">
+            <div className="hidden lg:flex items-center gap-1 text-sm px-1.5 py-0.5 border-2 border-primary rounded-2xl">
               <Link href="/all-stores" className="flex">
               <i className="fi fi-rr-marker flex text-primary text-xl"></i>
               <span className="w-min text-center text-[0.7rem] leading-none font-bold text-primary">
@@ -1649,7 +1659,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
             </div>
 
             {/* Account */}
-            <div className="max-sm:hidden flex items-center gap-1 text-sm px-1.5 py-0.5 border-2 border-primary rounded-2xl">
+            <div className="hidden lg:flex items-center gap-1 text-sm px-1.5 py-0.5 border-2 border-primary rounded-2xl">
 
                     {isLoggedIn ? (
                               <>
@@ -1706,28 +1716,24 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
             </div>
 
             {/* Mobile Icons */}
-            <div className="max-sm:block hidden">
-              <Link href="/all-stores" className="flex">
-                <i className="fi fi-rr-marker flex text-primary font-bold text-2xl"></i>
+            <div className="lg:hidden flex">
+              <Link href="/all-stores" aria-label="Store locator" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm ring-1 ring-red-100">
+                <i className="fi fi-rr-marker flex text-primary font-bold text-xl"></i>
               </Link>
             </div>
 
-            <div className="max-sm:block hidden">
+            <div className="lg:hidden flex">
               {isLoggedIn ? (
                               <>
-                                <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center text-black ">
+                                <button onClick={() => setDropdownOpen(!dropdownOpen)} aria-label="Account" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm ring-1 ring-red-100 text-black">
                                   <FiUser size={18} className="text-red-600" />
-                                  <span className="w-min text-center text-[0.7rem] leading-none font-bold text-primary">
-                                      Hi, 
-                                    
-                                  </span>
                                 </button>
       
                                 {dropdownOpen && (
                                   <div className="absolute right-0 mt-10 w-48 bg-white rounded-xl shadow-xl z-50 py-2 px-2" style={{
                                         top: `40px`,
-                                        right: `5%`,
-                                        width: `40%`,
+                                        right: `8px`,
+                                        width: `min(92vw, 240px)`,
                                         maxHeight: '220px'
                                       }}>
                                       {isAdmin && (
@@ -1757,9 +1763,10 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                             ) : (
                               <button
                             onClick={() => setShowAuthModal(true)}
-                            className="flex"
+                            aria-label="Account login"
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm ring-1 ring-red-100"
                           >
-                            <i className="fi fi-sr-sign-in-alt flex text-primary font-bold text-2xl"></i>
+                            <i className="fi fi-sr-sign-in-alt flex text-primary font-bold text-xl"></i>
                            
                           </button>
                             )}
@@ -1767,9 +1774,9 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
 
             {/* Wishlist */}
             <div className="relative flex items-center gap-1 text-sm">
-              <Link href="/wishlist" className="flex">
-              <i className="fi fi-rs-heart flex text-primary font-bold text-2xl"></i>
-              <span className="absolute -top-2 -right-2 bg-primary text-white w-4 h-4 text-[0.6rem] flex items-center justify-center rounded-full">
+              <Link href="/wishlist" aria-label="Wishlist" className="relative flex h-9 w-9 lg:h-auto lg:w-auto items-center justify-center rounded-full bg-white/90 lg:bg-transparent shadow-sm lg:shadow-none ring-1 ring-red-100 lg:ring-0">
+              <i className="fi fi-rs-heart flex text-primary font-bold text-xl lg:text-2xl"></i>
+              <span className="absolute -top-1 -right-1 lg:-top-2 lg:-right-2 bg-primary text-white min-w-4 h-4 px-1 text-[0.6rem] flex items-center justify-center rounded-full">
                 {wishlistCount}
               </span>
               </Link>
@@ -1777,35 +1784,30 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
 
             {/* Cart */}
             <div className="relative flex items-center gap-1 text-sm">
-              <Link href="/cart" className="flex">
-              <i className="fi fi-rs-shopping-cart flex text-primary font-bold text-2xl"></i>
-              <span className="absolute -top-2 -right-2 bg-primary text-white w-4 h-4 text-[0.6rem] flex items-center justify-center rounded-full">
+              <Link href="/cart" aria-label="Cart" className="relative flex h-9 w-9 lg:h-auto lg:w-auto items-center justify-center rounded-full bg-white/90 lg:bg-transparent shadow-sm lg:shadow-none ring-1 ring-red-100 lg:ring-0">
+              <i className="fi fi-rs-shopping-cart flex text-primary font-bold text-xl lg:text-2xl"></i>
+              <span className="absolute -top-1 -right-1 lg:-top-2 lg:-right-2 bg-primary text-white min-w-4 h-4 px-1 text-[0.6rem] flex items-center justify-center rounded-full">
                 {cartCount}
               </span>
               </Link>
             </div>
 
-            {/* Mobile Menu */}
-           <div className="sm:block lg:hidden">
-              <button onClick={toggleMobileMenu} aria-label="Menu" className="relative">
-                {isMobileMenuOpen
-                  ? <FiX size={16} className="text-red-600" />
-                  : <FaBars size={16} className="text-red-600" />}
-              </button>
-            </div>
           </div>
         </div>
 
         {/* Mobile Search */}
-        <div className="lg:hidden max-w-2xl px-4 mx-auto pb-2.5">
+        <div className="lg:hidden max-w-2xl px-3 mx-auto pb-3">
           <div className="relative w-full">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">
+              <i className="fi fi-br-search flex font-bold text-primary"></i>
+            </span>
             <input
                                 type="search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={handleKeyPress}
-                                placeholder="Search for products..."
-                                className="w-full pl-5 pr-12 py-2 rounded-full border-2 bg-white text-gray font-bold border-gray-400/80 outline-none"
+                                placeholder="Search for products, brands & more..."
+                                className="w-full h-11 pl-11 pr-12 rounded-full border border-red-200 bg-white text-sm text-gray-900 font-semibold shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-red-100"
                                 ref={searchInputRef}
                                 onFocus={() => {
                                   setSearchContext('mobileTop'); // ADDED
@@ -1820,9 +1822,9 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                                 }}
                               />
                               
-                              <button onClick={handleSearchBtnClick} className="text-red-600 ">
-                                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-red-600">
-                <i className="fi fi-br-search flex font-bold text-primary"></i>
+                              <button onClick={handleSearchBtnClick} aria-label="Search" className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">
+                                      <span className="text-white">
+                <i className="fi fi-br-search flex font-bold text-white"></i>
               </span>
                                     </button>
           </div>
@@ -1830,6 +1832,34 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
 
 
       </header>
+
+      {/* ================= MOBILE CATEGORY STRIP (Flipkart-style) ================= */}
+      {Array.isArray(categoriesMenu) && categoriesMenu.length > 0 && (
+        <nav className="lg:hidden bg-white border-b border-red-100 shadow-sm">
+          <div className="flex gap-1 overflow-x-auto hide-scrollbar px-2 py-2">
+            {categoriesMenu.map((cat) => (
+              <Link
+                key={cat._id}
+                href={`/category/${cat.category_slug}`}
+                className="flex flex-col items-center gap-1 shrink-0 w-16 group"
+              >
+                <span className="flex h-13 w-13 items-center justify-center rounded-full bg-linear-to-r from-linearyellow via-white to-linearyellow ring-1 ring-red-100 overflow-hidden p-1.5 group-active:scale-95 transition-transform">
+                  <Image
+                    src={cat.image}
+                    alt={cat.category_name}
+                    width={36}
+                    height={36}
+                    className="object-contain w-full h-full"
+                  />
+                </span>
+                <span className="text-[10px] font-semibold text-gray-700 text-center leading-tight line-clamp-1 w-full">
+                  {cat.category_name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {/* ================= CATEGORY NAV ================= */}
        
@@ -2018,26 +2048,33 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
                                       
                                       {/* Mobile Menu (Hidden on desktop) */}
                                       {isMobileMenuOpen && (
-                                        <div className="lg:hidden bg-white fixed inset-0 z-50 p-4 pt-3 rounded-lg shadow-lg overflow-y-auto transition-all duration-300"
+                                        <div className="lg:hidden bg-white fixed inset-0 z-50 px-3 pt-3 pb-5 shadow-lg overflow-y-auto transition-all duration-300"
                                           style={{ touchAction: 'auto', userSelect: 'auto', WebkitUserSelect: 'auto' }}
                                         >
                                           {/* Internal sticky header */}
-                                          <div className="flex items-center justify-between mb-3 sticky top-0 bg-white pb-2 border-b">
-                                            <div className="flex items-center gap-2 text-red-600 font-semibold text-sm">
-                                              <span>Menu</span>
+                                          <div className="flex items-center justify-between mb-3 sticky top-0 z-10 bg-white py-2 border-b">
+                                            <div className="flex items-center gap-2 min-w-0">
+                                              <Image
+                                                src="/assets/images/sm-logo.png"
+                                                alt="Sathya Mobiles"
+                                                width={72}
+                                                height={36}
+                                                className="w-[72px] h-auto"
+                                              />
+                                              <span className="text-sm font-bold text-gray-900">Menu</span>
                                             </div>
                                             <button
                                               onClick={() => setIsMobileMenuOpen(false)}
                                               aria-label="Close menu"
-                                              className="p-2 rounded-full text-red-600 hover:bg-red-50 active:bg-red-100 focus:outline-none focus:ring focus:ring-red-200"
+                                              className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-red-600 active:bg-red-100 focus:outline-none focus:ring focus:ring-red-200"
                                             >
-                                              <FiX size={22} />
+                                              <FiX size={20} />
                                             </button>
                                           </div>
                               
                                           {/* Mobile Category Block (accordion) */}
-                                            <div className=" bg-white rounded-md border border-gray-200 overflow-hidden">
-                                                <div className="px-3 py-4 text-[14px] font-semibold tracking-wide text-white  bg-[#d32424]">
+                                            <div className="bg-white rounded-md border border-gray-200 overflow-hidden">
+                                                <div className="px-3 py-3 text-[14px] font-semibold tracking-wide text-white bg-[#d32424]">
                                                   Browse Category
                                                 </div>
                                                 {/* Use unified nodes (categories + hoveredCategory subcategories when available) */}

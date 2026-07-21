@@ -180,14 +180,25 @@ function CategoryCard({ image, title, bg }) {
               banner.banner_image,
               banner.updatedAt || banner._id
             );
+            const mobileImageSrc = banner.mobile_banner_image
+              ? getVersionedHeroImage(
+                  banner.mobile_banner_image,
+                  banner.updatedAt || banner._id
+                )
+              : null;
             const image = isUploadedBanner ? (
-              <img
-                src={imageSrc}
-                alt={`Banner ${index + 1}`}
-                className="w-full h-full object-cover"
-                loading={index === 0 ? "eager" : "lazy"}
-                fetchPriority={index === 0 ? "high" : "auto"}
-              />
+              <picture>
+                {mobileImageSrc && (
+                  <source media="(max-width: 767px)" srcSet={mobileImageSrc} />
+                )}
+                <img
+                  src={imageSrc}
+                  alt={`Banner ${index + 1}`}
+                  className="w-full h-full object-cover"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                />
+              </picture>
             ) : (
               <Image
                 src={imageSrc}

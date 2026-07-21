@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const TopBannerSchema = new mongoose.Schema({
-  banner_image: { type: String, required: true }, // store image path
+  banner_image: { type: String, required: true }, // desktop image path
+  mobile_banner_image: { type: String, default: "" }, // mobile image path (optional)
   redirect_url: { type: String, default: "" },
   status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
   order: { type: Number, default: 0 }, // 👈 added for sorting
