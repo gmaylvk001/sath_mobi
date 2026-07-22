@@ -15,7 +15,7 @@ export default function CategoryPage() {
     brands: [],
     filters: []
   });
-  console.log(categoryData);
+  //console.log(categoryData);
   const [showEndMessage, setShowEndMessage] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({

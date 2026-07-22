@@ -74,7 +74,7 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
       const categoryData = await categoryRes.json();
      // console.log('categoryData : ',categoryData);
       if (categoryData.products.length === 0) {
-        console.log('categoryData : ',categoryData);
+       // console.log('categoryData : ',categoryData);
         setNofound(true);
         setLoading(false);
         return;
