@@ -9,6 +9,7 @@ import { MdDateRange } from "react-icons/md";
 import { IoWalletSharp } from "react-icons/io5";
 import { IoMdMail } from "react-icons/io";
 import { TbTruckDelivery } from "react-icons/tb";
+import dayjs from "dayjs";
 import { MdOutlineLocalShipping, MdDeliveryDining, MdContacts } from "react-icons/md";
 
 const OrderDetails = () => {
@@ -337,7 +338,7 @@ const addHistory = async () => {
           <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
             <MdDateRange className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
             Date: </td>
-          <td className="p-2 ">{new Date(order.createdAt).toLocaleDateString()}</td>
+          <td className="p-2 ">{dayjs(order.createdAt).format("DD/MM/YYYY hh:mm:ss A")}</td>
         </tr>
        
         <tr className="border-b">
