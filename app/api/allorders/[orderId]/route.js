@@ -4,17 +4,17 @@ import { NextResponse } from "next/server";
 import dbConnect from '@/lib/db';
 
 export async function GET(req, { params }) {
-  await dbConnect();
-  const { orderId } = params;
+  await dbConnect();
+  const { orderId } = await params;
 
-  try {
-    const order = await Order.findById(orderId).lean();
+  try {
+    const order = await Order.findById(orderId).lean();
 
-    if (!order) {
-      return NextResponse.json({ error: "Order not found" }, { status: 404 });
-    }
+    if (!order) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
 
-    const productItemCodes = order.order_details.map(item => {
+    const productItemCodes = order.order_details.map(item => {
       // Check if the item_code starts with 'ITEM' and remove it
       if (item.item_code && item.item_code.startsWith('ITEM')) {
         return item.item_code.substring(4); // 'ITEM' is 4 characters long
@@ -22,16 +22,16 @@ export async function GET(req, { params }) {
       return item.item_code;
     });
 
-    console.log("Trimmed Item codes:", productItemCodes);
+    //console.log("Trimmed Item codes:", productItemCodes);
 
-    const products = await Product.find({ item_code: { $in: productItemCodes } })
-      .select("slug item_code")
-      .lean();
+    const products = await Product.find({ item_code: { $in: productItemCodes } })
+      .select("slug item_code")
+      .lean();
 
-    // Log the fetched products to check if a match was found
-    console.log("Fetched Products:", products);
+    // Log the fetched products to check if a match was found
+    //console.log("Fetched Products:", products);
 
-    order.order_details = order.order_details.map(item => {
+    order.order_details = order.order_details.map(item => {
       // Find the corresponding product using the original item_code
       const product = products.find(p => {
         const trimmedCode = p.item_code;
@@ -41,17 +41,17 @@ export async function GET(req, { params }) {
       return { ...item, slug: product?.slug || null };
     });
 
-    console.log("Order with Slugs:", order);
-    
-    return NextResponse.json(order);
-  } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
+    //console.log("Order with Slugs:", order);
+    
+    return NextResponse.json(order);
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }
 
 export async function PATCH(req, { params }) {
   await dbConnect();
-  const { orderId } = params;
+  const { orderId } = await params;
   const { status, comment, customer_notified } = await req.json();
 
   try {

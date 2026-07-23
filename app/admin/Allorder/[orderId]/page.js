@@ -273,7 +273,7 @@ const addHistory = async () => {
       console.error("❌ Failed to update history:", data);
       toast.error("Failed to update history");
     } else {
-      console.log("✅ History updated", data);
+      //console.log("✅ History updated", data);
       setOrder(data);
       setStatus("");
       setComment("");
@@ -300,146 +300,122 @@ const addHistory = async () => {
 
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto bg-white">
+    <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-6xl mx-auto bg-white overflow-x-hidden">
       {/* Title */}
-      <h2 className="text-2xl font-semibold text-gray-700">Orders</h2>
+      <h2 className="text-xl sm:text-2xl font-semibold text-gray-700">Orders</h2>
       <ToastContainer />
 
       {/* Top Grid */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
   {/* Order Details */}
   <div className="bg-white shadow rounded overflow-hidden">
-    <table className="w-full text-sm text-gray-700">
-      <thead>
-        <tr className="bg-gray-100 border-b">
-          <th className="p-2 text-left" colSpan={4}>Order Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-b">
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <IoWalletSharp className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            Payment:
-          </td>
-          <td className="p-2">
-            <div className="flex flex-col gap-2">
-              <span>{order.payment_method || "N/A"}</span>
-              <span
-                className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-semibold capitalize ${
-                  paymentStatusStyles[paymentStatus] || paymentStatusStyles.pending
-                }`}
-              >
-                {paymentStatusLabel[paymentStatus] || "Pending"}
-              </span>
-            </div>
-          </td>
-        </tr>
-        <tr className="border-b">
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <MdDateRange className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            Date: </td>
-          <td className="p-2 ">{dayjs(order.createdAt).format("DD/MM/YYYY hh:mm:ss A")}</td>
-        </tr>
-       
-        <tr className="border-b">
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <MdDeliveryDining className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            Pickup:</td>
-          <td className="p-2">
-            {order.delivery_type === "store_pickup" ? (
-              <span className="py-0.5 text-white px-2 bg-red-500 rounded">{order.delivery_type}</span>
-            ):(
-              order.delivery_type
-            )}
-            
-          </td>
-        </tr>
-        <tr>
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <MdOutlineLocalShipping className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            Shipping:</td>
-          <td className="p-2">{orderShippingCost > 0 ? `Rs. ${orderShippingCost.toLocaleString("en-IN")}` : "Free Shipping"}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="bg-gray-100 border-b p-2 sm:p-3 font-semibold text-sm text-gray-700">Order Details</div>
+    <div className="divide-y text-sm text-gray-700">
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <IoWalletSharp className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Payment:
+        </span>
+        <div className="flex flex-col gap-2 min-w-0 break-words">
+          <span>{order.payment_method || "N/A"}</span>
+          <span
+            className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-semibold capitalize ${
+              paymentStatusStyles[paymentStatus] || paymentStatusStyles.pending
+            }`}
+          >
+            {paymentStatusLabel[paymentStatus] || "Pending"}
+          </span>
+        </div>
+      </div>
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <MdDateRange className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Date:
+        </span>
+        <span className="min-w-0 break-words">{dayjs(order.createdAt).format("DD/MM/YYYY hh:mm:ss A")}</span>
+      </div>
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <MdDeliveryDining className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Pickup:
+        </span>
+        <span className="min-w-0 break-words">
+          {order.delivery_type === "store_pickup" ? (
+            <span className="py-0.5 text-white px-2 bg-red-500 rounded inline-block">{order.delivery_type}</span>
+          ) : (
+            order.delivery_type
+          )}
+        </span>
+      </div>
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <MdOutlineLocalShipping className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Shipping:
+        </span>
+        <span className="min-w-0 break-words">{orderShippingCost > 0 ? `Rs. ${orderShippingCost.toLocaleString("en-IN")}` : "Free Shipping"}</span>
+      </div>
+    </div>
   </div>
 
   {/* Customer Details */}
   <div className="bg-white shadow rounded overflow-hidden">
-    <table className="w-full text-sm text-gray-700">
-      <thead>
-        <tr className="bg-gray-100 border-b">
-          <th className="p-2 text-left" colSpan={2}>Customer Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-b">
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <MdContacts className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            Name:</td>
-          <td className="p-2">{order.order_username}</td>
-        </tr>
-        <tr className="border-b">
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <FaPhoneAlt className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            Phone:</td>
-          <td className="p-2">{order.order_phonenumber}</td>
-        </tr>
-        <tr className="border-b"> 
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <FaStore className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            store:</td>
-         <td className="p-2">{order.order_details?.[0]?.store_id}</td>
-
-        </tr>
-        <tr>
-          <td className="p-2 flex items-center gap-2 font-semibold text-gray-700">
-            <IoMdMail className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
-            email:</td>
-          <td className="p-2">{order.email_address}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="bg-gray-100 border-b p-2 sm:p-3 font-semibold text-sm text-gray-700">Customer Details</div>
+    <div className="divide-y text-sm text-gray-700">
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <MdContacts className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Name:
+        </span>
+        <span className="min-w-0 break-words">{order.order_username}</span>
+      </div>
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <FaPhoneAlt className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Phone:
+        </span>
+        <span className="min-w-0 break-words">{order.order_phonenumber}</span>
+      </div>
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <FaStore className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Store:
+        </span>
+        <span className="min-w-0 break-words">{order.order_details?.[0]?.store_id}</span>
+      </div>
+      <div className="p-2.5 sm:p-3 flex gap-3 items-start">
+        <span className="shrink-0 flex items-center gap-2 font-semibold min-w-[88px] sm:min-w-[100px]">
+          <IoMdMail className="bg-red-500 text-white p-1 rounded-md w-6 h-6" />
+          Email:
+        </span>
+        <span className="min-w-0 break-all">{order.email_address}</span>
+      </div>
+    </div>
   </div>
 
   {/* Options / Invoice */}
-  <div className="bg-white shadow rounded overflow-hidden">
-    <table className="w-full text-sm text-gray-700">
-      <thead>
-        <tr className="bg-gray-100 border-b">
-          <th className="p-2 text-left" colSpan={2}>Options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-b">
-          <td className="p-2" colSpan={2}>
-            <textarea
-              className="w-full border rounded p-2 text-sm"
-              placeholder="Note: Maximum 150 characters allowed"
-              maxLength={150}
-              rows={3}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td className="p-2" colSpan={2}>
-            <button
-              onClick={generateInvoice}
-              className="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600 w-full"
-            >
-              Generate Invoice
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div className="bg-white shadow rounded overflow-hidden md:col-span-2 lg:col-span-1">
+    <div className="bg-gray-100 border-b p-2 sm:p-3 font-semibold text-sm text-gray-700">Options</div>
+    <div className="p-2.5 sm:p-3 space-y-3">
+      <textarea
+        className="w-full border rounded p-2 text-sm"
+        placeholder="Note: Maximum 150 characters allowed"
+        maxLength={150}
+        rows={3}
+      />
+      <button
+        onClick={generateInvoice}
+        className="bg-red-500 text-white px-4 py-2.5 rounded text-sm hover:bg-red-600 w-full"
+      >
+        Generate Invoice
+      </button>
+    </div>
   </div>
 </div>
 
 
       {/* Order Info */}
-      <div className="bg-white p-4 shadow rounded">
-        <h3 className="font-semibold text-gray-600 border-b pb-2">Order #{order.order_number}</h3>
+      <div className="bg-white p-3 sm:p-4 shadow rounded">
+        <h3 className="font-semibold text-gray-600 border-b pb-2 text-base sm:text-lg break-all">Order #{order.order_number}</h3>
         {/* Address */}
         <div className="mt-4">
   <table className="w-full border text-sm text-gray-700">
@@ -450,7 +426,7 @@ const addHistory = async () => {
     </thead>
     <tbody>
       <tr>
-        <td className="p-2">{order.order_deliveryaddress}</td>
+        <td className="p-2 break-words whitespace-normal">{order.order_deliveryaddress}</td>
       </tr>
     </tbody>
   </table>
@@ -459,8 +435,8 @@ const addHistory = async () => {
 
 
         {/* Product Table */}
-        <div className="mt-4">
-          <table className="w-full border text-sm text-gray-700">
+        <div className="mt-4 overflow-x-auto -mx-1 px-1">
+          <table className="w-full min-w-[560px] border text-sm text-gray-700">
             <thead>
               <tr className="bg-gray-100 border-b">
                 <th className="p-2 text-left">Product</th>
@@ -473,7 +449,7 @@ const addHistory = async () => {
             <tbody>
  {order.order_details?.map((item, i) => (
   <tr key={i} className="border-b">
-    <td className="p-2">
+    <td className="p-2 break-words max-w-[220px]">
   {item.slug ? (
     <a 
       href={`/product/${item.slug}`} 
@@ -488,25 +464,25 @@ const addHistory = async () => {
   )}
 </td>
 
-    <td className="p-2">{item.model}</td>
+    <td className="p-2 whitespace-nowrap">{item.model}</td>
     <td className="p-2 text-center">{item.quantity}</td>
-    <td className="p-2 text-right">₹{Number(item.quantity * item.product_price).toLocaleString("en-IN")}</td>
-    <td className="p-2 text-right">₹{Number(item.quantity * item.product_price).toLocaleString("en-IN")}</td>
+    <td className="p-2 text-right whitespace-nowrap">₹{Number(item.quantity * item.product_price).toLocaleString("en-IN")}</td>
+    <td className="p-2 text-right whitespace-nowrap">₹{Number(item.quantity * item.product_price).toLocaleString("en-IN")}</td>
   </tr>
 ))}
   <tr className="font-semibold">
     <td colSpan="4" className="p-2 text-right">Sub-Total:</td>
     {/* <td className="p-2 text-right">₹{order.sub_total}</td> */}
-    <td className="p-2 text-right">Rs. {orderProductsSubtotal.toLocaleString("en-IN")}</td>
+    <td className="p-2 text-right whitespace-nowrap">Rs. {orderProductsSubtotal.toLocaleString("en-IN")}</td>
   </tr>
   <tr>
     <td colSpan="4" className="p-2 text-right">Shipping:</td>
     {/* <td className="p-2 text-right">₹{order.shipping_fee}</td> */}
-     <td className="p-2 text-right">Rs. {orderShippingCost.toLocaleString("en-IN")}</td>
+     <td className="p-2 text-right whitespace-nowrap">Rs. {orderShippingCost.toLocaleString("en-IN")}</td>
   </tr>
   <tr className="font-bold bg-gray-100">
     <td colSpan="4" className="p-2 text-right">Total:</td>
-    <td className="p-2 text-right">₹{Number(order.order_amount).toLocaleString("en-IN")}</td>
+    <td className="p-2 text-right whitespace-nowrap">₹{Number(order.order_amount).toLocaleString("en-IN")}</td>
   </tr>
 </tbody>
 
@@ -515,25 +491,26 @@ const addHistory = async () => {
 
 
         {/* Order History */}
-<div className="bg-white p-4 shadow rounded mt-6">
+<div className="bg-white p-3 sm:p-4 shadow rounded mt-6">
   <h3 className="font-semibold text-gray-600 border-b pb-2">Order History</h3>
 
   {/* Order History Table */}
-  <table className="w-full text-sm mt-3 border text-gray-700">
+  <div className="mt-3 overflow-x-auto -mx-1 px-1">
+  <table className="w-full min-w-[520px] text-sm border text-gray-700">
     <thead>
       <tr className="bg-gray-100 border-b">
-        <th className="p-2">Date Added</th>
-        <th className="p-2">Comment</th>
-        <th className="p-2">Status</th>
+        <th className="p-2 text-left">Date Added</th>
+        <th className="p-2 text-left">Comment</th>
+        <th className="p-2 text-left">Status</th>
         <th className="p-2 text-center">Customer Notified</th>
       </tr>
     </thead>
     <tbody>
       {order.order_history?.map((entry, i) => (
         <tr key={i} className="border-b">
-          <td className="p-2">{new Date(entry.date).toLocaleDateString()}</td>
-          <td className="p-2">{entry.comment}</td>
-          <td className="p-2">{entry.status}</td>
+          <td className="p-2 whitespace-nowrap">{new Date(entry.date).toLocaleDateString()}</td>
+          <td className="p-2 break-words">{entry.comment}</td>
+          <td className="p-2 whitespace-nowrap">{entry.status}</td>
           <td className="p-2 text-center">
             {entry.customer_notified ? "Yes" : "No"}
           </td>
@@ -541,6 +518,7 @@ const addHistory = async () => {
       ))}
     </tbody>
   </table>
+  </div>
 
   {/* Add Order History Form */}
   <div className="mt-6">
@@ -584,7 +562,7 @@ const addHistory = async () => {
       <button
   onClick={addHistory}
   disabled={isUpdating}
-  className="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600 disabled:bg-gray-400"
+  className="bg-red-500 text-white px-4 py-2.5 rounded text-sm hover:bg-red-600 disabled:bg-gray-400 w-full sm:w-auto"
 >
   {isUpdating ? "Adding..." : "+ Add History"}
 </button>
