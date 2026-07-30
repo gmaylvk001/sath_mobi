@@ -262,6 +262,11 @@ const getCategoryBrands = (category) => {
             <div className="w-full container mx-auto px-3  grid grid-cols-1 md:grid-cols-3 gap-16 justify-between">
               {/* Corporate Office */}
               <div className="space-y-3">
+                <div className="mb-2 text-xs uppercase tracking-wide text-gray-400">
+                  <a href="https://eywamedia.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline">
+                    © EYWAMEDIA 2026
+                  </a>
+                </div>
                 <h3 className="text-white font-semibold text-lg mb-4">Corporate Office</h3>
                 <p>
                   SATHYA Mobiles India Pvt. Ltd., <br />
@@ -601,7 +606,16 @@ const getCategoryBrands = (category) => {
         With affordable pricing, EMI options, and genuine warranty coverage, Sathya Mobiles makes tablet shopping easy and reliable.
       </p>
     </div>
-
+      <div className="mt-6 py-4">
+          <div className="text-right ml-1 mb-1">
+            <p>
+              <a href="https://eywamedia.com/" className="hover:underline text-white">
+                EYWAMEDIA ©
+              </a>{" "}
+              2026 All rights reserved.
+            </p>
+          </div>
+        </div>
   </div>
 </section>
           
