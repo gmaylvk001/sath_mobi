@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProductComponent from "@/app/admin/components/product/create";
-import { generateProductSlug } from "@/utils/generateProductSlug";
+import { generateProductSlug } from "@/utils/combinations";
 
 function buildInitialProductData(newProduct, ai = {}) {
   const keyFeatures = Array.isArray(ai.key_features)

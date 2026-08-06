@@ -9,3 +9,14 @@ export function combinations(...arrays) {
     subCombinations.map(combination => [item, ...combination])
   );
 }
+
+export function generateProductSlug(name) {
+  if (!name) return "";
+
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
