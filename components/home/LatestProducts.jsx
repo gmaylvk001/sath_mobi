@@ -95,7 +95,7 @@ export default function LatestProducts() {
                     href={`/product/${product.slug}`}
                     className="bg-white rounded-xl overflow-hidden shrink-0"
                   >
-                    <Image
+                    <img
                       src={
                         product.images?.[0]
                           ? `/uploads/products/${product.images[0]}`
@@ -106,6 +106,8 @@ export default function LatestProducts() {
                       height={100}
                       className="object-contain"
                     />
+
+                    
                   </Link>
 
                   {/* Product Info */}
