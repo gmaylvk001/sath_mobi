@@ -458,7 +458,7 @@ useEffect(() => {
   <ul className="list-disc pl-4 sm:pl-5 mt-1 sm:mt-3 text-gray-700 text-sm sm:text-base">
     {product.product_highlights.flatMap((item) =>
       item
-        .split(/[\n,]+/) // split by newline or comma
+        .split(/[\n]+/) // split by newline or comma
         .map((subItem) => subItem.trim())
         .filter((subItem) => subItem.length > 0)
     ).map((feature, index) => (

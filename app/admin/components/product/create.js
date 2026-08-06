@@ -5,6 +5,7 @@ import { FaPlus, FaMinus, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import TinyEditor from "./TinyEditor";
 const Select = dynamic(() => import('react-select'), { ssr: false });
 import { combinations } from '@/utils/combinations';
+import { generateProductSlug } from '@/utils/generateProductSlug';
 import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { components } from "react-select";
@@ -388,16 +389,79 @@ useEffect(() => {
 
   useEffect(() => {
     if (initialProductData) {
-      setProduct({
+      const productName = initialProductData.name || "";
+      setProduct((prev) => ({
+        ...prev,
         ...initialProductData,
-        brand_code: initialProductData.brand_code || "", // ensure brand_code defaults to empty string
-        // Ensure product_highlights is an array, even if it's null/undefined from backend
-        product_highlights: initialProductData.product_highlights || [],
-        // Ensure featured_products is an array or object, depending on your schema
-        featured_products: initialProductData.featured_products || [], // Adjust based on actual data type
-      });
+        slug: initialProductData.slug || generateProductSlug(productName),
+        brand_code: initialProductData.brand_code || prev.brand_code || "",
+        product_highlights: initialProductData.product_highlights || prev.product_highlights || [],
+        featured_products: initialProductData.featured_products || prev.featured_products || [],
+      }));
     }
   }, [initialProductData]);
+
+  useEffect(() => {
+    const brandName = initialProductData?.brandName;
+    if (!brandName || brand.length === 0) return;
+
+    setProduct((prev) => {
+      if (prev.brand) return prev;
+
+      const match = brand.find(
+        (item) => item.label.toLowerCase() === brandName.toLowerCase()
+      );
+
+      return match ? { ...prev, brand: match.value } : prev;
+    });
+  }, [brand, initialProductData?.brandName]);
+
+  useEffect(() => {
+    const categoryName = initialProductData?.categoryName;
+    if (!categoryName || categories.length === 0 || selectedCategory) return;
+
+    const findCategoryInTree = (items, name) => {
+      const lower = name.toLowerCase();
+      for (const item of items) {
+        if (item.category_name?.toLowerCase() === lower) return item;
+        if (item.children?.length) {
+          const found = findCategoryInTree(item.children, name);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const findParentCategory = (items, childId) => {
+      for (const cat of items) {
+        if (cat.children?.some((child) => child.md5_cat_name === childId)) {
+          return cat;
+        }
+        if (cat.children?.length) {
+          const found = findParentCategory(cat.children, childId);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const match = findCategoryInTree(categories, categoryName);
+    if (!match) return;
+
+    const parentCategory = findParentCategory(categories, match.md5_cat_name);
+    if (!parentCategory) return;
+
+    setSelectedCategory(match.md5_cat_name);
+    setSelectedParentCategory(parentCategory);
+    setProduct((prev) => ({
+      ...prev,
+      sub_category: match._id,
+      category: parentCategory,
+      category_new: parentCategory.md5_cat_name,
+      sub_category_new: `${parentCategory.md5_cat_name}##${match.md5_cat_name}`,
+      sub_category_name: `${parentCategory.category_name}##${match.category_name}`,
+    }));
+  }, [categories, initialProductData?.categoryName, selectedCategory]);
 
    const handleVariantFieldChange1 = (index, field, value) => {
   const updatedVariants = variant.map((v, i) =>
@@ -1166,8 +1230,9 @@ const uploadImages = async (files) => {
     setProduct((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
-      slug: name === "name" 
-        ? value.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-") : prev.slug,
+      slug: name === "name"
+        ? generateProductSlug(value)
+        : prev.slug,
     }));
   };
 
@@ -1335,6 +1400,7 @@ const handleSubmit = async (e) => {
 
     const finalProductData = {
       ...cleanedProduct,
+      slug: cleanedProduct.slug || generateProductSlug(cleanedProduct.name),
       extend_warranty: validWarranties,
     };
 
@@ -1616,6 +1682,19 @@ const handleSubmit = async (e) => {
                         )}
               </div>
         
+              <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+                <input
+                  type="text"
+                  name="slug"
+                  value={product.slug || ""}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Item Code</label>
                 <input type="text" name="item_code" value={product.item_code} onChange={handleChange} className="w-full border p-2 rounded" required />

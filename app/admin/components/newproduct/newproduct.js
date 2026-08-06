@@ -7,9 +7,11 @@ import DateRangePicker from '@/components/DateRangePicker';
 
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import * as XLSX from 'xlsx';
 
 export default function CategoryComponent() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -94,8 +96,13 @@ const fetchSubcategories = async () => {
     fetchProducts();
     fetchCategories();
     fetchBrands();
-    fetchSubcategories
+    fetchSubcategories();
   }, []);
+
+  const handleUpload = (product) => {
+    sessionStorage.setItem("newProductUploadData", JSON.stringify(product));
+    router.push("/admin/product/create?source=newproduct");
+  };
 
   // Debounce search input
   useEffect(() => {
@@ -556,8 +563,7 @@ if (stockFilter) {
                 <th className="p-2 whitespace-nowrap">Spl Price</th>
                 <th className="p-2">Quantity</th>
                 <th className="p-2">Brand</th>
-                {/* <th className="p-2">Status</th> */}
-               {/* // <th className="p-2">Action</th> */}
+                <th className="p-2">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -613,43 +619,21 @@ if (stockFilter) {
                     {/* Quantity Column */}
                     <td className="p-2">{Number(product.quantity).toLocaleString("en-IN")}</td>
                     <td className="p-2">{product.brand}</td>
-                    
-                    {/* Status Column */}
-                    {/* <td className="p-2 font-semibold">
-                      {product.status === "Active" ? (
-                        <span className="bg-green-100 text-green-600 px-6 py-1.5 rounded-full font-medium text-sm">Active</span>
-                      ) : (
-                        <span className="bg-red-100 text-red-600 px-6 py-1.5 rounded-full font-medium text-sm">Inactive</span>
-                      )}
-                    </td> */}
-                    
-                    {/* Action Column */}
-                    {/* <td>
-                      <div className="flex items-center gap-2 justify-center">
-                        <button
-                          onClick={() => handleEditProduct(product)}
-                          className="w-7 h-7 bg-red-100 text-red-600 rounded-full inline-flex items-center justify-center"
-                          title="Edit"
-                        >
-                          <FaEdit className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setProductToDelete(product._id);
-                            setShowConfirmationModal(true);
-                          }}
-                          className="w-7 h-7 bg-pink-100 text-pink-600 rounded-full inline-flex items-center justify-center"
-                          title="Delete"
-                        >
-                          <Icon icon="mingcute:delete-2-line" />
-                        </button>
-                      </div>
-                    </td> */}
+                    <td className="p-2">
+                      <button
+                        type="button"
+                        onClick={() => handleUpload(product)}
+                        className="px-3 py-1.5 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 transition-colors"
+                        title="Generate content and create product"
+                      >
+                        Upload
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center p-4">
+                  <td colSpan="7" className="text-center p-4">
                     No Products found
                   </td>
                 </tr>

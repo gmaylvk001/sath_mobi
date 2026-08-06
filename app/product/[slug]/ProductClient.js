@@ -1285,33 +1285,20 @@ export default function ProductClient() {
                                 product.product_highlights
                                 .flatMap(item => item.split(/[\n,]+/).map(i => i.trim()))
                                 .filter(item => item.length > 0).length > 0 ? (
-                                <table className="w-full text-xs text-left text-gray-700 border border-gray-200">
-                                    <thead className="bg-gray-100">
-                                    <tr>
-                                        <th className="border px-3 py-2">Key</th>
-                                        <th className="border px-3 py-2">Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                                <ul className="list-disc pl-5 space-y-1 text-xs text-gray-600">
                                     {product.product_highlights
-                                        .flatMap(item => item.split(/[\n,]+/).map(i => i.trim()))
+                                        .flatMap(item => item.split(/[\n]+/).map(i => i.trim()))
                                         .filter(item => item.length > 0)
                                         .map((item, index) => {
                                         const cleanedItem = item
-                                            .replace(/[\[\]{}"]/g, '') // remove braces, brackets, quotes
-                                            .replace(/\s+/g, ' ')
+                                            .replace(/[\[\]{}"]/g, "")
+                                            .replace(/\s+/g, " ")
                                             .trim();
-                                        const [key, ...rest] = cleanedItem.split(':');
-                                        const value = rest.join(':').trim();
                                         return (
-                                            <tr key={index} className="bg-white even:bg-gray-50">
-                                            <td className="border px-3 py-2 font-medium">{key?.trim()}</td>
-                                            <td className="border px-3 py-2">{value || '-'}</td>
-                                            </tr>
+                                            <li key={index}>{cleanedItem}</li>
                                         );
                                         })}
-                                    </tbody>
-                                </table>
+                                </ul>
                                 ) : (
                                 <p className="text-gray-500 text-xs">No highlights available.</p>
                                 )}
