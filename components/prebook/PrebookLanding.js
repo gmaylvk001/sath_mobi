@@ -84,7 +84,7 @@ export default function PrebookLanding({ campaign }) {
           {campaign.mobile_banner_image && (
             <source media="(max-width: 767px)" srcSet={campaign.mobile_banner_image} />
           )}
-          <Image
+          <img
             src={bannerImage}
             alt={`${campaign.product_name} pre-booking banner`}
             width={1920}
@@ -112,7 +112,7 @@ export default function PrebookLanding({ campaign }) {
           {campaign.detail_images?.length > 0 && (
             <div className="grid grid-cols-1 gap-4">
               {campaign.detail_images.map((image, index) => (
-                <Image
+                <img
                   key={image}
                   src={image}
                   alt={`${campaign.product_name} detail banner ${index + 1}`}

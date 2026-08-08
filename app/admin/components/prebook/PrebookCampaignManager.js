@@ -193,7 +193,7 @@ export default function PrebookCampaignManager() {
               className="w-full rounded-lg border border-gray-300 p-2"
             />
             {editing?.banner_image && !form.banner_image && (
-              <Image
+              <img
                 src={editing.banner_image}
                 alt="Current desktop banner"
                 width={480}
@@ -219,7 +219,7 @@ export default function PrebookCampaignManager() {
               className="w-full rounded-lg border border-gray-300 p-2"
             />
             {editing?.mobile_banner_image && !form.mobile_banner_image && (
-              <Image
+              <img
                 src={editing.mobile_banner_image}
                 alt="Current mobile banner"
                 width={240}
@@ -261,7 +261,7 @@ export default function PrebookCampaignManager() {
               <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                 {form.retained_detail_images.map((image) => (
                   <div key={image} className="relative overflow-hidden rounded-lg border">
-                    <Image
+                    <img
                       src={image}
                       alt="Small detail banner"
                       width={320}
@@ -337,7 +337,7 @@ export default function PrebookCampaignManager() {
                 {campaigns.map((campaign) => (
                   <tr key={campaign._id} className="border-t">
                     <td className="px-4 py-3">
-                      <Image
+                      <img
                         src={campaign.banner_image}
                         alt={campaign.product_name}
                         width={120}
