@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 
 const PrebookSchema = new mongoose.Schema(
   {
-    name: String,
+    name: { type: String, required: true, trim: true },
     email: String,
-    phone: String,
+    phone: { type: String, required: true, trim: true },
+    pincode: { type: String, required: true, trim: true },
+    district: { type: String, required: true, trim: true },
     store: String,
-    product: String,
+    product: { type: String, required: true, trim: true },
   },
   {
     timestamps: true,

@@ -127,7 +127,7 @@ const ProductPrebook = ({ imageUrls = [], productName, productList = [] }) => {
                 src={url}
                 alt={`Image ${index + 1} of ${productName}`}
                 width={800}
-                height={800}
+                height={600}
                 className="w-full max-w-4xl h-auto object-contain"
               />
             </motion.div>

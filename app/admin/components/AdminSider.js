@@ -45,6 +45,14 @@ export default function AdminSider({ collapsed }) {
    { icon: 'mdi:note-text-outline', label: 'Blog', link: 'blog' },
     { icon: 'mdi:account-outline', label: 'User', link: 'user' },
     { icon: 'mdi:phone-outline', label: 'Contact', link: 'contact' },
+    {
+      icon: 'mdi:calendar-check-outline',
+      label: 'Pre Booking',
+      submenu: [
+        { icon: 'mdi:image-edit-outline', label: 'Pre Booking Setup', link: 'prebook/settings', dotColor: 'bg-green-500' },
+        { icon: 'mdi:account-group-outline', label: 'Pre Booked Customers', link: 'prebook/customers', dotColor: 'bg-yellow-500' },
+      ]
+    },
    /*  {
   icon: 'mdi:file-chart-outline', // changed to reports icon
  
