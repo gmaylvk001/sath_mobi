@@ -1717,7 +1717,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
 
             {/* Mobile Icons */}
             <div className="lg:hidden flex">
-              <Link href="/all-stores" aria-label="Store locator" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm ring-1 ring-red-100">
+              <Link href="https://stores.sathyamobiles.com/" aria-label="Store locator" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm ring-1 ring-red-100">
                 <i className="fi fi-rr-marker flex text-primary font-bold text-xl"></i>
               </Link>
             </div>
