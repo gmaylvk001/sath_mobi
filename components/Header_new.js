@@ -1650,7 +1650,7 @@ const handleCategoryClick = useCallback((categorySlug, categoryName) => {
 
             {/* Store Locator */}
             <div className="hidden lg:flex items-center gap-1 text-sm px-1.5 py-0.5 border-2 border-primary rounded-2xl">
-              <Link href="/all-stores" className="flex">
+              <Link href="https://sathya-mobiles.adtarbo.com/stores" className="flex">
               <i className="fi fi-rr-marker flex text-primary text-xl"></i>
               <span className="w-min text-center text-[0.7rem] leading-none font-bold text-primary">
                 Store Locator
