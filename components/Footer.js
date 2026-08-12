@@ -26,7 +26,6 @@ const Footer = () => {
   const [stores, setStores] = useState([]);
   const [loadingStores, setLoadingStores] = useState(true);
   const [errorStores, setErrorStores] = useState(null);
-  
   // Auth state
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
@@ -45,16 +44,15 @@ const Footer = () => {
   useEffect(() => {
     const fetchStores = async () => {
       try {
-        const response = await fetch('/api/store/get');
+        const response = await fetch("/api/store-locations/get");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        //console.log(data);
         if (data.success) {
           setStores(data.data);
         } else {
-          setErrorStores(data.error || 'Failed to fetch stores');
+          setErrorStores(data.error || "Failed to fetch stores");
         }
       } catch (error) {
         console.error("Error fetching stores:", error);
@@ -75,21 +73,6 @@ const Footer = () => {
   acc[city].push(store.organisation_name);
   return acc;
 }, {}); */
-
-const groupedStores = stores.reduce((acc, store) => {
-  const city = store.city;
-
-  if (!acc[city]) {
-    acc[city] = [];
-  }
-
-  acc[city].push({
-    name: store.organisation_name,
-    slug: store.slug
-  });
-
-  return acc;
-}, {});
 
 const categoriesdescription = [
   {
@@ -462,19 +445,23 @@ const getCategoryBrands = (category) => {
                       ))} */}
 
                       <p className="text-gray-400 leading-7 text-sm">
-                        {Object.entries(groupedStores).map(([city, orgList]) =>
-                          orgList.map((org, index) => (
-                            <span key={org.slug}>
+                        {loadingStores && "Loading stores..."}
+                        {!loadingStores && errorStores && "Unable to load stores."}
+                        {!loadingStores &&
+                          !errorStores &&
+                          stores.map((store, index) => (
+                            <span key={store.slug}>
                               <a
-                                href={`/store/${org.slug}`}
+                                href={store.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="hover:text-white hover:underline"
                               >
-                                {org.name}
+                                {store.name}
                               </a>
-                              {", "}
+                              {index < stores.length - 1 && ", "}
                             </span>
-                          ))
-                        )}
+                          ))}
                       </p>
                </div>
               </div>
