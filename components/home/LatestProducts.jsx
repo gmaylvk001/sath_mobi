@@ -232,7 +232,7 @@ export default function LatestProducts() {
                           href={`/product/${product.slug}`}
                           className="bg-white rounded-lg p-4 flex justify-center items-center h-[150px] sm:h-[260px] md:h-[220px] lg:h-[260px]"
                         >
-                          <Image
+                          <img
                             src={
                               product.images?.[0]
                                 ? `/uploads/products/${product.images[0]}`
