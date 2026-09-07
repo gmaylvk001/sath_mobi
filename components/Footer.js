@@ -344,6 +344,11 @@ const getCategoryBrands = (category) => {
                         <FaInstagram className="text-sm text-white transition-colors duration-300 group-hover:text-white" />
                       </div>
                     </Link>
+                    <Link href="https://www.youtube.com/@SathyaMobiles-hc7wh">
+                      <div className="p-2 rounded-full border border-gray transition-colors duration-300 hover:border-white hover:bg-red-600 group">
+                        <FaYoutube className="text-sm text-white transition-colors duration-300 group-hover:text-white" />
+                      </div>
+                    </Link>
                   </div>
                   <div className="flex flex-col md:flex-row items-center gap-4">
                   <div className="py-3">
