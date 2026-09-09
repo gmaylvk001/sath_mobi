@@ -92,10 +92,6 @@ export async function GET(request) {
       agent: "GPTBot",
       disallow: ["/"],
     }),
-    buildGroup({
-      agent: "GPTBot",
-      disallow: ["/"],
-    }),
     "",
   ].join("\n");
 
