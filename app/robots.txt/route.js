@@ -88,6 +88,11 @@ export async function GET(request) {
       crawlDelay: 1,
     }),
     "",
+    buildGroup({
+      agent: "GPTBot",
+      disallow: ["/"],
+    }),
+    "",
   ].join("\n");
 
   return new NextResponse(robotsTxt, {
