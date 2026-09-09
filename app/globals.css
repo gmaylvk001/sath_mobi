@@ -212,12 +212,6 @@ color: #000;
 {
 background: -webkit-linear-gradient(left, #ed3237 0%, #ffe8e9 100%);
 }
-@font-face {
-  font-family: 'Open Sans, sans-serif';
-  src: url('../public/assets/fonts/Quicksand-Bold.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;  
-}
 .py-3 {
     padding-top: 0.8rem;
     padding-bottom: 0.8rem

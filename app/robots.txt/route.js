@@ -10,6 +10,7 @@ const COMMON_DISALLOWS = [
   "/address",
   "/wishlist",
   "/search",
+  "/filter-products",
 ];
 
 const ADSBOT_DISALLOWS = [
