@@ -19,6 +19,7 @@ export default function EditProductModal({ product, onClose }) {
         overviewImage: product.overviewImage?.length ? product.overviewImage : [null],
         variantAttributes: product.variantAttributes || [],
         product_highlights: product.product_highlights || [""],
+        faqs: product.faqs || [],
       };
       setProductData(prefilledProduct);
       setLoading(false);

@@ -21,10 +21,12 @@ export default function ProductDetailsSection({ product }) {
   if (product.reviewItems && product.reviewItems.length > 0) return "reviews";
   if (product.key_specifications) return "keySpecs";
   if (product.product_highlights?.length > 0) return "productHighlights";
+  if (product.faqs && product.faqs.length > 0) return "faq";
   return null;
 };
 
  const [activeTab, setActiveTab] = useState(() => getFirstAvailableTab());
+ const [openFaqIndex, setOpenFaqIndex] = useState(0);
  const [brand, setBrand] = useState([]);
 
  const [canReview, setCanReview] = useState(false);
@@ -427,6 +429,15 @@ useEffect(() => {
             onClick={() => setActiveTab("productHighlights")}
           >
               Highlights
+          </button>
+
+          <button
+            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-full font-semibold text-xs sm:text-sm whitespace-nowrap ${
+              activeTab === "faq" ? "bg-red-600 text-white" : "text-red-800 hover:bg-red-100"
+            }`}
+            onClick={() => setActiveTab("faq")}
+          >
+              FAQ
           </button>
   
       
@@ -848,6 +859,107 @@ useEffect(() => {
                 </ul>
               ) : (
                 <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">No highlights available.</p>
+              );
+            })()}
+          </div>
+        )}
+
+       {activeTab === "faq" && (
+          <div className="py-1">
+            {(() => {
+              const validFaqs = Array.isArray(product.faqs)
+                ? product.faqs.filter(f => f?.question?.trim())
+                : [];
+
+              return (
+                <div>
+                  {/* Header Section matching screenshot */}
+                  <div className="flex items-center justify-between pb-1">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full border-2 border-red-500 text-red-600 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                        ?
+                      </div>
+                      <div>
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                          Frequently Asked Questions (FAQs)
+                        </h2>
+                        <p className="text-gray-500 text-xs sm:text-sm mt-0.5">
+                          Find quick answers to popular questions about this product.
+                        </p>
+                      </div>
+                    </div>
+                    {validFaqs.length > 0 && (
+                      <span className="bg-red-50 text-red-600 border border-red-200 rounded-full px-3.5 py-1 text-xs font-semibold whitespace-nowrap">
+                        {validFaqs.length} {validFaqs.length === 1 ? 'Question' : 'Questions'}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="border-b border-gray-200 my-4"></div>
+
+                  {/* FAQ Accordion List matching screenshot */}
+                  {validFaqs.length > 0 ? (
+                    <div className="space-y-3.5 mt-4">
+                      {validFaqs.map((faq, index) => {
+                        const isOpen = openFaqIndex === index;
+                        return (
+                          <div
+                            key={index}
+                            className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                              isOpen
+                                ? "border-red-300 bg-white shadow-xs"
+                                : "border-gray-200 bg-white hover:border-gray-300"
+                            }`}
+                          >
+                            {/* Question Row (Clickable Header) */}
+                            <button
+                              type="button"
+                              onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                              className="w-full p-4 sm:p-4 text-left flex items-center justify-between gap-3 focus:outline-none"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span
+                                  className={`w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
+                                    isOpen
+                                      ? "bg-red-600 text-white"
+                                      : "bg-gray-100 text-gray-700"
+                                  }`}
+                                >
+                                  Q{index + 1}
+                                </span>
+                                <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                                  {faq.question}
+                                </span>
+                              </div>
+                              <span className="shrink-0">
+                                {isOpen ? (
+                                  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+                                  </svg>
+                                ) : (
+                                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                  </svg>
+                                )}
+                              </span>
+                            </button>
+
+                            {/* Answer Row (Expandable Content) */}
+                            {isOpen && faq.answer && (
+                              <div className="px-4 pb-4 pt-1 sm:px-4 sm:pb-4 border-t border-gray-100/80">
+                                <p className="text-gray-600 text-xs sm:text-sm pl-10 whitespace-pre-line leading-relaxed">
+                                  {faq.answer}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 mt-2 text-sm sm:text-base">No FAQs available.</p>
+                  )}
+                </div>
               );
             })()}
           </div>

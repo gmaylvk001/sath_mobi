@@ -41,6 +41,15 @@ add_ons: {
   extended_warranty:Number,
   overviewdescription: String,
   product_highlights: {type: [String],default: [],},
+  faqs: {
+    type: [
+      {
+        question: { type: String, default: "" },
+        answer: { type: String, default: "" },
+      }
+    ],
+    default: [],
+  },
   meta_title: { type: String, default: "" }, // Add meta_title field
   meta_description: { type: String, default: "" }, // Add meta_description field
   search_keywords: { type: String, default: "" }, // Add search_keywords field

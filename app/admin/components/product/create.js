@@ -57,6 +57,7 @@ export default function AddProductPage({ mode = "add", productData = null, produ
     warranty: "",
     extend_warranty: [],
     product_highlights: [],
+    faqs: [],
     category_new : "",
     sub_category_new : "",
     sub_category_name : "",
@@ -369,6 +370,7 @@ useEffect(() => {
         : [null],
       overviewImageFile: productData.overviewImageFile || [null],
       featured_products: productData.featured_products || [],
+      faqs: Array.isArray(productData.faqs) ? productData.faqs : [],
       removedOverviewImages: [] // Reset removed images
     }));
 
@@ -1332,6 +1334,95 @@ const handleupdatefilterchange = (filters) => {
     ),
   }));
 };
+
+  const [showFaqImportModal, setShowFaqImportModal] = useState(false);
+  const [faqJsonInput, setFaqJsonInput] = useState('');
+
+  const handleFaqChange = (index, field, value) => {
+    setProduct((prevProduct) => {
+      const currentFaqs = Array.isArray(prevProduct.faqs) && prevProduct.faqs.length > 0 
+        ? [...prevProduct.faqs] 
+        : [{ question: "", answer: "" }];
+      if (!currentFaqs[index]) currentFaqs[index] = { question: "", answer: "" };
+      currentFaqs[index] = { ...currentFaqs[index], [field]: value };
+      return {
+        ...prevProduct,
+        faqs: currentFaqs,
+      };
+    });
+  };
+
+  const addFaq = () => {
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      faqs: [...(Array.isArray(prevProduct.faqs) ? prevProduct.faqs : []), { question: "", answer: "" }],
+    }));
+  };
+
+  const removeFaq = (indexToRemove) => {
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      faqs: (Array.isArray(prevProduct.faqs) ? prevProduct.faqs : []).filter(
+        (_, index) => index !== indexToRemove
+      ),
+    }));
+  };
+
+  const handleImportFaqs = (importMode = 'append') => {
+    try {
+      if (!faqJsonInput.trim()) {
+        toast.error("Please paste JSON array or upload a file first!");
+        return;
+      }
+      const parsed = JSON.parse(faqJsonInput);
+      if (!Array.isArray(parsed)) {
+        toast.error("JSON must be an array of objects!");
+        return;
+      }
+      const formatted = parsed
+        .map(item => ({
+          question: item.question || item.q || "",
+          answer: item.answer || item.a || ""
+        }))
+        .filter(f => f.question || f.answer);
+
+      if (formatted.length === 0) {
+        toast.error("No valid questions and answers found in JSON!");
+        return;
+      }
+
+      setProduct(prev => ({
+        ...prev,
+        faqs: importMode === 'replace' 
+          ? formatted 
+          : [...(Array.isArray(prev.faqs) ? prev.faqs : []), ...formatted]
+      }));
+      toast.success(importMode === 'replace' ? "FAQs replaced successfully!" : "FAQs imported & appended!");
+      setShowFaqImportModal(false);
+      setFaqJsonInput('');
+    } catch (err) {
+      toast.error("Invalid JSON format: " + err.message);
+    }
+  };
+
+  const handleFaqFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result;
+        if (typeof content === 'string') {
+          JSON.parse(content);
+          setFaqJsonInput(content);
+          toast.success("File uploaded successfully!");
+        }
+      } catch (err) {
+        toast.error("Uploaded file is not a valid JSON file!");
+      }
+    };
+    reader.readAsText(file);
+  };
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -1365,6 +1456,7 @@ const handleSubmit = async (e) => {
       add_ons: product.add_ons || [],
       category: product.category || "",
       product_highlights: product.product_highlights || [],
+      faqs: product.faqs || [],
       // Product images
       images: existingProductImages,
       // FIX: Send as overview_image (database field name) not overviewImage
@@ -2218,6 +2310,90 @@ const handleSubmit = async (e) => {
   ))}
 </div>
 
+{/* Product FAQs (Frequently Asked Questions) Section */}
+<div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm mb-6 mt-4">
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-4">
+    <div>
+      <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-red-600 inline-block"></span>
+        Product FAQs (Frequently Asked Questions)
+      </h3>
+      <p className="text-xs text-gray-500 mt-1">
+        Add 5 to 6 product-specific questions and answers to show in the product FAQ tab.
+      </p>
+    </div>
+    <button
+      type="button"
+      onClick={() => setShowFaqImportModal(true)}
+      className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors self-start sm:self-auto"
+    >
+      <span>Import</span>
+      <span className="text-sm">↓</span>
+    </button>
+  </div>
+
+  {/* FAQ Items list */}
+  <div className="space-y-4">
+    {((product.faqs && product.faqs.length > 0) ? product.faqs : [{ question: "", answer: "" }]).map((faq, index) => (
+      <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50/50 relative">
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-xs font-bold text-red-500">
+            Question #{index + 1}
+          </span>
+          <button
+            type="button"
+            onClick={() => removeFaq(index)}
+            className="text-gray-400 hover:text-red-600 p-1 transition-colors"
+            title="Delete FAQ"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Question
+            </label>
+            <input
+              type="text"
+              value={faq.question || ""}
+              onChange={(e) => handleFaqChange(index, "question", e.target.value)}
+              className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              placeholder="e.g. Does this product come with a manufacturer warranty?"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Answer
+            </label>
+            <textarea
+              value={faq.answer || ""}
+              onChange={(e) => handleFaqChange(index, "answer", e.target.value)}
+              className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              rows="2"
+              placeholder="e.g. Yes, It includes 1-year brand warranty covering manufacturing defects."
+            />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  {/* Add question button */}
+  <div className="mt-4">
+    <button
+      type="button"
+      onClick={addFaq}
+      className="px-4 py-2 border border-dashed border-gray-300 hover:border-red-500 hover:text-red-600 text-gray-600 rounded-lg text-xs font-medium w-full flex items-center justify-center gap-1.5 transition-colors"
+    >
+      <span>+ Add Question</span>
+    </button>
+  </div>
+</div>
+
 
       
             <div>
@@ -2297,6 +2473,100 @@ const handleSubmit = async (e) => {
         )}
         <StepNavigation />
       </form>
+
+      {/* Bulk Import FAQs Modal */}
+      {showFaqImportModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-mono font-bold">
+                  {"</>"}
+                </div>
+                <h3 className="font-bold text-gray-800 text-base sm:text-lg">
+                  Bulk Import FAQs (JSON Format)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowFaqImportModal(false)}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold p-1 rounded-md"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4">
+              {/* Expected JSON Format Box */}
+              <div className="bg-blue-50/80 border border-blue-200/80 rounded-lg p-4">
+                <div className="font-semibold text-blue-900 text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                  <span>💡</span>
+                  <span>Expected JSON Format Example:</span>
+                </div>
+                <pre className="bg-white/90 border border-blue-100 rounded-md p-3 text-xs text-blue-950 font-mono overflow-x-auto">
+{`[
+  { "question": "What is the warranty period?", "answer": "1 Year Brand Warranty" },
+  { "question": "Is cash on Delivery available?", "answer": "Yes, COD is available" }
+]`}
+                </pre>
+              </div>
+
+              {/* Label + Upload Button */}
+              <div className="flex justify-between items-center">
+                <label className="text-xs sm:text-sm font-semibold text-gray-700">
+                  Paste JSON Array Below:
+                </label>
+                <label className="cursor-pointer text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                  <span>📁</span> Upload .json File
+                  <input
+                    type="file"
+                    accept=".json,application/json"
+                    onChange={handleFaqFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {/* Textarea */}
+              <textarea
+                value={faqJsonInput}
+                onChange={(e) => setFaqJsonInput(e.target.value)}
+                className="w-full h-44 border border-gray-300 rounded-lg p-3 text-xs sm:text-sm font-mono text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                placeholder={`[\n  {\n    "question": "Question here...",\n    "answer": "Answer here..."\n  }\n]`}
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-2 px-6 py-4 bg-gray-50 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setShowFaqImportModal(false)}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-100 w-full sm:w-auto"
+              >
+                Cancel
+              </button>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => handleImportFaqs('append')}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs sm:text-sm font-semibold w-full sm:w-auto shadow-sm"
+                >
+                  Import & Append
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleImportFaqs('replace')}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs sm:text-sm font-semibold w-full sm:w-auto shadow-sm"
+                >
+                  Replace All FAQs
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -22,7 +22,6 @@ import "tinymce/plugins/fullscreen";
 import "tinymce/plugins/insertdatetime";
 import "tinymce/plugins/media";
 import "tinymce/plugins/table";
-import "tinymce/plugins/help";
 import "tinymce/plugins/wordcount";
 import "tinymce/plugins/directionality";
 
@@ -42,7 +41,7 @@ const TinyEditor = ({ value, onChange }) => {
       plugins:
         "advlist autolink lists link image charmap preview anchor " +
         "searchreplace visualblocks code fullscreen " +
-        "insertdatetime media table help wordcount directionality",
+        "insertdatetime media table wordcount directionality",
       toolbar:
         "undo redo | formatselect | bold italic underline strikethrough | " +
         "alignleft aligncenter alignright alignjustify | " +

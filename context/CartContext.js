@@ -49,5 +49,6 @@ useEffect(() => {
 };
 
 export const useCart = () => {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+  return context || { cartCount: 0, updateCartCount: () => {}, clearCart: () => {} };
 };

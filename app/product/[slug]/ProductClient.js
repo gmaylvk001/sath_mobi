@@ -81,8 +81,8 @@ export default function ProductClient() {
 
 
 
-    const { updateCartCount } = useCart();
-    const { openAuthModal } = useModal();
+    const { updateCartCount } = useCart() || {};
+    const { openAuthModal } = useModal() || {};
     const handleBuyNow = async () => {
         console.log("Buying now with warranty:", selectedWarranty, selectedExtendedWarranty);
         try {
