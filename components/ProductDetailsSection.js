@@ -763,84 +763,95 @@ useEffect(() => {
 
        {activeTab === "keySpecs" && (
           <div>
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Product Features</h2>
-            {product.key_specifications &&
-  typeof product.key_specifications === "string" ? (
-    (() => {
-      try {
-        const parsed = JSON.parse(product.key_specifications);
-        if (typeof parsed === "object" && parsed !== null) {
-          return (
-            <div className="mt-2 p-4">
-          <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
-            {Object.entries(parsed).map(([key, value], idx) => (
-              <li key={idx}>
-                <span className="font-bold ">{key}:</span> <span className="text-gray-600 text-right">{value}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Product Features</h2>
+            {(() => {
+              let features = [];
+              if (product?.key_specifications) {
+                if (Array.isArray(product.key_specifications)) {
+                  features = product.key_specifications.flatMap(item =>
+                    item.split(/,(?![^(]*\))/)
+                  );
+                } else if (typeof product.key_specifications === "string") {
+                  try {
+                    const parsed = JSON.parse(product.key_specifications);
+                    if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
+                      return (
+                        <div className="mt-2 p-2">
+                          <ol className="list-decimal list-inside space-y-2 text-sm sm:text-base text-gray-700">
+                            {Object.entries(parsed).map(([key, value], idx) => (
+                              <li key={idx}>
+                                <span className="font-bold">{key}:</span> <span className="text-gray-600">{value}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+                      );
+                    }
+                  } catch (err) {
+                    // process as string below
+                  }
+                  features = product.key_specifications.split(/,(?![^(]*\))/);
+                }
+              }
 
-          );
-        } else {
-          const words = product.key_specifications.split(" ");
-          const shortText = words.slice(0, 50).join(" ");
-          return (
-            <p className="text-gray-700 mt-1 sm:mt-2 text-sm sm:text-base text-justify">
-              {words.length > 50 ? shortText + "..." : product.key_specifications}
-            </p>
-          );
-        }
-      } catch (err) {
-        const words = product.key_specifications.split(" ");
-        const shortText = words.slice(0, 50).join(" ");
-        return (
-          <p className="text-gray-700 mt-1 sm:mt-2 text-sm sm:text-base text-justify">
-            {words.length > 50 ? shortText + "..." : product.key_specifications}
-          </p>
-        );
-      }
-    })()
-  ) : (
-    <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">No features available.</p>
-  )}
+              const cleanedFeatures = features
+                .map(f => String(f).replace(/[{}\[\]"]/g, "").trim())
+                .filter(f => f.length > 0);
+
+              return cleanedFeatures.length > 0 ? (
+                <ul className="list-disc pl-4 sm:pl-5 space-y-1 text-sm sm:text-base text-gray-700 mt-3">
+                  {cleanedFeatures.map((feature, index) => (
+                    <li key={index}>
+                      {feature.charAt(0).toUpperCase() + feature.slice(1)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">No features available.</p>
+              );
+            })()}
           </div>
         )}
 
-
-
        {activeTab === "productHighlights" && (
-  <div>
-    <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Product Highlights</h2>
+          <div>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Product Highlights</h2>
+            {(() => {
+              let rawHighlights = [];
+              if (product?.product_highlights) {
+                if (Array.isArray(product.product_highlights)) {
+                  rawHighlights = product.product_highlights;
+                } else if (typeof product.product_highlights === "string") {
+                  rawHighlights = [product.product_highlights];
+                }
+              }
 
-  {Array.isArray(product.product_highlights) && product.product_highlights.length > 0 ? (
-  <ul className="list-disc pl-4 sm:pl-5 mt-1 sm:mt-3 text-gray-700 text-sm sm:text-base">
-    {product.product_highlights
-      .map((item) =>
-        item
-          .replace(/^\[|\]$/g, '')     // remove starting and ending brackets
-          .replace(/^"|"$/g, '')       // remove wrapping quotes
-          .replace(/\\"/g, '') 
-          .replace(/[\[\]{}"]/g, '') // <-- removes curly braces, square brackets, quotes
-          .replace(/\s+/g, ' ')        // remove escaped quotes
-          .trim()
-      )
-      .flatMap((cleanedItem) =>
-        cleanedItem
-          .split(/[\n]+/)              // split by newlines only (remove `,` to keep full phrases)
-          .map((line) => line.trim())
-          .filter((line) => line.length > 0)
-      )
-      .map((feature, index) => (
-        <li key={index}>{feature}</li>
-      ))}
-  </ul>
-) : (
-  <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">No highlights available.</p>
-)}
+              const items = rawHighlights
+                .flatMap((item) =>
+                  String(item)
+                    .replace(/^\[|\]$/g, '')
+                    .replace(/^"|"$/g, '')
+                    .replace(/\\"/g, '')
+                    .replace(/[\[\]{}"]/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim()
+                    .split(/[\n]+/)
+                    .map((line) => line.trim())
+                    .filter((line) => line.length > 0)
+                );
 
-  </div>
-)}
+              return items.length > 0 ? (
+                <ul className="list-disc pl-4 sm:pl-5 mt-3 space-y-1 text-sm sm:text-base text-gray-700">
+                  {items.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">No highlights available.</p>
+              );
+            })()}
+          </div>
+        )}
 
 
       </div>
