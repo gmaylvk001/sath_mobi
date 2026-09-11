@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- TV Monitor Screen -->
+  <rect x="12" y="25" width="56" height="42" rx="3" fill="none" stroke="black" stroke-width="6" />
+  <!-- TV Stand Base -->
+  <path d="M 32 67 L 48 67 M 40 67 L 40 73 M 30 73 L 50 73" stroke="black" stroke-width="6" fill="none" />
+
+  <!-- Remote Control -->
+  <rect x="76" y="46" width="16" height="28" rx="2" fill="none" stroke="black" stroke-width="4" />
+  <!-- Remote Indicator LED -->
+  <circle cx="80" cy="49" r="1" fill="black" stroke="none" />
+  <!-- Remote Button Grid -->
+  <rect x="79" y="52" width="3" height="2" fill="black" stroke="none" />
+  <rect x="84" y="52" width="3" height="2" fill="black" stroke="none" />
+  <rect x="89" y="52" width="3" height="2" fill="black" stroke="none" />
+  <rect x="79" y="56" width="3" height="2" fill="black" stroke="none" />
+  <rect x="84" y="56" width="3" height="2" fill="black" stroke="none" />
+  <rect x="89" y="56" width="3" height="2" fill="black" stroke="none" />
+  <!-- Circle Nav Pad -->
+  <circle cx="84" cy="66" r="4" fill="none" stroke="black" stroke-width="3" />
+  <circle cx="84" cy="66" r="1" fill="black" stroke="none" />
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tablet Outer Body -->
+  <rect x="22" y="14" width="56" height="72" rx="7" fill="black" stroke="none" />
+  <!-- Inner Screen Display Area -->
+  <rect x="26" y="22" width="48" height="56" fill="white" stroke="none" />
+  <!-- Top Earpiece Slit -->
+  <rect x="44" y="17" width="12" height="2" rx="1" fill="white" stroke="none" />
+  <!-- Bottom Home Button -->
+  <circle cx="50" cy="82" r="3" fill="white" stroke="none" />
+</svg>

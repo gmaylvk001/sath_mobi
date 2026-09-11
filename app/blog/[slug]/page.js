@@ -22,7 +22,7 @@ async function getBlogPost(slug) {
 }
 
 export default async function BlogPost({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const blog = await getBlogPost(slug);
 
   if (!blog) {

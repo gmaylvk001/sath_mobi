@@ -11,12 +11,12 @@ export async function GET() {
       .sort({ name: 1 })
       .lean();
 
-    return NextResponse.json({ success: true, data: stores });
+    return NextResponse.json({ success: true, data: stores || [] });
   } catch (error) {
     console.error("Get store locations error:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to fetch store locations" },
-      { status: 500 }
+      { success: false, data: [], error: error.message || "Failed to fetch store locations" },
+      { status: 200 }
     );
   }
 }

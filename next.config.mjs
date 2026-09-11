@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {images: {
+const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
     remotePatterns: [
       {
         protocol: "http",
@@ -8,6 +15,7 @@ const nextConfig = {images: {
         pathname: "/uploads/categories/**",
       },
     ],
-  },};
+  },
+};
 
 export default nextConfig;

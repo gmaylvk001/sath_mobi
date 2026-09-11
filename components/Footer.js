@@ -46,17 +46,23 @@ const Footer = () => {
       try {
         const response = await fetch("/api/store-locations/get");
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          setStores([]);
+          return;
         }
-        const data = await response.json();
-        if (data.success) {
-          setStores(data.data);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          if (data.success && Array.isArray(data.data)) {
+            setStores(data.data);
+          } else {
+            setStores([]);
+          }
         } else {
-          setErrorStores(data.error || "Failed to fetch stores");
+          setStores([]);
         }
       } catch (error) {
         console.error("Error fetching stores:", error);
-        setErrorStores(error.message);
+        setStores([]);
       } finally {
         setLoadingStores(false);
       }

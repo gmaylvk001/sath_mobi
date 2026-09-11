@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Adapter Body -->
+  <rect x="32" y="30" width="36" height="34" rx="5" fill="black" stroke="none" />
+  <!-- Adapter Prongs -->
+  <rect x="40" y="16" width="5" height="14" fill="black" stroke="none" />
+  <rect x="55" y="16" width="5" height="14" fill="black" stroke="none" />
+  <!-- Lightning Bolt -->
+  <polygon points="52,36 44,48 50,48 48,58 56,46 50,46" fill="white" stroke="none" />
+  <!-- Cable base outlet -->
+  <rect x="44" y="64" width="12" height="6" rx="2" fill="black" stroke="none" />
+  <!-- Curved Cable -->
+  <path d="M 50 70 C 50 92, 76 92, 76 70 C 76 52, 60 48, 60 62" stroke="black" stroke-width="5" fill="none" />
+  <!-- Cable USB Connector -->
+  <rect x="55" y="62" width="10" height="14" rx="2" fill="black" stroke="none" />
+  <rect x="57" y="76" width="6" height="4" fill="black" stroke="none" />
+</svg>

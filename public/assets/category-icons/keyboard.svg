@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Keyboard Frame -->
+  <rect x="15" y="32" width="70" height="36" rx="5" stroke="black" stroke-width="6" fill="none" />
+  <!-- Keys Grid Top Row -->
+  <rect x="22" y="38" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="33" y="38" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="44" y="38" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="55" y="38" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="66" y="38" width="12" height="6" rx="1" fill="black" stroke="none" />
+  <!-- Keys Grid Middle Row -->
+  <rect x="22" y="47" width="10" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="35" y="47" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="46" y="47" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="57" y="47" width="8" height="6" rx="1" fill="black" stroke="none" />
+  <rect x="68" y="47" width="10" height="6" rx="1" fill="black" stroke="none" />
+  <!-- Spacebar Row -->
+  <rect x="35" y="56" width="30" height="6" rx="1" fill="black" stroke="none" />
+</svg>
