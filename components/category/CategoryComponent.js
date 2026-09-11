@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "react-feather";
 import ProductCard from "@/components/ProductCard";
 import Addtocart from "@/components/AddToCart";
@@ -28,7 +28,6 @@ export default function CategoryPage() {
   const [filterGroups, setFilterGroups] = useState({});
   const [loading, setLoading] = useState(true);
   const { slug } = useParams();
-  const searchParams = useSearchParams();
   const [sortOption, setSortOption] = useState('');
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
   const [isBrandsExpanded, setIsBrandsExpanded] = useState(true);
@@ -64,7 +63,7 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
     if (slug) {
       fetchInitialData();
     }
-  }, [slug, searchParams]);
+  }, [slug]);
 
   
   
@@ -88,23 +87,7 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
          banners: banners
       });
 
-      // Parse brand parameter from URL if present
-      const brandsQuery = searchParams ? (searchParams.get('brands') || searchParams.get('brand')) : null;
-      let initialBrandIds = [];
-      if (brandsQuery) {
-        const targetBrandsList = brandsQuery.split(',').map(s => s.trim().toLowerCase());
-        initialBrandIds = (categoryData.brands || [])
-          .filter(b => {
-            const bId = (b._id || '').toString().toLowerCase();
-            const bSlug = (b.brand_slug || b.slug || '').toString().toLowerCase();
-            const bName = (b.brand_name || b.name || '').toString().toLowerCase();
-            return targetBrandsList.some(t => t === bId || t === bSlug || t === bName);
-          })
-          .map(b => b._id);
-      }
-
-      let currentMinPrice = 0;
-      let currentMaxPrice = 100000;
+      
 
       if (categoryData.products?.length > 0) {
         const prices = categoryData.products.map(p => p.special_price);
@@ -117,21 +100,14 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
           maxPrice = maxPrice + 1; // or e.g., maxPrice * 1.05
         }
 
-        currentMinPrice = minPrice;
-        currentMaxPrice = maxPrice;
         setPriceRange([minPrice, maxPrice]);
+        setSelectedFilters(prev => ({
+          ...prev,
+          price: { min: minPrice, max: maxPrice }
+        }));
       } else {
         setNofound(true);
       }
-
-      const initialSelectedFilters = {
-        categories: [],
-        brands: initialBrandIds,
-        price: { min: currentMinPrice, max: currentMaxPrice },
-        filters: []
-      };
-
-      setSelectedFilters(initialSelectedFilters);
 
       const groups = {};
       categoryData.filters.forEach(filter => {
@@ -150,8 +126,8 @@ const [currentCategoryBannerIndex, setCurrentCategoryBannerIndex] = useState(0);
       });
       setFilterGroups(groups);
       
-      // Fetch products after setting up initial data with initialSelectedFilters
-      await fetchFilteredProducts(categoryData, 1, true, initialSelectedFilters);
+      // Fetch products after setting up initial data
+      await fetchFilteredProducts(categoryData, 1, true);
     } catch (error) {
       toast.error("Error fetching initial data");
     } finally {
@@ -186,14 +162,13 @@ useEffect(() => {
   fetchBrand();
 }, []);
 
-  const fetchFilteredProducts = useCallback(async (categoryData, pageNum = 1, initialLoad = false, filtersOverride = null) => {
+  const fetchFilteredProducts = useCallback(async (categoryData, pageNum = 1, initialLoad = false) => {
     try {
       if (!categoryData.main_category) return;
       if (!initialLoad) setLoading(true);
-      const activeFilters = filtersOverride || selectedFilters;
       const query = new URLSearchParams();
-      const categoryIds = activeFilters.categories.length > 0
-        ? activeFilters.categories
+      const categoryIds = selectedFilters.categories.length > 0
+        ? selectedFilters.categories
         : categoryData.allCategoryIds;
 
       //query.set('categoryIds', categoryIds.join(','));
@@ -201,14 +176,14 @@ useEffect(() => {
       query.set('page', pageNum);
       query.set('limit', itemsPerPage);
 
-      if (activeFilters.brands && activeFilters.brands.length > 0) {
-        query.set('brands', activeFilters.brands.join(','));
+      if (selectedFilters.brands.length > 0) {
+        query.set('brands', selectedFilters.brands.join(','));
       }
-      query.set('minPrice', activeFilters.price.min);
-      query.set('maxPrice', activeFilters.price.max);
+      query.set('minPrice', selectedFilters.price.min);
+      query.set('maxPrice', selectedFilters.price.max);
       
-      if (activeFilters.filters && activeFilters.filters.length > 0) {
-        query.set('filters', activeFilters.filters.join(','));
+      if (selectedFilters.filters.length > 0) {
+        query.set('filters', selectedFilters.filters.join(','));
       }
 
       const res = await fetch(`/api/product/filter/main?${query}`);
@@ -716,7 +691,6 @@ useEffect(() => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8">
             <div className="lg:col-span-1 space-y-6">
-              <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-3 text-gray-600 pl-1">{categoryData.main_category.category_name}</h1>
             </div>
             <div className="lg:col-span-3 hidden md:block">
               {/* Sorting and Count - Desktop */}

@@ -324,6 +324,7 @@ export async function POST(req) {
       "phone",
       "phone_after_hours",
       "website",
+      "whatsapp",
       "email",
       "twitter",
       "facebook",

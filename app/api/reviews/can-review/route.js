@@ -1,28 +1,34 @@
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
+import dbConnect from "@/lib/db";
 import Order from "@/models/ecom_order_infos";
 import Review from "@/models/Review";
 
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
-    const productId = searchParams.get("productId"); // IMPORTANT
-    const userId = searchParams.get("userId"); // IMPORTANT
-    const productCode = searchParams.get("productcode"); // IMPORTANT
+    const productId = searchParams.get("productId")?.trim();
+    const userId = searchParams.get("userId")?.trim();
+    const productCode = searchParams.get("productcode")?.trim();
 
-     if (!productId || !userId) {
+    if (
+      !productId ||
+      !userId ||
+      !mongoose.isValidObjectId(productId) ||
+      !mongoose.isValidObjectId(userId)
+    ) {
       return NextResponse.json(
-        { canReview: false, message: "Invalid request" },
-        { status: 400 }
+        { canReview: false, alreadyReviewed: false },
+        { status: 200 }
       );
     }
 
-   // const userObjectId = new mongoose.Types.ObjectId(userId);
-   // const productObjectId = new mongoose.Types.ObjectId(productId);
+    await dbConnect();
 
     /* 1️⃣ Already reviewed check */
     const existingReview = await Review.findOne({
-      user_id: userId,
-      product_id: productId
+      user_id: new mongoose.Types.ObjectId(userId),
+      product_id: new mongoose.Types.ObjectId(productId),
     });
 
     if (existingReview) {
@@ -31,6 +37,10 @@ export async function GET(req) {
         alreadyReviewed: true,
         message: "You have already reviewed this product",
       });
+    }
+
+    if (!productCode) {
+      return NextResponse.json({ canReview: false, alreadyReviewed: false });
     }
 
     const order = await Order.findOne({

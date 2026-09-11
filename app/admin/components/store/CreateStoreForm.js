@@ -36,6 +36,7 @@ export default function CreateStoreForm({ storeId = null }) {
     phone: "",
     phone_after_hours: "",
     website: "",
+    whatsapp: "",
     email: "",
     twitter: "",
     facebook: "",
@@ -96,6 +97,7 @@ export default function CreateStoreForm({ storeId = null }) {
           phone: result.phone || "",
           phone_after_hours: result.phone_after_hours || "",
           website: result.website || "",
+          whatsapp: result.whatsapp || "",
           email: result.email || "",
           twitter: result.twitter || "",
           facebook: result.facebook || "",
@@ -354,6 +356,7 @@ export default function CreateStoreForm({ storeId = null }) {
       "phone",
       "phone_after_hours",
       "website",
+      "whatsapp",
       "email",
       "twitter",
       "facebook",
@@ -589,6 +592,11 @@ export default function CreateStoreForm({ storeId = null }) {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
               <input type="text" name="website" className="p-2 border rounded w-full" onChange={handleInputChange} value={newStore.website} />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Whatsapp</label>
+              <input type="text" name="whatsapp" className="p-2 border rounded w-full" onChange={handleInputChange} value={newStore.whatsapp} />
             </div>
           </div>
         )}

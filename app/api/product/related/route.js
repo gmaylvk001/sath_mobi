@@ -8,8 +8,10 @@ export async function GET(req) {
     await dbConnect();
 
     const { searchParams } = new URL(req.url);
-    const categoryId = searchParams.get("category"); // category ID
-    const excludeId = searchParams.get("exclude"); // optional product to exclude
+    const categoryId =
+      searchParams.get("category") || searchParams.get("categoryId");
+    const excludeId =
+      searchParams.get("exclude") || searchParams.get("excludeId");
     const limit = parseInt(searchParams.get("limit")) || 5; // default 5
 
     if (!categoryId) {

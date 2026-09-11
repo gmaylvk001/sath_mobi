@@ -78,9 +78,12 @@ export default function BrandPage() {
       });
 
       if (brandData.products?.length > 0) {
-        const prices = brandData.products.map(p => p.special_price);
-        const minPrice = Math.min(...prices);
-        const maxPrice = Math.max(...prices);
+        const prices = brandData.products
+          .map((product) => Number(product.special_price ?? product.price))
+          .filter(Number.isFinite);
+        const minPrice = prices.length ? Math.min(...prices) : 0;
+        const rawMaxPrice = prices.length ? Math.max(...prices) : 0;
+        const maxPrice = rawMaxPrice > minPrice ? rawMaxPrice : minPrice + 100;
         setPriceRange([minPrice, maxPrice]);
         setSelectedFilters(prev => ({
           ...prev,
@@ -310,19 +313,22 @@ export default function BrandPage() {
  };
  
     const STEP = 100;
-   const MIN = priceRange[0];
-   const MAX = priceRange[1];
+   const MIN = Number.isFinite(priceRange[0]) ? priceRange[0] : 0;
+   const MAX = Math.max(
+     MIN + STEP,
+     Number.isFinite(priceRange[1]) ? priceRange[1] : MIN + STEP
+   );
  
    // slider local state
-   const [values, setValues] = useState([
-     selectedFilters.price.min,
-     selectedFilters.price.max,
-   ]);
+   const [values, setValues] = useState([MIN, MAX]);
  
    // sync with external filters (e.g. reset button)
    useEffect(() => {
-     setValues([selectedFilters.price.min, selectedFilters.price.max]);
-   }, [selectedFilters.price.min, selectedFilters.price.max]);
+     setValues([
+       Math.max(MIN, Math.min(selectedFilters.price.min, MAX - STEP)),
+       Math.min(MAX, Math.max(selectedFilters.price.max, MIN + STEP)),
+     ]);
+   }, [selectedFilters.price.min, selectedFilters.price.max, MIN, MAX]);
  
   const CategoryTree = ({ 
     categories, 

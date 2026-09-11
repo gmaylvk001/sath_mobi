@@ -69,15 +69,22 @@ useEffect(() => {
 }, [product?._id]);
 */
 
-if (!userId) {
-const token = localStorage.getItem("token");
-      if (token) {
-        const decoded = jwtDecode(token);
-        const userId = decoded.userId;
-        console.log('userId:', userId);
-        setUserId(userId);
-      }
+useEffect(() => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setCheckingReview(false);
+      return;
     }
+
+    const decoded = jwtDecode(token);
+    if (decoded?.userId) setUserId(decoded.userId);
+    else setCheckingReview(false);
+  } catch (error) {
+    console.error("Unable to read user session:", error);
+    setCheckingReview(false);
+  }
+}, []);
 
   const tabData = {
     overview: product.overviewdescription || "No overview available.",
@@ -150,7 +157,7 @@ const removeImage = (index) => {
         `/api/reviews/can-review?&userId=${userId}&productcode=${product.item_code}&productId=${product._id}`
       );
       const data = await res.json();
-      console.log('Can review:', data);
+      //console.log('Can review:', data);
       setAlreadyReviewed(data.alreadyReviewed);
       setCanReview(data.canReview);
       setMessage(data.message || "");
@@ -161,10 +168,12 @@ const removeImage = (index) => {
     }
   };
 
-  if (product?._id) {
+  if (product?._id && userId) {
     checkCanReview();
+  } else if (!userId) {
+    setCheckingReview(false);
   }
-}, [product?._id]);
+}, [product?._id, userId]);
 
   
 const fetchBrand = async () => {
@@ -201,10 +210,18 @@ useEffect(() => {
 }, []);
 
   const fetchRelatedProducts = async () => {
+    const categoryId = product?.category?._id || product?.category;
+
+    if (!categoryId || !product?._id) {
+      setRelatedProducts([]);
+      setLoadingRelated(false);
+      return;
+    }
+
     try {
       setLoadingRelated(true);
       const response = await fetch(
-        `/api/product/related?categoryId=${product.category._id}&excludeId=${product._id}&limit=4`
+        `/api/product/related?categoryId=${encodeURIComponent(categoryId)}&excludeId=${encodeURIComponent(product._id)}&limit=4`
       );
       const data = await response.json();
       if (data.success) {
@@ -353,10 +370,36 @@ useEffect(() => {
   const decodeAndClean = (str) => {
     if (!str) return "";
 
-    // Create a temporary element to decode HTML entities
-    const temp = document.createElement("textarea");
-    temp.innerHTML = str;
-    let decoded = temp.value;
+    let decoded = str;
+
+    if (typeof document !== "undefined") {
+      const temp = document.createElement("textarea");
+      temp.innerHTML = str;
+      decoded = temp.value;
+    } else {
+      const entities = {
+        amp: "&",
+        apos: "'",
+        gt: ">",
+        lt: "<",
+        nbsp: " ",
+        quot: '"',
+      };
+
+      decoded = str.replace(
+        /&(#x?[0-9a-f]+|amp|apos|gt|lt|nbsp|quot);/gi,
+        (entity, value) => {
+          if (value[0] === "#") {
+            const code = value[1].toLowerCase() === "x"
+              ? parseInt(value.slice(2), 16)
+              : parseInt(value.slice(1), 10);
+            return Number.isNaN(code) ? entity : String.fromCodePoint(code);
+          }
+
+          return entities[value.toLowerCase()] || entity;
+        }
+      );
+    }
 
     // Remove both actual LRM char and literal "&lrm;"
     decoded = decoded.replace(/\u200E/g, "").replace(/&lrm;/gi, "");

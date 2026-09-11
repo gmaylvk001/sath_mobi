@@ -30,6 +30,7 @@ export default function StoreComponent() {
     phone: "",
     phone_after_hours: "",
     website: "",
+    whatsapp: "",
     email: "",
     twitter: "",
     facebook: "",

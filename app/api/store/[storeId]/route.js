@@ -105,6 +105,7 @@ export async function PUT(request, { params }) {
       phone: fields.phone?.[0] || "",
       phone_after_hours: fields.phone_after_hours?.[0] || "",
       website: fields.website?.[0] || "",
+      whatsapp: fields.whatsapp?.[0] || "",
       email: fields.email?.[0] || "",
       twitter: fields.twitter?.[0] || "",
       facebook: fields.facebook?.[0] || "",

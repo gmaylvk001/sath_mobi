@@ -1,7 +1,7 @@
 import CategoryClient from "@/components/category/CategoryComponent";
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
+  const { slug } = params;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
   try {
@@ -62,7 +62,7 @@ async function getCategoryData(slug) {
 }
 
 export default async function Page({ params }) {
-  const { slug } = await params;
+  const { slug } = params;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const data = await getCategoryData(slug);
 
@@ -127,6 +127,11 @@ export default async function Page({ params }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
+      )}
+      {data?.main_category?.category_name && (
+        <h1 className="container mx-auto px-4 pt-8 text-xl sm:text-3xl font-bold text-gray-600">
+          {data.main_category.category_name}
+        </h1>
       )}
       <CategoryClient />
     </>

@@ -98,6 +98,7 @@ const StoreSchema = new mongoose.Schema(
     phone_after_hours: { type: String },
 
     website: { type: String },
+    whatsapp: { type: String },
     email: { type: String },
     twitter: { type: String },
     facebook: { type: String },
