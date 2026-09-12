@@ -7,39 +7,42 @@ export async function POST(req) {
   try {
     await connectDB();
 
-    const { productId } = await req.json();
+    const { productId, productIds } = await req.json();
+    const ids = Array.isArray(productIds) ? productIds : productId ? [productId] : [];
 
-    if (!productId) {
+    if (ids.length === 0) {
       return NextResponse.json(
-        { error: "Product ID is required" },
+        { error: "At least one product ID is required" },
         { status: 400 }
       );
     }
 
-    const removedProduct = await ProductRemoved.findById(productId).lean();
+    for (const id of ids) {
+      const removedProduct = await ProductRemoved.findById(id).lean();
 
-    if (!removedProduct) {
-      return NextResponse.json(
-        { error: "Removed product not found" },
-        { status: 404 }
+      if (!removedProduct) {
+        return NextResponse.json(
+          { error: "Removed product not found" },
+          { status: 404 }
+        );
+      }
+
+      const { removedAt, ...productData } = removedProduct;
+
+      await Product.replaceOne(
+        { _id: removedProduct._id },
+        {
+          ...productData,
+          updatedAt: new Date(),
+        },
+        { upsert: true }
       );
+
+      await ProductRemoved.deleteOne({ _id: removedProduct._id });
     }
 
-    const { removedAt, ...productData } = removedProduct;
-
-    await Product.replaceOne(
-      { _id: removedProduct._id },
-      {
-        ...productData,
-        updatedAt: new Date(),
-      },
-      { upsert: true }
-    );
-
-    await ProductRemoved.deleteOne({ _id: removedProduct._id });
-
     return NextResponse.json(
-      { message: "Product restored successfully" },
+      { message: "Products restored successfully", count: ids.length },
       { status: 200 }
     );
   } catch (error) {

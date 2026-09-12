@@ -7,31 +7,34 @@ export async function POST(req) {
   try {
     await connectDB();
 
-    const { productId } = await req.json();
+    const { productId, productIds } = await req.json();
+    const ids = Array.isArray(productIds) ? productIds : productId ? [productId] : [];
 
-    if (!productId) {
-      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    if (ids.length === 0) {
+      return NextResponse.json({ error: "At least one product ID is required" }, { status: 400 });
     }
 
-    const product = await Product.findById(productId).lean();
+    for (const id of ids) {
+      const product = await Product.findById(id).lean();
 
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      }
+
+      await ProductRemoved.replaceOne(
+        { _id: product._id },
+        {
+          ...product,
+          removedAt: new Date(),
+          updatedAt: new Date(),
+        },
+        { upsert: true }
+      );
+
+      await Product.deleteOne({ _id: id });
     }
 
-    await ProductRemoved.replaceOne(
-      { _id: product._id },
-      {
-        ...product,
-        removedAt: new Date(),
-        updatedAt: new Date(),
-      },
-      { upsert: true }
-    );
-
-    await Product.deleteOne({ _id: productId });
-
-    return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
+    return NextResponse.json({ message: "Products deleted successfully", count: ids.length }, { status: 200 });
   } catch (error) {
     console.error("Error deleting product:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

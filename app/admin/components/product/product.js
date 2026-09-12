@@ -21,6 +21,7 @@ export default function CategoryComponent() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [SelectedProduct, setSelectedProduct] = useState("");
+  const [selectedProductIds, setSelectedProductIds] = useState([]);
   
   
   // Filters
@@ -314,18 +315,21 @@ const exportToExcel = () => {
     setCurrentPage(0);
   };
 
-  const handleDeleteProduct = async (productId) => {
+  const handleDeleteProduct = async (productIds) => {
+    const ids = Array.isArray(productIds) ? productIds : [productIds];
+
     try {
       const response = await fetch("/api/product/delete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productIds: ids }),
       });
 
       const result = await response.json();
       if (response.ok) {
-        setSuccessMessage("Product deleted successfully.");
+        setSuccessMessage(`${ids.length} product${ids.length === 1 ? "" : "s"} deleted successfully.`);
         setShowSuccessModal(true);
+        setSelectedProductIds([]);
         fetchProducts();
       } else {
         console.error("Error:", result.error);
@@ -338,6 +342,25 @@ const exportToExcel = () => {
       setShowConfirmationModal(false);
       setProductToDelete(null);
     }
+  };
+
+  const toggleProductSelection = (productId) => {
+    setSelectedProductIds((currentIds) =>
+      currentIds.includes(productId)
+        ? currentIds.filter((id) => id !== productId)
+        : [...currentIds, productId]
+    );
+  };
+
+  const toggleCurrentPageSelection = () => {
+    const currentPageIds = paginatedProducts.map((product) => product._id);
+    const allCurrentPageSelected = currentPageIds.every((id) => selectedProductIds.includes(id));
+
+    setSelectedProductIds((currentIds) =>
+      allCurrentPageSelected
+        ? currentIds.filter((id) => !currentPageIds.includes(id))
+        : [...new Set([...currentIds, ...currentPageIds])]
+    );
   };
 
   const clearDateFilter = () => {
@@ -620,6 +643,8 @@ if (stockFilter) {
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
+  const allCurrentPageSelected = paginatedProducts.length > 0 &&
+    paginatedProducts.every((product) => selectedProductIds.includes(product._id));
 
   return (
     <div className="container mx-auto p-4 max-w-full overflow-x-hidden">
@@ -743,11 +768,34 @@ if (stockFilter) {
 
           <hr className="border-t border-gray-200 mb-4" />
 
+          {selectedProductIds.length > 0 && (
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => {
+                  setProductToDelete(selectedProductIds);
+                  setShowConfirmationModal(true);
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
+              >
+                <Icon icon="mingcute:delete-2-line" />
+                Delete selected ({selectedProductIds.length})
+              </button>
+            </div>
+          )}
+
           {/* Products Table */}
           <div className="overflow-x-auto w-full max-w-full">
           <table className="w-full border border-gray-300" style={{minWidth: '900px'}}>
             <thead>
               <tr className="bg-gray-200">
+                <th className="p-2">
+                  <input
+                    type="checkbox"
+                    checked={allCurrentPageSelected}
+                    onChange={toggleCurrentPageSelection}
+                    aria-label="Select all products on this page"
+                  />
+                </th>
                 <th className="p-2">Action</th>
                 <th className="p-2">Item Code</th>
                 <th className="p-2">Ean</th>
@@ -763,6 +811,14 @@ if (stockFilter) {
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map((product, index) => (
                   <tr key={product._id} className="text-center border-b">
+                    <td className="p-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedProductIds.includes(product._id)}
+                        onChange={() => toggleProductSelection(product._id)}
+                        aria-label={`Select ${product.name}`}
+                      />
+                    </td>
                     {/* Action Column */}
                     <td>
                       <div className="flex items-center gap-2 justify-center">
@@ -851,7 +907,7 @@ if (stockFilter) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center p-4">
+                  <td colSpan="10" className="text-center p-4">
                     No Products found
                   </td>
                 </tr>
@@ -941,7 +997,9 @@ if (stockFilter) {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Delete Product</h2>
-            <p className="mb-4">Are you sure you want to delete this Product?</p>
+            <p className="mb-4">
+              Are you sure you want to delete {Array.isArray(productToDelete) ? `${productToDelete.length} products` : "this product"}?
+            </p>
 
             <div className="flex justify-end space-x-3">
               <button

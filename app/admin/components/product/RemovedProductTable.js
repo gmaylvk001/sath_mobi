@@ -7,7 +7,8 @@ export default function RemovedProductTable() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [restoringId, setRestoringId] = useState(null);
+  const [restoringIds, setRestoringIds] = useState([]);
+  const [selectedProductIds, setSelectedProductIds] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -34,15 +35,17 @@ export default function RemovedProductTable() {
     fetchRemovedProducts();
   }, []);
 
-  const handleRestoreProduct = async (productId) => {
+  const handleRestoreProduct = async (productIds) => {
+    const ids = Array.isArray(productIds) ? productIds : [productIds];
+
     try {
-      setRestoringId(productId);
+      setRestoringIds(ids);
       setErrorMessage("");
 
       const response = await fetch("/api/product/restore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productIds: ids }),
       });
 
       const result = await response.json();
@@ -51,16 +54,25 @@ export default function RemovedProductTable() {
         throw new Error(result.error || "Failed to restore product");
       }
 
-      setSuccessMessage("Product restored successfully.");
+      setSuccessMessage(`${ids.length} product${ids.length === 1 ? "" : "s"} restored successfully.`);
       setProducts((currentProducts) =>
-        currentProducts.filter((product) => product._id !== productId)
+        currentProducts.filter((product) => !ids.includes(product._id))
       );
+      setSelectedProductIds([]);
     } catch (error) {
       console.error("Error restoring product:", error);
-      setErrorMessage("Failed to restore product.");
+      setErrorMessage("Failed to restore product(s).");
     } finally {
-      setRestoringId(null);
+      setRestoringIds([]);
     }
+  };
+
+  const toggleProductSelection = (productId) => {
+    setSelectedProductIds((currentIds) =>
+      currentIds.includes(productId)
+        ? currentIds.filter((id) => id !== productId)
+        : [...currentIds, productId]
+    );
   };
 
   const filteredProducts = products.filter((product) => {
@@ -76,6 +88,19 @@ export default function RemovedProductTable() {
       product.item_code?.toLowerCase().includes(query)
     );
   });
+
+  const allFilteredProductsSelected = filteredProducts.length > 0 &&
+    filteredProducts.every((product) => selectedProductIds.includes(product._id));
+
+  const toggleFilteredProductSelection = () => {
+    const filteredProductIds = filteredProducts.map((product) => product._id);
+
+    setSelectedProductIds((currentIds) =>
+      allFilteredProductsSelected
+        ? currentIds.filter((id) => !filteredProductIds.includes(id))
+        : [...new Set([...currentIds, ...filteredProductIds])]
+    );
+  };
 
   return (
     <div className="container mx-auto p-4 max-w-full overflow-x-hidden">
@@ -109,6 +134,19 @@ export default function RemovedProductTable() {
           />
         </div>
 
+        {selectedProductIds.length > 0 && (
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => handleRestoreProduct(selectedProductIds)}
+              disabled={restoringIds.length > 0}
+              className="bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white px-4 py-2 rounded-md inline-flex items-center gap-2"
+            >
+              <Icon icon="mdi:restore" />
+              Restore selected ({selectedProductIds.length})
+            </button>
+          </div>
+        )}
+
         {isLoading ? (
           <p>Loading removed products...</p>
         ) : (
@@ -116,6 +154,14 @@ export default function RemovedProductTable() {
             <table className="w-full border border-gray-300" style={{ minWidth: "900px" }}>
               <thead>
                 <tr className="bg-gray-200">
+                  <th className="p-2">
+                    <input
+                      type="checkbox"
+                      checked={allFilteredProductsSelected}
+                      onChange={toggleFilteredProductSelection}
+                      aria-label="Select all removed products"
+                    />
+                  </th>
                   <th className="p-2">Action</th>
                   <th className="p-2">Item Code</th>
                   <th className="p-2">Image</th>
@@ -131,15 +177,23 @@ export default function RemovedProductTable() {
                   filteredProducts.map((product) => (
                     <tr key={product._id} className="text-center border-b">
                       <td className="p-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedProductIds.includes(product._id)}
+                          onChange={() => toggleProductSelection(product._id)}
+                          aria-label={`Select ${product.name}`}
+                        />
+                      </td>
+                      <td className="p-2">
                         <button
                           onClick={() => handleRestoreProduct(product._id)}
-                          disabled={restoringId === product._id}
+                          disabled={restoringIds.length > 0}
                           className="bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white px-3 py-2 rounded-md inline-flex items-center gap-2"
                           title="Restore Product"
                         >
                           <Icon icon="mdi:restore" />
                           <span>
-                            {restoringId === product._id ? "Restoring..." : "Restore"}
+                            {restoringIds.includes(product._id) ? "Restoring..." : "Restore"}
                           </span>
                         </button>
                       </td>
@@ -186,7 +240,7 @@ export default function RemovedProductTable() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center p-4">
+                    <td colSpan="9" className="text-center p-4">
                       No removed products found
                     </td>
                   </tr>
