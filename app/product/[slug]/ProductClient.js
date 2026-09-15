@@ -839,7 +839,41 @@ export default function ProductClient({ initialProduct = null }) {
 
                     {/* Middle Section */}
                     <div className="md:col-span-5">
-                        <h1 className="text-1xl font-semibold">{product.name}</h1>
+                        {/* Amazon-Style Combined Title (Product Title + Meta Keywords) */}
+                        {(() => {
+                            const baseTitle = product.meta_title || product.name || '';
+                            const keywordsStr = product.search_keywords || product.meta_keywords || '';
+                            let combinedTitle = baseTitle;
+
+                            if (keywordsStr) {
+                                const keywordsArr = keywordsStr
+                                    .split(',')
+                                    .map(k => k.trim())
+                                    .filter(k => k && !baseTitle.toLowerCase().includes(k.toLowerCase()));
+                                if (keywordsArr.length > 0) {
+                                    combinedTitle = `${baseTitle}, ${keywordsArr.join(', ')}`;
+                                }
+                            }
+
+                            return (
+                                <h1 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 leading-snug tracking-normal mb-2">
+                                    {combinedTitle}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const el = document.getElementById('product-details-section');
+                                            if (el) {
+                                                el.scrollIntoView({ behavior: 'smooth' });
+                                            }
+                                        }}
+                                        className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium hover:underline focus:outline-none ml-1.5 inline-block cursor-pointer align-baseline"
+                                    >
+                                        more...
+                                    </button>
+                                </h1>
+                            );
+                        })()}
+
                         <div className="mt-2 pb-3 border-b border-gray-400">
                             {/* Top Row - Item Code and Quantity Label */}
                             <div className="flex items-center space-x-2 text-sm mb-1">
@@ -990,7 +1024,10 @@ export default function ProductClient({ initialProduct = null }) {
                             </div>
                         </div> */}
                         {/* <h4><b>Available offers</b></h4> */}
-                        <RazorpayOffers amount={product.special_price} />
+                        <RazorpayOffers
+                          amount={product?.special_price || product?.price || 0}
+                          onGstInvoiceClick={() => setshowGstInvoiceModal(true)}
+                        />
 
                         {/* EMI Modal */}
                         {showEMIModal && (
@@ -1157,6 +1194,8 @@ export default function ProductClient({ initialProduct = null }) {
                                 </div>
                             </div>
                         )}
+
+
 
                         {/* Product More Info */}
                         <div className="mt-4 bg-gray-50 p-4 rounded-md">
@@ -1360,13 +1399,13 @@ export default function ProductClient({ initialProduct = null }) {
 
                             {/* Modal */}
                             {showGstInvoiceModal && (
-                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                                    <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl relative p-6">
+                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                                    <div className="bg-white rounded-lg shadow-lg w-full max-w-lg relative p-6">
                                     {/* Modal Header */}
-                                    <div className="flex justify-between items-center border-b pb-2">
+                                    <div className="flex justify-between items-center border-b pb-3">
                                         <h2 className="text-lg font-semibold text-red-800">GST Invoice</h2>
                                         <button
-                                        className="text-gray-500 hover:text-gray-700 text-xl"
+                                        className="text-gray-400 hover:text-gray-600 text-xl font-bold"
                                         onClick={() => setshowGstInvoiceModal(false)}
                                         >
                                         &times;
@@ -1374,15 +1413,17 @@ export default function ProductClient({ initialProduct = null }) {
                                     </div>
 
                                     {/* Modal Content */}
-                                    <div className="mt-4 text-sm text-gray-700 space-y-2 max-h-[60vh] scrollbar-hide overflow-y-auto">
-                                        <p>Click here to know more about our T & C</p>
+                                    <div className="my-5 text-sm text-gray-700">
+                                        <a href="/shipping" className="text-gray-700 hover:underline">
+                                            Click here to know more about our T & C
+                                        </a>
                                     </div>
 
                                     {/* Modal Footer */}
-                                    <div className="mt-6 flex justify-end border-t pt-3">
+                                    <div className="mt-4 flex justify-end border-t pt-3">
                                         <a
                                         href="/shipping"
-                                        className="text-sm text-red-600 font-medium hover:underline"
+                                        className="text-sm text-red-600 font-semibold hover:underline"
                                         >
                                         Know More
                                         </a>
@@ -1763,7 +1804,7 @@ export default function ProductClient({ initialProduct = null }) {
             </div>
         
 
-            <div className="space-y-8">
+            <div className="space-y-8 scroll-mt-6" id="product-details-section">
                 <ProductDetailsSection product={product} reviews={reviews} avgRating={avgRating} reviewCount={reviewCount}/>
                 <RecentlyViewedProducts className="w-full" />
                 <RelatedProducts className="w-full" categoryId={product.category} currentProductId={product._id} />
