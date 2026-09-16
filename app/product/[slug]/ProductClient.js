@@ -857,7 +857,7 @@ export default function ProductClient({ initialProduct = null }) {
 
                             return (
                                 <h1 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 leading-snug tracking-normal mb-2">
-                                    {combinedTitle}
+                                    {product.name}
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -890,7 +890,7 @@ export default function ProductClient({ initialProduct = null }) {
                                         <FaRupeeSign className="inline" />{Math.round(Number(product.special_price) || Number(product.price)).toLocaleString('en-IN')}
                                         </span>
 
-                                        {Number(product.special_price) > 0 && Number(product.price) > 0 && (
+                                        {Number(product.special_price) > 0 && Number(product.price) > Number(product.special_price) && (
                                             <span className="text-gray-800 line-through text-sm flex items-center">
                                                 <FaRupeeSign className="inline text-xs" />{Math.round(Number(product.price)).toLocaleString('en-IN')}
                                             </span>
