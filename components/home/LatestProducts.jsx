@@ -67,7 +67,7 @@ export default function LatestProducts() {
   const swiperProducts = products.slice(3);
 
   return (
-    <section className="w-full py-10 bg-linear-to-r from-linearyellow via-white to-linearyellow inner-section-padding border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#f0ecff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+    <section className="w-full py-10 bg-linear-to-r from-linearyellow via-white to-linearyellow inner-section-padding border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#f0ecff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4 max-sm:w-auto">
       {/* ================= MOBILE VIEW (FLIPKART 2x2 GRID MODEL) ================= */}
       <div className="block md:hidden">
         <div className="flex items-center justify-between mb-3">

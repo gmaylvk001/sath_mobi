@@ -396,7 +396,7 @@ export default function HomePage() {
       {/* ================= Latest Products ================= */}
       <OnSaleSection />
 
-      <section className="inner-section-padding py-10 max-sm:py-4 max-sm:mx-3 max-sm:my-4 max-sm:p-3.5 max-sm:bg-[#eff6ff] max-sm:rounded-2xl">
+      <section className="inner-section-padding py-10 max-sm:py-4 max-sm:mx-3 max-sm:my-4 max-sm:p-3.5 max-sm:bg-[#eff6ff] max-sm:rounded-2xl max-sm:w-auto">
         <div className="hidden max-sm:flex items-center justify-between mb-3">
           <h2 className="text-gray-900 font-bold text-lg">Trending TV Categories</h2>
           <div className="w-7 h-7 bg-black text-white rounded-full flex items-center justify-center font-bold text-xs shrink-0">
@@ -490,7 +490,7 @@ export default function HomePage() {
       <BrandSlider />
 
 
-      <section className="w-full inner-section-padding py-5 max-sm:mx-3 max-sm:my-3 max-sm:p-3.5 max-sm:bg-white max-sm:rounded-2xl max-sm:shadow-xs">
+      <section className="w-auto inner-section-padding py-5 max-sm:mx-3 max-sm:my-3 max-sm:p-3.5 max-sm:bg-white max-sm:rounded-2xl max-sm:shadow-xs max-sm:w-auto">
         <h2 className="text-primary mb-5 text-2xl font-bold max-sm:text-lg max-sm:text-gray-900 max-sm:mb-3">
           What&apos;s Trending
         </h2>

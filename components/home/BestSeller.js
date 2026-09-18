@@ -93,7 +93,7 @@ const BestSellers = () => {
   };
 
   return (
-    <section className="inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#fff7ed] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+    <section className="inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#fff7ed] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4 max-sm:w-auto">
       <div className="flex items-center justify-between mb-5 max-sm:mb-3">
         <h2 className="text-2xl font-bold text-primary max-sm:text-gray-900 text-center max-sm:text-left max-sm:text-lg">
           Best Price in the Market
@@ -107,8 +107,8 @@ const BestSellers = () => {
       </div>
 
       {/* CATEGORY SCROLL (FLIPKART APP ICON CARD STYLE - UNIFORM SIZE) */}
-      <div className="max-w-3xl mx-auto mb-5 max-sm:mb-4 overflow-x-auto pb-1.5">
-        <div className="flex gap-3 max-sm:gap-2 justify-start md:justify-center overflow-x-auto px-1 py-1">
+      <div className="max-w-3xl mx-auto mb-3 max-sm:mb-2">
+        <div className="flex gap-3 max-sm:gap-2 justify-start md:justify-center overflow-x-auto scrollbar-hide px-1 py-1">
           {categories.map((cat) => {
             const isActive = activeCategory === cat._id;
             return (
@@ -131,7 +131,9 @@ const BestSellers = () => {
                     <img
                       src={cat.image}
                       alt={cat.category_name}
-                      className="w-full h-full object-contain max-w-full max-h-full"
+                      className={`w-full h-full object-contain max-w-full max-h-full ${
+                        cat.category_name === "Accessories" ? "scale-90 p-0.5" : ""
+                      }`}
                     />
                   )}
                 </div>
@@ -145,6 +147,20 @@ const BestSellers = () => {
               </button>
             );
           })}
+        </div>
+
+        {/* MOBILE INDICATOR DOTS LIKE IMAGE 2 */}
+        <div className="flex md:hidden items-center justify-center gap-1.5 mt-2.5 mb-1">
+          {categories.map((cat) => (
+            <span
+              key={cat._id}
+              className={`transition-all duration-300 rounded-full ${
+                activeCategory === cat._id
+                  ? "w-6 h-1.5 bg-black"
+                  : "w-1.5 h-1.5 bg-gray-300"
+              }`}
+            />
+          ))}
         </div>
       </div>
          
@@ -265,7 +281,7 @@ const BestSellers = () => {
   <> 
       {/* ---------------- ACCESSORIES GRID ---------------- */}
       <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
-        <div className="col-span-1">
+        <div className="col-span-2 max-sm:col-span-2">
           <Link href="/category/accessories">
           <GridImage src="/assets/images/categoryimages/access-1.png" alt="Accessories1" />
           </Link>
@@ -415,33 +431,33 @@ const BestSellers = () => {
                             </p>
                         </Link>
 
-                        <div className="flex flex-wrap items-center gap-2 w-full">
+                        <div className="flex flex-wrap items-center gap-1.5 w-full mt-1.5">
+                          <span className="font-extrabold text-red-600 text-xs sm:text-sm">
+                            ₹{sell.toLocaleString('en-IN')}
+                          </span>
 
-                          <div>
-                            <span className="font-bold text-xs sm:text-[15px] px-1 py-2">
-                              ₹ {sell.toLocaleString('en-IN')}
-                            </span>
-                            {mrp && (
-                              <span className="text-red-500 fold-semiblod line-through px-1 py-2 text-[9px] sm:text-xs">
-                                ₹ {mrp.toLocaleString('en-IN')}
-                              </span>
-                            )}
-                          </div>
                           {mrp && (
-                              <span className="bg-green-600 text-white text-[9px] sm:text-[10px] font-semibold px-1 py-1 rounded-md 
-                                w-auto mt-1 sm:mt-0">
-                                {discount}% Off
-                              </span>
-                            )}
+                            <span className="text-gray-400 line-through text-[10px] sm:text-xs">
+                              ₹{mrp.toLocaleString('en-IN')}
+                            </span>
+                          )}
+
+                          {discount > 0 && (
+                            <span className="bg-emerald-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0">
+                              {discount}% Off
+                            </span>
+                          )}
                         </div>
-                        <div className="flex items-center justify-between mt-2">
-                            <Addtocart
-                              productId={product._id}
-                              stockQuantity={product.quantity}
-                              special_price={sell}
-                              className="flex-1 text-xs sm:text-sm py-1.5 sm:py-2"
-                            />
-                            <a
+
+                        <div className="flex items-center gap-1.5 justify-between mt-2.5 w-full">
+                          <Addtocart
+                            productId={product._id}
+                            stockQuantity={product.quantity}
+                            special_price={sell}
+                            className="flex-1 text-[11px] sm:text-sm py-1.5"
+                          />
+
+                          <a
                             href={`https://wa.me/919047048777?text=${encodeURIComponent(
                                 `Check Out This Product: ${
                                 typeof window !== "undefined"
@@ -451,13 +467,13 @@ const BestSellers = () => {
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full flex items-center justify-center transition"
-                            >
-                            <svg className="w-4 h-4" viewBox="0 0 32 32" fill="currentColor">
-                                <path d="M16.003 2.667C8.64 2.667 2.667 8.64 2.667 16c0 2.773.736 5.368 2.009 7.629L2 30l6.565-2.643A13.254 13.254 0 0016.003 29.333C23.36 29.333 29.333 23.36 29.333 16c0-7.36-5.973-13.333-13.33-13.333zm7.608 18.565c-.32.894-1.87 1.749-2.574 1.865-.657.104-1.479.148-2.385-.148-.55-.175-1.256-.412-2.162-.812-3.8-1.648-6.294-5.77-6.49-6.04-.192-.269-1.55-2.066-1.55-3.943 0-1.878.982-2.801 1.33-3.168.346-.364.75-.456 1.001-.456.25 0 .5.002.719.013.231.01.539-.088.845.643.32.768 1.085 2.669 1.18 2.863.096.192.16.423.03.683-.134.26-.2.423-.39.65-.192.231-.413.512-.589.689-.192.192-.391.401-.173.788.222.392.986 1.625 2.116 2.636 1.454 1.298 2.682 1.7 3.075 1.894.393.192.618.173.845-.096.23-.27.975-1.136 1.237-1.527.262-.392.524-.32.894-.192.375.13 2.35 1.107 2.75 1.308.393.205.656.308.75.48.096.173.096 1.003-.224 1.897z" />
+                            className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full flex items-center justify-center shrink-0 transition"
+                          >
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 32 32" fill="currentColor">
+                              <path d="M16.003 2.667C8.64 2.667 2.667 8.64 2.667 16c0 2.773.736 5.368 2.009 7.629L2 30l6.565-2.643A13.254 13.254 0 0016.003 29.333C23.36 29.333 29.333 23.36 29.333 16c0-7.36-5.973-13.333-13.33-13.333zm7.608 18.565c-.32.894-1.87 1.749-2.574 1.865-.657.104-1.479.148-2.385-.148-.55-.175-1.256-.412-2.162-.812-3.8-1.648-6.294-5.77-6.49-6.04-.192-.269-1.55-2.066-1.55-3.943 0-1.878.982-2.801 1.33-3.168.346-.364.75-.456 1.001-.456.25 0 .5.002.719.013.231.01.539-.088.845.643.32.768 1.085 2.669 1.18 2.863.096.192.16.423.03.683-.134.26-.2.423-.39.65-.192.231-.413.512-.589.689-.192.192-.391.401-.173.788.222.392.986 1.625 2.116 2.636 1.454 1.298 2.682 1.7 3.075 1.894.393.192.618.173.845-.096.23-.27.975-1.136 1.237-1.527.262-.392.524-.32.894-.192.375.13 2.35 1.107 2.75 1.308.393.205.656.308.75.48.096.173.096 1.003-.224 1.897z" />
                             </svg>
-                            </a>
-                          </div>
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </SwiperSlide>

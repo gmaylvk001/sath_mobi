@@ -29,7 +29,7 @@ export default function NewlyArrivedSection() {
 
   return (
      <>
-     <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-5 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#faf5ff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+     <section className="w-auto inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-5 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#faf5ff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4 max-sm:w-auto">
       <div className="flex items-center justify-between mb-4 max-sm:mb-3">
         <h2 className="text-primary max-sm:text-gray-900 font-semibold text-2xl max-sm:text-lg">
           Newly Arrived
@@ -75,12 +75,11 @@ export default function NewlyArrivedSection() {
             Product Highlights
           </h3>
 
-          <ul
-            className={`productHighlights transition-all duration-300 overflow-hidden ${
-              showHighlights ? "max-h-[600px]" : "max-h-[250px]"
-            }`}
-          >
-            {product.product_highlights?.map((item, index) => (
+          <ul className="productHighlights transition-all duration-300">
+            {(showHighlights
+              ? product.product_highlights
+              : product.product_highlights?.slice(0, 3)
+            )?.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
@@ -88,7 +87,7 @@ export default function NewlyArrivedSection() {
           {product.product_highlights?.length > 3 && (
             <button
               onClick={() => setShowHighlights(!showHighlights)}
-              className="text-primary text-sm font-semibold mt-2 hover:underline"
+              className="text-primary text-sm font-semibold mt-2 hover:underline cursor-pointer"
             >
               {showHighlights ? "View Less" : "View More"}
             </button>
@@ -101,12 +100,11 @@ export default function NewlyArrivedSection() {
             Product Features
           </h3>
 
-          <ul
-            className={`productFeatures transition-all duration-300 overflow-hidden ${
-              showFeatures ? "max-h-[600px]" : "max-h-[250px]"
-            }`}
-          >
-            {product.features?.map((item, index) => (
+          <ul className="productFeatures transition-all duration-300">
+            {(showFeatures
+              ? product.features
+              : product.features?.slice(0, 3)
+            )?.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
@@ -114,7 +112,7 @@ export default function NewlyArrivedSection() {
           {product.features?.length > 3 && (
             <button
               onClick={() => setShowFeatures(!showFeatures)}
-              className="text-primary text-sm font-semibold mt-2 hover:underline"
+              className="text-primary text-sm font-semibold mt-2 hover:underline cursor-pointer"
             >
               {showFeatures ? "View Less" : "View More"}
             </button>
