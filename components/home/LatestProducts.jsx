@@ -44,7 +44,7 @@ export default function LatestProducts() {
     fetchData();
   }, []);
 
-  // 🔥 Pricing Logic
+  // 🔥 Pricing Logic (Deterministic to prevent React Hydration Mismatch)
   const calculatePricing = (price, special) => {
     const p = Number(price);
     const s = Number(special);
@@ -54,29 +54,147 @@ export default function LatestProducts() {
     }
 
     let mrp = p;
-
-    // If price equals special_price → add 10% to MRP
     if (p === s) {
-      mrp = Math.round(s * 1.1);
+      mrp = Math.round(s * 1.12);
     }
 
-    // Random discount between 9% and 15%
-    const randomDiscount =
-      Math.floor(Math.random() * (15 - 9 + 1)) + 9;
+    const discount = Math.max(1, Math.round(100 - (s / mrp) * 100));
 
-    return { sell: s, mrp, discount: randomDiscount };
+    return { sell: s, mrp, discount };
   };
 
   const leftProducts = products.slice(0, 3);
   const swiperProducts = products.slice(3);
 
   return (
-    <section className="w-full py-10 bg-linear-to-r from-linearyellow via-white to-linearyellow inner-section-padding border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
+    <section className="w-full py-10 bg-linear-to-r from-linearyellow via-white to-linearyellow inner-section-padding border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#f0ecff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+      {/* ================= MOBILE VIEW (FLIPKART 2x2 GRID MODEL) ================= */}
+      <div className="block md:hidden">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg text-gray-900 font-extrabold">Latest Products</h2>
+          <Link
+            href="/category/mobiles"
+            className="w-7 h-7 bg-black text-white rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-xs hover:bg-gray-800 active:scale-95 transition-all"
+          >
+            ➔
+          </Link>
+        </div>
+
+        <div className="bg-white rounded-2xl p-3 border border-purple-100/80 shadow-xs">
+          <div className="grid grid-cols-2 gap-3">
+            {products.slice(0, 4).map((product, idx) => {
+              const { sell, mrp, discount } = calculatePricing(
+                product.price,
+                product.special_price
+              );
+              return (
+                <Link
+                  href={`/product/${product.slug}`}
+                  key={product._id || product.slug || `lat1-${idx}`}
+                  className="group flex flex-col"
+                >
+                  <div className="bg-[#f8f9fa] rounded-xl p-2.5 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-100/90 group-hover:bg-gray-100/80 transition-colors">
+                    <img
+                      src={
+                        product.images?.[0]
+                          ? `/uploads/products/${product.images[0]}`
+                          : "/assets/images/no-image.png"
+                      }
+                      alt={product.name}
+                      className="object-contain max-h-[105px] w-auto h-auto transition-transform duration-200 group-hover:scale-105"
+                    />
+                    {discount > 0 && (
+                      <span className="absolute top-1.5 left-1.5 bg-red-600 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-2xs">
+                        {discount}% OFF
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-1.5 px-0.5 flex flex-col justify-between flex-1">
+                    <p className="text-[11px] font-semibold text-gray-800 line-clamp-1 leading-tight group-hover:text-primary transition-colors">
+                      {product.name}
+                    </p>
+                    <div className="flex items-baseline gap-1 mt-0.5">
+                      <span className="text-[11px] font-extrabold text-gray-900">
+                        ₹{sell.toLocaleString("en-IN")}
+                      </span>
+                      {mrp && (
+                        <span className="text-[9px] font-medium text-gray-400 line-through">
+                          ₹{mrp.toLocaleString("en-IN")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* SECONDARY 2x2 GRID IF MORE THAN 4 PRODUCTS */}
+        {products.length > 4 && (
+          <div className="bg-white rounded-2xl p-3 border border-purple-100/80 shadow-xs mt-3">
+            <div className="grid grid-cols-2 gap-3">
+              {products.slice(4, 8).map((product, idx) => {
+                const { sell, mrp, discount } = calculatePricing(
+                  product.price,
+                  product.special_price
+                );
+                return (
+                  <Link
+                    href={`/product/${product.slug}`}
+                    key={product._id || product.slug || `lat2-${idx}`}
+                    className="group flex flex-col"
+                  >
+                    <div className="bg-[#f8f9fa] rounded-xl p-2.5 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-100/90 group-hover:bg-gray-100/80 transition-colors">
+                      <img
+                        src={
+                          product.images?.[0]
+                            ? `/uploads/products/${product.images[0]}`
+                            : "/assets/images/no-image.png"
+                        }
+                        alt={product.name}
+                        className="object-contain max-h-[105px] w-auto h-auto transition-transform duration-200 group-hover:scale-105"
+                      />
+                      {discount > 0 && (
+                        <span className="absolute top-1.5 left-1.5 bg-red-600 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-2xs">
+                          {discount}% OFF
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1.5 px-0.5 flex flex-col justify-between flex-1">
+                      <p className="text-[11px] font-semibold text-gray-800 line-clamp-1 leading-tight group-hover:text-primary transition-colors">
+                        {product.name}
+                      </p>
+                      <div className="flex items-baseline gap-1 mt-0.5">
+                        <span className="text-[11px] font-extrabold text-gray-900">
+                          ₹{sell.toLocaleString("en-IN")}
+                        </span>
+                        {mrp && (
+                          <span className="text-[9px] font-medium text-gray-400 line-through">
+                            ₹{mrp.toLocaleString("en-IN")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ================= DESKTOP VIEW (ORIGINAL LAYOUT) ================= */}
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
 
         {/* LEFT CONTENT */}
         <div className="space-y-4 md:col-span-2 lg:col-span-1 z-40">
-          <h2 className="text-2xl text-primary font-bold">Latest Products</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl text-primary max-sm:text-gray-900 font-bold max-sm:text-lg">Latest Products</h2>
+            <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
+              ➔
+            </div>
+          </div>
 
           <div className="grid grid-rows-3 gap-y-2.5">
             {leftProducts.map((product) => {
@@ -106,8 +224,6 @@ export default function LatestProducts() {
                       height={100}
                       className="object-contain"
                     />
-
-                    
                   </Link>
 
                   {/* Product Info */}

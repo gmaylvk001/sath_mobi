@@ -33,10 +33,13 @@ export default function BrandSlider() {
   if (loading || !brands.length) return null;
 
   return (
-    <section className="w-full inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+    <section className="w-full inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-white max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4 max-sm:shadow-xs">
       {/* HEADER */}
-      <div className="flex justify-between items-end mb-5">
-        <h2 className="text-primary font-semibold text-2xl mb-4">Shop by Brands</h2>
+      <div className="flex justify-between items-center mb-5 max-sm:mb-3">
+        <h2 className="text-primary max-sm:text-gray-900 font-semibold text-2xl max-sm:text-lg mb-4 max-sm:mb-0">Shop by Brands</h2>
+        <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
+          ➔
+        </div>
 
         {/*
         <Link

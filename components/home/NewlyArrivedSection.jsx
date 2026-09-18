@@ -29,10 +29,15 @@ export default function NewlyArrivedSection() {
 
   return (
      <>
-     <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-5 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-      <h2 className="text-primary font-semibold text-2xl mb-4">
-        Newly Arrived
-      </h2>
+     <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-5 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#faf5ff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+      <div className="flex items-center justify-between mb-4 max-sm:mb-3">
+        <h2 className="text-primary max-sm:text-gray-900 font-semibold text-2xl max-sm:text-lg">
+          Newly Arrived
+        </h2>
+        <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
+          ➔
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
 
@@ -48,7 +53,7 @@ export default function NewlyArrivedSection() {
             {product.images?.map((img, index) => (
             <SwiperSlide key={index}>
                 <Link href={`/product/${product.slug}`}>
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center">
                     <Image
                     src={`/uploads/products/${img}`}
                     alt={`${product.name} ${index + 1}`}

@@ -103,11 +103,13 @@ const AddToWishlistButton = ({ productId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authError, setAuthError] = useState('');
-  const { wishlistCount, wishlistItems, isInWishlist, updateWishlist } = useWishlist();
-  const [isWishlisted, setIsWishlisted] = useState(isInWishlist(productId));
+  const { wishlistCount = 0, wishlistItems = [], isInWishlist = () => false, updateWishlist } = useWishlist() || {};
+  const [isWishlisted, setIsWishlisted] = useState(typeof isInWishlist === 'function' ? isInWishlist(productId) : false);
 
   useEffect(() => {
-    setIsWishlisted(isInWishlist(productId));
+    if (typeof isInWishlist === 'function') {
+      setIsWishlisted(isInWishlist(productId));
+    }
   }, [productId, wishlistItems, isInWishlist]);
 
   const handleWishlistAction = async () => {

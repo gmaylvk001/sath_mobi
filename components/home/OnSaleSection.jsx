@@ -29,11 +29,9 @@ export default function OnSaleSection() {
       mrp = Math.round(s * 1.1);
     }
 
-    // Random discount between 9% and 15%
-    const randomDiscount =
-      Math.floor(Math.random() * (15 - 9 + 1)) + 9;
+    const discount = Math.max(1, Math.round(100 - (s / mrp) * 100));
 
-    return { sell: s, mrp, discount: randomDiscount };
+    return { sell: s, mrp, discount };
   };
 
   useEffect(() => {
@@ -78,14 +76,21 @@ export default function OnSaleSection() {
     setProducts(data.data || []);
   };
 
+
+
   return (
-    <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-      <h2 className="text-xl text-primary font-bold mb-5">
-        Fast Moving Products of{" "}
-        <span className="text-2xl text-red-800">
-          {selectedProduct}
-        </span>
-      </h2>
+    <section className="w-full inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#f0fdf4] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+      <div className="flex items-center justify-between mb-5 max-sm:mb-3">
+        <h2 className="text-xl text-primary max-sm:text-gray-900 font-bold max-sm:text-lg">
+          Fast Moving Products of{" "}
+          <span className="text-2xl text-red-800 max-sm:text-lg">
+            {selectedProduct}
+          </span>
+        </h2>
+        <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
+          ➔
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-8 gap-y-4 items-start">
 
@@ -120,9 +125,8 @@ export default function OnSaleSection() {
         </div>
 
         {/* PRODUCT AREA */}
-        <div className="relative z-0 col-span-3">
-          <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-3.5 auto-rows-fr">
-
+        <div className="relative z-0 col-span-3 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-emerald-100/80 max-sm:shadow-xs">
+          <div className="grid grid-cols-2 max-sm:grid-cols-2 gap-3.5 max-sm:gap-3 auto-rows-fr">
             {products.map((p) => {
               const { sell, mrp, discount } =
                 calculatePricing(p.price, p.special_price);
@@ -130,7 +134,7 @@ export default function OnSaleSection() {
               return (
                 <div
                   key={p._id}
-                  className="bg-white rounded-xl shadow-lg p-4 flex gap-4 items-center"
+                  className="bg-white rounded-xl shadow-lg max-sm:shadow-none max-sm:border max-sm:border-gray-100 p-4 max-sm:p-2.5 flex gap-4 max-sm:flex-col items-center max-sm:items-start"
                 >
                   <Link href={`/product/${p.slug}`}>
                     <Image

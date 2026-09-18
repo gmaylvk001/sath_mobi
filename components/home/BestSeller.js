@@ -87,50 +87,57 @@ const BestSellers = () => {
       mrp = Math.round(s * 1.1);
     }
 
-    // 🔥 Random discount between 9% and 15%
-    const randomDiscount = Math.floor(Math.random() * (15 - 9 + 1)) + 9;
+    const discount = Math.max(1, Math.round(100 - (s / mrp) * 100));
 
-    return { sell: s, mrp, discount: randomDiscount };
+    return { sell: s, mrp, discount };
   };
 
   return (
-    <section className="inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-      <h2 className="text-2xl font-bold text-primary text-center mb-5">
-        Best Price in the Market
-      </h2>
+    <section className="inner-section-padding py-10 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#fff7ed] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4">
+      <div className="flex items-center justify-between mb-5 max-sm:mb-3">
+        <h2 className="text-2xl font-bold text-primary max-sm:text-gray-900 text-center max-sm:text-left max-sm:text-lg">
+          Best Price in the Market
+        </h2>
+        <Link 
+          href={`/category/${categoryName?.toLowerCase().replace(/&/g, "").replace(/\s+/g, "-") || "mobiles"}`}
+          className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0 shadow-xs hover:bg-gray-800 active:scale-95 transition-all"
+        >
+          ➔
+        </Link>
+      </div>
 
-      {/* CATEGORY SCROLL */}
-      <div className="max-w-2xl mx-auto mb-5 overflow-x-auto">
-        <div className="flex gap-x-2 justify-between">
+      {/* CATEGORY SCROLL (FLIPKART APP ICON CARD STYLE - UNIFORM SIZE) */}
+      <div className="max-w-3xl mx-auto mb-5 max-sm:mb-4 overflow-x-auto pb-1.5">
+        <div className="flex gap-3 max-sm:gap-2 justify-start md:justify-center overflow-x-auto px-1 py-1">
           {categories.map((cat) => {
             const isActive = activeCategory === cat._id;
             return (
               <button
                 key={cat._id}
                 onClick={() => {
-  setActiveCategory(cat._id);
-  setCategoryName(cat.category_name);
-}}
-                className="shrink-0 flex flex-col items-center gap-2"
+                  setActiveCategory(cat._id);
+                  setCategoryName(cat.category_name);
+                }}
+                className="shrink-0 flex flex-col items-center gap-1.5 w-20 max-sm:w-15 transition-all"
               >
                 <div
-                  className={`border-2 rounded-full bg-white w-24 h-24 overflow-hidden ${
-                    isActive ? "border-primary" : "border-gray-400"
+                  className={`w-16 h-16 max-sm:w-14 max-sm:h-14 aspect-square shrink-0 rounded-2xl max-sm:rounded-xl flex items-center justify-center p-2 border transition-all duration-200 overflow-hidden ${
+                    isActive
+                      ? "bg-white border-2 border-primary shadow-md ring-2 ring-primary/20"
+                      : "bg-white max-sm:bg-gradient-to-b max-sm:from-white max-sm:to-amber-50/60 border-gray-200/90 hover:border-gray-300 shadow-2xs"
                   }`}
                 >
                   {cat.image && (
-                    <Image
+                    <img
                       src={cat.image}
                       alt={cat.category_name}
-                      width={96}
-                      height={96}
-                      className="object-cover p-2"
+                      className="w-full h-full object-contain max-w-full max-h-full"
                     />
                   )}
                 </div>
                 <span
-                  className={`text-sm font-bold ${
-                    isActive ? "text-primary" : "text-gray-600"
+                  className={`text-xs max-sm:text-[10px] text-center w-full truncate ${
+                    isActive ? "text-primary font-extrabold" : "text-gray-700 font-bold"
                   }`}
                 >
                   {cat.category_name}
@@ -144,8 +151,8 @@ const BestSellers = () => {
        
           {categoryName === "Mobiles" && (
             <>
-          {/* ---------------- Mobile GRID ---------------- */}
-            <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+            {/* ---------------- Mobile GRID ---------------- */}
+            <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
               <div className="col-span-2 max-sm:col-span-2">
                 <Link href="/category/mobiles">
                   <GridImage src="/assets/images/categoryimages/M-1.png" alt="Mobile Main" />
@@ -153,7 +160,7 @@ const BestSellers = () => {
                 
               </div>
 
-              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4 max-sm:gap-3">
                 <Link href="/category/iphones">
                 <GridImage src="/assets/images/categoryimages/M-2.png" alt="iPhone Category" />
                 </Link>
@@ -162,7 +169,7 @@ const BestSellers = () => {
                 </Link>
               </div>
 
-              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4 max-sm:gap-3">
                 <Link href="/category/google-pixel"> 
                 <GridImage src="/assets/images/categoryimages/M-4.png" alt="Android Category" />
                 </Link>
@@ -176,7 +183,7 @@ const BestSellers = () => {
               {categoryName === "Air Conditioner" && (
                 <>  
             {/* ---------------- AC GRID ---------------- */}
-            <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+            <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
               <div className="col-span-2 max-sm:col-span-2">
                 <Link href="/category/air-conditioner">
                 <GridImage src="/assets/images/categoryimages/ac-w-button-new-1.png" alt="AC Main" />
@@ -189,7 +196,7 @@ const BestSellers = () => {
                 </Link>
               </div>
 
-              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+              <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4 max-sm:gap-3">
                 <Link href="/category/split-ac">
                 <GridImage src="/assets/images/categoryimages/ac-split-w-button-new-1.png" alt="Split AC" />
                 </Link>
@@ -203,14 +210,14 @@ const BestSellers = () => {
 {categoryName === "Smart Tv" && (
   <> 
       {/* ---------------- TV GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
         <div className="col-span-2 max-sm:col-span-2">
           <Link href="/category/smart-tv">
           <GridImage src="/assets/images/categoryimages/TV-1.png" alt="TV Main" />
           </Link>
         </div>
 
-        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4 max-sm:gap-3">
           <Link href="/category/led-hd">
           <GridImage src="/assets/images/categoryimages/TV-2.png" alt="TV Category1" />
           </Link>
@@ -219,7 +226,7 @@ const BestSellers = () => {
           </Link>
         </div>
 
-        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4 max-sm:gap-3">
           <Link href="/category/qled">
           <GridImage src="/assets/images/categoryimages/TV-4.png" alt="TV Category3" />
           </Link>
@@ -233,7 +240,7 @@ const BestSellers = () => {
         {categoryName === "Laptop & Desktops" && (
           <> 
       {/* ---------------- LAPTOP & DESKTOP GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
         <div className="col-span-2 max-sm:col-span-2">
           <Link href="/category/laptop-desktops">
           <GridImage src="/assets/images/categoryimages/L-D-1.png" alt="Laptop Main" />
@@ -257,14 +264,14 @@ const BestSellers = () => {
 {categoryName === "Accessories" && (
   <> 
       {/* ---------------- ACCESSORIES GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
         <div className="col-span-1">
           <Link href="/category/accessories">
           <GridImage src="/assets/images/categoryimages/access-1.png" alt="Accessories1" />
           </Link>
         </div>
 
-        <div className="col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 flex flex-col gap-4 max-sm:gap-3">
           <Link href="/category/speakers">
           <GridImage src="/assets/images/categoryimages/access-2.png" alt="Accessories2" />
           </Link>
@@ -273,7 +280,7 @@ const BestSellers = () => {
           </Link>
         </div>
 
-        <div className="col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 flex flex-col gap-4 max-sm:gap-3">
           <Link href="/category/earbuds">
           <GridImage src="/assets/images/categoryimages/access-4.png" alt="Accessories" />
           </Link>
@@ -282,7 +289,7 @@ const BestSellers = () => {
           </Link>
         </div>
 
-        <div className="col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 flex flex-col gap-4 max-sm:gap-3">
           <Link href="/category/chargers">
           <GridImage src="/assets/images/categoryimages/access-6.png" alt="Accessories6" />
           </Link>
@@ -296,7 +303,7 @@ const BestSellers = () => {
 {categoryName === "Tablets" && (
   <> 
       {/* ---------------- TABLETS GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 mb-10">
+      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
         <div className="col-span-2 max-sm:col-span-2">
           <Link href={`/category/tablets`}>
           <GridImage src="/assets/images/categoryimages/T-1.png" alt="Tablet Main" />
@@ -309,7 +316,7 @@ const BestSellers = () => {
           </Link>
         </div>
 
-        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-4 max-sm:gap-3">
           <Link href={`/category/tablet-with-call-facility`}>
           <GridImage src="/assets/images/categoryimages/T-3.png" alt="Tablet Category2" />
           </Link>
@@ -465,13 +472,13 @@ const BestSellers = () => {
 
 function GridImage({ src, alt }) {
   return (
-    <div className="h-full rounded-lg overflow-hidden shadow-[5px_5px_3px_0px_rgba(0,0,0,0.3)]">
+    <div className="h-full rounded-2xl max-sm:rounded-xl overflow-hidden shadow-2xs max-sm:shadow-xs border border-gray-100 hover:shadow-md transition-all duration-300 bg-white p-0.5 max-sm:p-1 active:scale-[0.98]">
       <Image
         src={src}
         alt={alt}
         width={600}
         height={400}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover rounded-xl max-sm:rounded-lg"
       />
     </div>
   );
