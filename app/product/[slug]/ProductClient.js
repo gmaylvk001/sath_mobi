@@ -857,7 +857,7 @@ export default function ProductClient({ initialProduct = null }) {
 
                             return (
                                 <h1 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 leading-snug tracking-normal mb-2">
-                                    {combinedTitle}
+                                    {product.name}
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -890,7 +890,7 @@ export default function ProductClient({ initialProduct = null }) {
                                         <FaRupeeSign className="inline" />{Math.round(Number(product.special_price) || Number(product.price)).toLocaleString('en-IN')}
                                         </span>
 
-                                        {Number(product.special_price) > 0 && Number(product.price) > 0 && (
+                                        {Number(product.special_price) > 0 && Number(product.price) > Number(product.special_price) && (
                                             <span className="text-gray-800 line-through text-sm flex items-center">
                                                 <FaRupeeSign className="inline text-xs" />{Math.round(Number(product.price)).toLocaleString('en-IN')}
                                             </span>
@@ -1324,11 +1324,11 @@ export default function ProductClient({ initialProduct = null }) {
                                     <p>
                                     Should you receive an item with physical damages, please note that you should
                                     contact us within 48 hours, (In the case of Brands like Apple, 24 hours), without
-                                    using the product and without breaching Poorvika's Online Replacement Policy. If
+                                    using the product and without breaching Sathyamobiles's Online Replacement Policy. If
                                     you fail to follow these, the replacement claim will become void.
                                     </p>
                                     <p>
-                                    Products you purchased from Poorvika Online are only eligible for Replacement, under
+                                    Products you purchased from Sathyamobiles Online are only eligible for Replacement, under
                                     the following conditions during delivery:
                                     </p>
                                     <ul className="list-disc pl-6">
@@ -1341,11 +1341,11 @@ export default function ProductClient({ initialProduct = null }) {
                                     <p>
                                     In case you receive an item that is not in perfect condition, please contact us
                                     immediately. Important - DO NOT INSERT THE SIM and DO NOT CONNECT TO WIFI (Adhering
-                                    to Poorvika's Online Replacement Policy).
+                                    to Sathyamobiles's Online Replacement Policy).
                                     </p>
                                     <p className="font-semibold">Void Claim:</p>
                                     <p>
-                                    Please note that if you do not abide by Poorvika Online's Replacement Policy and/or
+                                    Please note that if you do not abide by Sathyamobiles Online's Replacement Policy and/or
                                     on ignoring your duties as stated above, you agree that your claim for replacement
                                     will become a VOID CLAIM.
                                     </p>
