@@ -150,7 +150,7 @@ export default function OnSaleSection() {
 
         {/* PRODUCT AREA */}
         <div className="relative z-0 col-span-3 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-emerald-100/80 max-sm:shadow-xs">
-          <div className="grid grid-cols-2 max-sm:grid-cols-2 gap-3.5 max-sm:gap-2.5 auto-rows-fr">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 max-sm:gap-2.5 auto-rows-fr">
             {products.map((p) => {
               const { sell, mrp, discount } =
                 calculatePricing(p.price, p.special_price);
@@ -252,7 +252,7 @@ export default function OnSaleSection() {
             })}
 
             {!products.length && (
-              <p className="col-span-2 text-center text-gray-500">
+              <p className="col-span-full text-center text-gray-500 py-6">
                 No products available
               </p>
             )}
