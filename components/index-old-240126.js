@@ -1369,7 +1369,7 @@ export default function HomeComponent() {
                           className="w-full h-full object-cover"
                         />
                         <img
-                          src="https://img.poorvika.com//play_video.png"
+                          src="https://img.Sathyamobiles.com//play_video.png"
                           alt="play"
                           className="absolute w-12 h-12"
                         />

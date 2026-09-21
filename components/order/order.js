@@ -485,14 +485,12 @@ export default function Order() {
                             {canRetryPayment(order) && (
                               <button
                                 onClick={() => handlePayNow(order)}
-                                disabled={payingOrderId === order._id}
+                                disabled
                                 className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md transition-colors text-xs sm:text-sm ${
-                                  payingOrderId === order._id
-                                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                                    : 'bg-green-600 text-white hover:bg-green-700'
+                                  'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 }`}
                               >
-                                {payingOrderId === order._id ? 'Opening...' : 'Pay Now'}
+                                Pay Now
                               </button>
                             )}
 

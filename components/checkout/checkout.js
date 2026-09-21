@@ -728,13 +728,6 @@ const [isSubmitting, setIsSubmitting] = useState(false);
         console.warn('Cart clear failed after order creation.');
       }
 
-      await handleOnlinePayment({
-        totalAmount,
-        orderId: createdOrderId,
-        orderNumber: createdOrderNumber,
-      });
-
-
       // if(orderRes.ok){
         // const responsedata = await orderRes.json();
         // const order_id = responsedata.order._id.toString();
