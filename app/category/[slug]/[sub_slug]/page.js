@@ -70,6 +70,11 @@ export default async function Page({ params }) {
   const slug = awaitedParams.slug;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const data = await getSubCategoryData(sub_slug);
+  const pageHeading =
+    data?.main_category?.category_name ||
+    sub_slug
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
 
   const categorySchema = data?.main_category
     ? {
@@ -139,6 +144,9 @@ export default async function Page({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       )}
+      <h1 className="container mx-auto px-4 pt-8 text-xl font-bold text-gray-600 sm:text-3xl">
+        {pageHeading}
+      </h1>
       <CategoryClient />
     </>
   );

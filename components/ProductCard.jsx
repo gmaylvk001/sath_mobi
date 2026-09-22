@@ -99,7 +99,7 @@ import { useWishlist } from '@/context/WishlistContext';
 import { Heart } from 'lucide-react';
 import {AuthModal} from '@/components/AuthModal';
 const AddToWishlistButton = ({ productId }) => {
-  const { openAuthModal } = useModal();
+  const { openAuthModal = () => {} } = useModal() || {};
   const [isLoading, setIsLoading] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authError, setAuthError] = useState('');

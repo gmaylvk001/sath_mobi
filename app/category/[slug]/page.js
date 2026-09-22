@@ -65,6 +65,11 @@ export default async function Page({ params }) {
   const { slug } = params;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const data = await getCategoryData(slug);
+  const pageHeading =
+    data?.main_category?.category_name ||
+    slug
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
 
   const categorySchema = data?.main_category
     ? {
@@ -128,11 +133,9 @@ export default async function Page({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       )}
-      {data?.main_category?.category_name && (
-        <h1 className="container mx-auto px-4 pt-8 text-xl sm:text-3xl font-bold text-gray-600">
-          {data.main_category.category_name}
-        </h1>
-      )}
+      <h1 className="container mx-auto px-4 pt-8 text-xl font-bold text-gray-600 sm:text-3xl">
+        {pageHeading}
+      </h1>
       <CategoryClient />
     </>
   );
