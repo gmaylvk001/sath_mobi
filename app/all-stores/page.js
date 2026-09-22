@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 
 import AllstoreComponent from "@/components/all-store/all-store";
 
-
 export default function Dashboard() {
   const [time, setTime] = useState(null);
 
@@ -13,8 +12,10 @@ export default function Dashboard() {
 
   return (
     <div>
-      
-      <AllstoreComponent /> 
+      <h1 className="container mx-auto px-4 pt-8 text-2xl font-bold text-gray-900 sm:text-3xl">
+        All Stores
+      </h1>
+      <AllstoreComponent />
     </div>
   );
 }

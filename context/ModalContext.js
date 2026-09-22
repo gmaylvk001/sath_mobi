@@ -28,4 +28,18 @@ export const ModalProvider = ({ children }) => {
   );
 };
 
-export const useModal = () => useContext(ModalContext);
+export const useModal = () => {
+  const context = useContext(ModalContext);
+
+  if (!context) {
+    return {
+      showAuthModal: false,
+      authError: '',
+      openAuthModal: () => {},
+      closeAuthModal: () => {},
+      onAuthSuccess: null,
+    };
+  }
+
+  return context;
+};

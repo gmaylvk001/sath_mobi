@@ -327,7 +327,7 @@ export default function HomePage() {
       {/* ================= WHAT'S HOT (FLIPKART STYLE CARD ON MOBILE) ================= */}
       <section className="inner-section-padding mt-5 mb-10 max-sm:mt-3 max-sm:mb-4 max-sm:mx-3 max-sm:p-3.5 max-sm:bg-[#fff0f3] max-sm:rounded-2xl">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-primary max-sm:text-gray-900 font-bold text-2xl max-sm:text-lg">What&apos;s Hot</h2>
+          <h1 className="text-primary max-sm:text-gray-900 font-bold text-2xl max-sm:text-lg">What&apos;s Hot</h1>
           <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
             ➔
           </div>
@@ -477,7 +477,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-sm:gap-2.5 max-sm:bg-white max-sm:p-2.5 max-sm:rounded-xl">
           {/* LEFT BIG BANNER */}
           <div className="lg:col-span-2 relative rounded-2xl overflow-hidden bg-black min-h-[260px] lg:min-h-[420px] max-sm:min-h-[180px]">
-            <Link href="/category/smart-tv">
+            <Link href="/category/smart-tv" className="block h-full w-full">
               <Image
                 src="/assets/images/all-tv-image.png"
                 alt="All LED"
@@ -485,12 +485,10 @@ export default function HomePage() {
                 className="object-cover opacity-80"
                 priority
               />
-            </Link>
-            <div className="relative z-10 p-6 lg:p-10 h-full flex flex-col justify-between">
-              <Link href="/category/smart-tv">
+              <div className="relative z-10 p-6 lg:p-10 h-full flex flex-col justify-between">
                 <h3 className="text-white text-2xl font-semibold">All LED</h3>
-              </Link>
-            </div>
+              </div>
+            </Link>
           </div>
 
           {/* RIGHT GRID */}
@@ -583,7 +581,7 @@ export default function HomePage() {
                   <img
                     src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
                     className="w-full aspect-video object-cover"
-                    alt=""
+                    alt={`${video.title} video thumbnail`}
                   />
                   <div className="absolute inset-0 bg-black/15"></div>
                   <span className="absolute inset-0 flex items-center justify-center">

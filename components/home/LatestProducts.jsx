@@ -88,12 +88,14 @@ export default function LatestProducts() {
                 product.special_price
               );
               return (
-                <Link
-                  href={`/product/${product.slug}`}
+                <div
                   key={product._id || product.slug || `lat1-${idx}`}
                   className="group flex flex-col"
                 >
-                  <div className="bg-[#f8f9fa] rounded-xl p-2.5 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-100/90 group-hover:bg-gray-100/80 transition-colors">
+                  <Link
+                    href={`/product/${product.slug}`}
+                    className="bg-[#f8f9fa] rounded-xl p-2.5 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-100/90 group-hover:bg-gray-100/80 transition-colors"
+                  >
                     <img
                       src={
                         product.images?.[0]
@@ -108,11 +110,14 @@ export default function LatestProducts() {
                         {discount}% OFF
                       </span>
                     )}
-                  </div>
+                  </Link>
                   <div className="mt-1.5 px-0.5 flex flex-col justify-between flex-1">
-                    <p className="text-[11px] font-semibold text-gray-800 line-clamp-1 leading-tight group-hover:text-primary transition-colors">
+                    <Link
+                      href={`/product/${product.slug}`}
+                      className="text-[11px] font-semibold text-gray-800 line-clamp-1 leading-tight group-hover:text-primary transition-colors"
+                    >
                       {product.name}
-                    </p>
+                    </Link>
                     <div className="flex items-baseline gap-1 mt-0.5">
                       <span className="text-[11px] font-extrabold text-gray-900">
                         ₹{sell.toLocaleString("en-IN")}
@@ -124,7 +129,7 @@ export default function LatestProducts() {
                       )}
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
@@ -140,12 +145,14 @@ export default function LatestProducts() {
                   product.special_price
                 );
                 return (
-                  <Link
-                    href={`/product/${product.slug}`}
+                  <div
                     key={product._id || product.slug || `lat2-${idx}`}
                     className="group flex flex-col"
                   >
-                    <div className="bg-[#f8f9fa] rounded-xl p-2.5 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-100/90 group-hover:bg-gray-100/80 transition-colors">
+                    <Link
+                      href={`/product/${product.slug}`}
+                      className="bg-[#f8f9fa] rounded-xl p-2.5 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-100/90 group-hover:bg-gray-100/80 transition-colors"
+                    >
                       <img
                         src={
                           product.images?.[0]
@@ -160,11 +167,14 @@ export default function LatestProducts() {
                           {discount}% OFF
                         </span>
                       )}
-                    </div>
+                    </Link>
                     <div className="mt-1.5 px-0.5 flex flex-col justify-between flex-1">
-                      <p className="text-[11px] font-semibold text-gray-800 line-clamp-1 leading-tight group-hover:text-primary transition-colors">
+                      <Link
+                        href={`/product/${product.slug}`}
+                        className="text-[11px] font-semibold text-gray-800 line-clamp-1 leading-tight group-hover:text-primary transition-colors"
+                      >
                         {product.name}
-                      </p>
+                      </Link>
                       <div className="flex items-baseline gap-1 mt-0.5">
                         <span className="text-[11px] font-extrabold text-gray-900">
                           ₹{sell.toLocaleString("en-IN")}
@@ -176,7 +186,7 @@ export default function LatestProducts() {
                         )}
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
@@ -204,13 +214,14 @@ export default function LatestProducts() {
               );
 
               return (
-                <Link
+                <div
                   key={product._id}
-                  href={`/product/${product.slug}`}
                   className="grid grid-cols-[100px_1fr] gap-4 rounded-xl bg-linear-to-tr from-pink-200 to-orange-200 p-3"
                 >
-                  {/* Product Image */}
-                  <div className="bg-white rounded-xl overflow-hidden shrink-0 w-[100px] h-[100px] flex items-center justify-center p-2">
+                  <Link
+                    href={`/product/${product.slug}`}
+                    className="bg-white rounded-xl overflow-hidden shrink-0 w-[100px] h-[100px] flex items-center justify-center p-2"
+                  >
                     <img
                       src={
                         product.images?.[0]
@@ -223,23 +234,22 @@ export default function LatestProducts() {
                         e.currentTarget.src = "/assets/images/no-image.png";
                       }}
                     />
-                  </div>
+                  </Link>
 
-                  {/* Product Info */}
                   <div className="grid min-w-0 grid-rows-[auto_auto_1fr_auto]">
-                    {/* Brand */}
                     <div className="mb-1">
                       <span className="text-[10px] font-bold text-gray-500 uppercase">
                         Brand: {brandMap[product.brand]?.name || ""}
                       </span>
                     </div>
-                    
-                    {/* Product Name */}
-                    <p className="mb-2 min-w-0 break-words font-semibold text-sm antialiased line-clamp-2">
-                      {product.name}
-                    </p>
 
-                    {/* Price & Discount */}
+                    <Link
+                      href={`/product/${product.slug}`}
+                      className="mb-2 min-w-0 break-words font-semibold text-sm antialiased line-clamp-2"
+                    >
+                      {product.name}
+                    </Link>
+
                     <div className="flex items-center gap-3">
                       <span className="text-red-600 font-bold text-md ">₹ {sell.toLocaleString('en-IN')}</span>
                       {mrp && (
@@ -252,7 +262,6 @@ export default function LatestProducts() {
                       )}
                     </div>
 
-                    {/* Add to Cart & WhatsApp */}
                     <div className="flex items-center justify-between mt-2">
                       <Addtocart
                         productId={product._id}
@@ -277,7 +286,7 @@ export default function LatestProducts() {
                       </a>
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>

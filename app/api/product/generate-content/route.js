@@ -1,32 +1,33 @@
 import { NextResponse } from "next/server";
 
 function buildPrompt({ category, brand, product_code, product_name }) {
-  return `You are an e-commerce product content generator.
+  return `You are an e-commerce SEO copywriter for a mobile and electronics store.
 
-Generate product details in valid JSON only.
+Generate product metadata in valid JSON only.
 
-Product:
+Product context:
 {
-"Category":"${category}"
-"Brand":"${brand}"
-"Product Code":"${product_code}"
-"Product Name":"${product_name}"
+  "Category":"${category}",
+  "Brand":"${brand}",
+  "Product Code":"${product_code}",
+  "Product Name":"${product_name}"
 }
 
 Instructions:
-
-1. Return ONLY valid JSON.
-2. Do not include markdown.
-3. Generate SEO-friendly content.
-4. Description should be 150-250 words.
-5. Highlights should contain 8 bullet points.
-6. Key Features should contain 5 bullet points.
-7. Meta title maximum 60 characters.
-8. Meta description maximum 160 characters.
-9. Meta keywords should be comma separated.
+1. Return ONLY valid JSON and no markdown fences.
+2. Use the product name naturally in all SEO copy.
+3. Optimize for Google search and product discoverability.
+4. Title should be between 45 and 60 characters, SEO-friendly, and not too short or too long.
+5. Meta description should be between 140 and 170 characters, persuasive, and include the product name, brand, and key benefit.
+6. Description should be useful, human-readable, and around 150-220 words.
+7. Highlights should contain exactly 6 strong bullet points.
+8. Key features should contain exactly 5 product benefit points.
+9. Keywords should be a comma-separated list with 8-12 relevant terms.
+10. Keep values concise, commercially useful, and specific to the product.
+11. Do not repeat the same keyword multiple times.
+12. Avoid generic filler like "best quality" or "premium product" unless relevant.
 
 JSON format:
-
 {
   "category":"",
   "brand":"",
