@@ -204,61 +204,40 @@ export default function LatestProducts() {
               );
 
               return (
-               <div
+                <Link
                   key={product._id}
+                  href={`/product/${product.slug}`}
                   className="grid grid-cols-[100px_1fr] gap-4 rounded-xl bg-linear-to-tr from-pink-200 to-orange-200 p-3"
                 >
                   {/* Product Image */}
-                  <Link
-                    href={`/product/${product.slug}`}
-                    className="bg-white rounded-xl overflow-hidden shrink-0"
-                  >
+                  <div className="bg-white rounded-xl overflow-hidden shrink-0 w-[100px] h-[100px] flex items-center justify-center p-2">
                     <img
                       src={
                         product.images?.[0]
                           ? `/uploads/products/${product.images[0]}`
                           : "/assets/images/no-image.png"
                       }
-                      alt="Product Image"
-                      width={100}
-                      height={100}
-                      className="object-contain"
+                      alt={product.name || "Product Image"}
+                      className="object-contain max-h-full max-w-full w-auto h-auto"
+                      onError={(e) => {
+                        e.currentTarget.src = "/assets/images/no-image.png";
+                      }}
                     />
-                  </Link>
+                  </div>
 
                   {/* Product Info */}
                   <div className="grid min-w-0 grid-rows-[auto_auto_1fr_auto]">
                     {/* Brand */}
                     <div className="mb-1">
-                      <Link
-                        href={`/brand/${brandMap[product.brand]?.name?.toLowerCase().replace(/\s+/g, "-") || ""}`}
-                        className="hover:opacity-80"
-                      >
-                        {/* BRAND IMAGE - uncomment when ready
-                        {brandMap[product.brand]?.image ? (
-                          <img
-                            src={brandMap[product.brand].image.startsWith('/') ? brandMap[product.brand].image : `/uploads/Brands/${brandMap[product.brand].image}`}
-                            alt={brandMap[product.brand]?.name || "Brand"}
-                            className="object-contain mix-blend-multiply h-[22px] max-w-[55px]"
-                          />
-                        ) : (
-                          <span className="text-[10px] font-bold text-gray-500 uppercase">
-                            Brand: {brandMap[product.brand]?.name || ""}
-                          </span>
-                        )}
-                        */}
-                        <span className="text-[10px] font-bold text-gray-500 uppercase">
-                          Brand: {brandMap[product.brand]?.name || ""}
-                        </span>
-                      </Link>
+                      <span className="text-[10px] font-bold text-gray-500 uppercase">
+                        Brand: {brandMap[product.brand]?.name || ""}
+                      </span>
                     </div>
                     
-                  {/*Prouct Name */}
-                   <Link href={`/product/${product.slug}`} className="min-w-0">
-                      <p className="mb-2 min-w-0 break-words font-semibold text-sm antialiased line-clamp-2">
-                        {product.name}
-                      </p>
-                    </Link>
+                    {/* Product Name */}
+                    <p className="mb-2 min-w-0 break-words font-semibold text-sm antialiased line-clamp-2">
+                      {product.name}
+                    </p>
 
                     {/* Price & Discount */}
                     <div className="flex items-center gap-3">
@@ -298,7 +277,7 @@ export default function LatestProducts() {
                       </a>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -346,7 +325,7 @@ export default function LatestProducts() {
                       <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-auto flex flex-col">
                         <Link
                           href={`/product/${product.slug}`}
-                          className="bg-white rounded-lg p-4 flex justify-center items-center h-[150px] sm:h-[260px] md:h-[220px] lg:h-[260px]"
+                          className="bg-white rounded-lg p-3 flex justify-center items-center h-[160px] sm:h-[220px] md:h-[200px] lg:h-[220px] overflow-hidden relative w-full shrink-0"
                         >
                           <img
                             src={
@@ -354,10 +333,11 @@ export default function LatestProducts() {
                                 ? `/uploads/products/${product.images[0]}`
                                 : "/assets/images/no-image.png"
                             }
-                            alt={product.name}
-                            width={200}
-                            height={250}
-                            className="object-contain"
+                            alt={product.name || "Product Image"}
+                            className="object-contain max-h-full max-w-full w-auto h-auto transition-transform duration-300 group-hover:scale-105"
+                            onError={(e) => {
+                              e.currentTarget.src = "/assets/images/no-image.png";
+                            }}
                           />
                         </Link>
 

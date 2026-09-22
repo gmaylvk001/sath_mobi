@@ -280,38 +280,40 @@ const BestSellers = () => {
 {categoryName === "Accessories" && (
   <> 
       {/* ---------------- ACCESSORIES GRID ---------------- */}
-      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-4 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs">
-        <div className="col-span-2 max-sm:col-span-2">
-          <Link href="/category/accessories">
-          <GridImage src="/assets/images/categoryimages/access-1.png" alt="Accessories1" />
+      <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-3 max-sm:gap-3 mb-8 max-sm:mb-4 max-sm:bg-white max-sm:p-3 max-sm:rounded-2xl max-sm:border max-sm:border-amber-100 max-sm:shadow-xs items-stretch">
+        <div className="col-span-2 max-sm:col-span-2 h-full">
+          <Link href="/category/accessories" className="block h-full">
+            <GridImage src="/assets/images/categoryimages/access-1.png" alt="Accessories1" imgClassName="object-contain" />
           </Link>
         </div>
 
-        <div className="col-span-1 flex flex-col gap-4 max-sm:gap-3">
-          <Link href="/category/speakers">
-          <GridImage src="/assets/images/categoryimages/access-2.png" alt="Accessories2" />
-          </Link>
-          <Link href="/category/smartwatches-and-accessories">
-          <GridImage src="/assets/images/categoryimages/access-3.png" alt="Accessories3" />
-          </Link>
-        </div>
+        <div className="col-span-2 max-sm:col-span-2 grid grid-cols-3 max-sm:grid-cols-2 gap-2.5 max-sm:gap-3 h-full">
+          <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-2.5 max-sm:gap-3 h-full">
+            <Link href="/category/speakers" className="block flex-1 min-h-0">
+              <GridImage src="/assets/images/categoryimages/access-2.png" alt="Accessories2" imgClassName="object-contain" />
+            </Link>
+            <Link href="/category/smartwatches-and-accessories" className="block flex-1 min-h-0">
+              <GridImage src="/assets/images/categoryimages/access-3.png" alt="Accessories3" imgClassName="object-contain" />
+            </Link>
+          </div>
 
-        <div className="col-span-1 flex flex-col gap-4 max-sm:gap-3">
-          <Link href="/category/earbuds">
-          <GridImage src="/assets/images/categoryimages/access-4.png" alt="Accessories" />
-          </Link>
-          <Link href="/category/power-banks">
-          <GridImage src="/assets/images/categoryimages/access-5.png" alt="Accessories5" />
-          </Link>
-        </div>
+          <div className="col-span-1 max-sm:col-span-1 flex flex-col gap-2.5 max-sm:gap-3 h-full">
+            <Link href="/category/earbuds" className="block flex-1 min-h-0">
+              <GridImage src="/assets/images/categoryimages/access-4.png" alt="Accessories4" imgClassName="object-contain" />
+            </Link>
+            <Link href="/category/power-banks" className="block flex-1 min-h-0">
+              <GridImage src="/assets/images/categoryimages/access-5.png" alt="Accessories5" imgClassName="object-contain" />
+            </Link>
+          </div>
 
-        <div className="col-span-1 flex flex-col gap-4 max-sm:gap-3">
-          <Link href="/category/chargers">
-          <GridImage src="/assets/images/categoryimages/access-6.png" alt="Accessories6" />
-          </Link>
-          <Link href="/category/back-case">
-          <GridImage src="/assets/images/categoryimages/access-7.png" alt="Accessories7" />
-          </Link>
+          <div className="col-span-1 max-sm:col-span-2 flex flex-col max-sm:grid max-sm:grid-cols-2 gap-2.5 max-sm:gap-3 h-full">
+            <Link href="/category/chargers" className="block flex-1 min-h-0">
+              <GridImage src="/assets/images/categoryimages/access-6.png" alt="Accessories6" imgClassName="object-contain" />
+            </Link>
+            <Link href="/category/back-case" className="block flex-1 min-h-0">
+              <GridImage src="/assets/images/categoryimages/access-7.png" alt="Accessories7" imgClassName="object-contain" />
+            </Link>
+          </div>
         </div>
       </div>
 </>
@@ -486,15 +488,15 @@ const BestSellers = () => {
     
 };
 
-function GridImage({ src, alt }) {
+function GridImage({ src, alt, className, imgClassName }) {
   return (
-    <div className="h-full rounded-2xl max-sm:rounded-xl overflow-hidden shadow-2xs max-sm:shadow-xs border border-gray-100 hover:shadow-md transition-all duration-300 bg-white p-0.5 max-sm:p-1 active:scale-[0.98]">
+    <div className={`h-full rounded-2xl max-sm:rounded-xl overflow-hidden shadow-2xs max-sm:shadow-xs border border-gray-100 hover:shadow-md transition-all duration-300 bg-white p-0.5 max-sm:p-1 active:scale-[0.98] ${className || ""}`}>
       <Image
         src={src}
         alt={alt}
         width={600}
         height={400}
-        className="w-full h-full object-cover rounded-xl max-sm:rounded-lg"
+        className={`w-full h-full object-cover rounded-xl max-sm:rounded-lg ${imgClassName || ""}`}
       />
     </div>
   );

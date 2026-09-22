@@ -325,7 +325,7 @@ export default function HomePage() {
       </section>
 
       {/* ================= WHAT'S HOT (FLIPKART STYLE CARD ON MOBILE) ================= */}
-      <section className="inner-section-padding mt-5 mb-10 max-sm:mt-3 max-sm:mb-4 max-sm:mx-3 max-sm:p-3.5 max-sm:bg-[#f0ecff] max-sm:rounded-2xl">
+      <section className="inner-section-padding mt-5 mb-10 max-sm:mt-3 max-sm:mb-4 max-sm:mx-3 max-sm:p-3.5 max-sm:bg-[#fff0f3] max-sm:rounded-2xl">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-primary max-sm:text-gray-900 font-bold text-2xl max-sm:text-lg">What&apos;s Hot</h2>
           <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
@@ -333,25 +333,95 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 max-sm:grid-cols-2 gap-4 max-sm:gap-2.5 max-sm:bg-white max-sm:p-2.5 max-sm:rounded-xl">
+        <div className="grid grid-cols-4 max-sm:grid-cols-2 gap-4 max-sm:gap-3">
           {[
-            "/category/air-conditioner",
-            "/category/mobiles",
-            "/category/accessories",
-            "/category/laptop-desktops",
-          ].map((link, index) => (
-            <Link href={link} key={index} className="max-sm:flex max-sm:flex-col">
-              <div className="rounded-xl overflow-hidden max-sm:bg-[#f8f9fa] max-sm:p-1 max-sm:aspect-square max-sm:flex max-sm:items-center max-sm:justify-center">
-                <Image
-                  src={`/assets/images/latest-sm-${index + 1}.png`}
-                  alt="Hot item"
-                  width={400}
-                  height={400}
-                  className="rounded-xl w-full h-full cursor-pointer hover:scale-105 transition-transform max-sm:rounded-lg"
-                />
-              </div>
-            </Link>
-          ))}
+            {
+              line1: "Best Selling",
+              line2: "Air Conditioner",
+              productImg: "/assets/images/acbg.png",
+              defaultImg: "/assets/images/latest-sm-1.png",
+              price: "Starting @ ₹ 27,990",
+              link: "/category/air-conditioner",
+              bgImg: "/assets/images/cardbg.png",
+            },
+            {
+              line1: "Best Selling",
+              line2: "Smart Phone",
+              productImg: "/assets/images/phonebg.png",
+              defaultImg: "/assets/images/latest-sm-2.png",
+              price: "Starting @ ₹ 11,990",
+              link: "/category/mobiles",
+              bgImg: "/assets/images/cardbg.png",
+            },
+            {
+              line1: "Best Selling",
+              line2: "Neck Band",
+              productImg: "/assets/images/neck.png",
+              defaultImg: "/assets/images/latest-sm-3.png",
+              price: "Starting @ ₹ 299",
+              link: "/category/accessories",
+              bgImg: "/assets/images/cardbg.png",
+            },
+            {
+              line1: "Best Selling",
+              line2: "Laptop",
+              productImg: "/assets/images/lap.png",
+              defaultImg: "/assets/images/latest-sm-4.png",
+              price: "Starting @ ₹ 39,790",
+              link: "/category/laptop-desktops",
+              bgImg: "/assets/images/cardbg.png",
+            },
+          ].map((item, index) => {
+            const cardBg = item.bgImg || "/assets/images/cardbg.png";
+            const productImgSrc = item.productImg || item.image || item.localImg || item.defaultImg;
+            const titleText = item.title || `${item.line1} ${item.line2}`;
+
+            return (
+              <Link href={item.link || "#"} key={index} className="group block w-full h-full">
+                <div
+                  className="relative flex flex-col justify-between items-center rounded-2xl max-sm:rounded-xl overflow-hidden p-2.5 sm:p-4 aspect-[3/4.2] sm:aspect-[3/4] w-full bg-cover bg-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                  style={{ backgroundImage: `url(${cardBg})` }}
+                >
+                  {/* Single Unified Inner Content Wrapper for 1-Piece Hover Scale */}
+                  <div className="w-full h-full flex flex-col justify-between items-center transition-transform duration-300 ease-out group-hover:scale-[1.06]">
+                    {/* 1. Header Title Container (2-Line Format) */}
+                    <div className="w-full pt-1 sm:pt-1.5 pb-0.5 text-center">
+                      <h3 className="text-white text-center font-extrabold text-[13px] max-sm:text-[14px] sm:text-xl md:text-2xl leading-tight tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                        <span className="block">{item.line1 || "Best Selling"}</span>
+                        <span className="block font-black">{item.line2 || titleText}</span>
+                      </h3>
+                    </div>
+
+                    {/* 2. Product Image Container (Enlarged for Mobile & Desktop) */}
+                    <div className="w-full flex-1 flex items-center justify-center my-0.5 px-0.5 overflow-hidden relative">
+                      {productImgSrc && (
+                        <img
+                          src={productImgSrc}
+                          alt={titleText}
+                          className="w-full h-full object-contain scale-[1.65] sm:scale-[1.45] filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] transition-transform duration-300"
+                          onError={(e) => {
+                            if (item.defaultImg && e.currentTarget.src !== window.location.origin + item.defaultImg) {
+                              e.currentTarget.src = item.defaultImg;
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
+
+                    {/* 3. Horizontal Yellow Line (Centered Divider) */}
+                    <div className="w-3/5 sm:w-2/3 h-[2px] sm:h-[3.5px] bg-[#facc15] my-1 sm:my-1.5 rounded-full shadow-sm shrink-0" />
+
+                    {/* 4. Price Container (Single Line No Wrap) */}
+                    <div className="w-full text-center pb-1 sm:pb-2 pt-0.5">
+                      <span className="text-white font-extrabold text-[12px] max-sm:text-[13px] sm:text-lg md:text-xl tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] whitespace-nowrap">
+                        {item.price}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
