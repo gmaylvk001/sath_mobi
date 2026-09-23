@@ -74,10 +74,22 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
       });
 
       if (data.products?.length > 0) {
-        const prices = data.products.map(p => p.special_price || p.price);
-        const minPrice = Math.min(...prices);
-        const maxPrice = Math.max(...prices);
+        const prices = data.products
+          .map(p => {
+            const price = Number(p.price);
+            const specialPrice = Number(p.special_price);
+
+            return specialPrice > 0 && specialPrice < price ? specialPrice : price;
+          })
+          .filter(price => Number.isFinite(price));
+        const rawMinPrice = prices.length > 0 ? Math.min(...prices) : 0;
+        const rawMaxPrice = prices.length > 0 ? Math.max(...prices) : 100000;
+        const minPrice = Math.max(0, rawMinPrice);
+        const bufferedMaxPrice = rawMinPrice === rawMaxPrice ? rawMaxPrice + STEP : rawMaxPrice;
+        const maxPrice = bufferedMaxPrice > minPrice ? bufferedMaxPrice : minPrice + STEP;
+
         setPriceRange([minPrice, maxPrice]);
+        setValues([minPrice, maxPrice]);
         setSelectedFilters(prev => ({
           ...prev,
           price: { min: minPrice, max: maxPrice },
@@ -117,12 +129,18 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
       if (categoryData.brand?._id) {
         query.set('brands', categoryData.brand._id);
       }
+
+      if (categoryData.category?.md5_cat_name) {
+        query.set('categoryMd5', categoryData.category.md5_cat_name);
+      }
       
       // Add category filters
       if (selectedFilters.categories.length > 0) {
         query.set('categoryIds', selectedFilters.categories.join(','));
       } else if (categoryData.allCategoryIds?.length > 0) {
         query.set('categoryIds', categoryData.allCategoryIds.join(','));
+      } else if (categoryData.category?._id) {
+        query.set('categoryIds', categoryData.category._id);
       }
       
       // Add subcategory filters if any
@@ -263,8 +281,9 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
   };
 
   const STEP = 100;
-  const MIN = priceRange[0] || 0;
-  const MAX = priceRange[1] || 100000;
+  const MIN = Number.isFinite(Number(priceRange[0])) ? Number(priceRange[0]) : 0;
+  const rawMax = Number.isFinite(Number(priceRange[1])) ? Number(priceRange[1]) : 100000;
+  const MAX = rawMax > MIN ? rawMax : MIN + STEP;
 
   // slider local state
   const [values, setValues] = useState([

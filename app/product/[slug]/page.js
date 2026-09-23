@@ -18,28 +18,48 @@ function isDescriptionHealthy(description) {
   return cleanDescription.length >= 120 && cleanDescription.length <= 170;
 }
 
-function getFallbackSeo(product, brandName) {
+function fitText(value, minLength, maxLength, suffix = "") {
+  let text = stripHtml(value);
+
+  if (text.length > maxLength) {
+    text = text.slice(0, maxLength).replace(/\s+\S*$/, "").trim();
+  }
+
+  if (text.length < minLength && suffix) {
+    const available = maxLength - text.length - 1;
+    if (available > 0) text = `${text} ${suffix.slice(0, available)}`.trim();
+  }
+
+  return text;
+}
+
+function getProductSeo(product, brandName) {
   const productName = product?.name || "Product";
   const safeBrand = brandName || "Sathyamobiles";
-  const baseTitle = `${productName} - ${safeBrand}`;
+  const category = stripHtml(product?.sub_category_name || product?.category_new || "electronics");
+  const price = Number(product?.special_price || product?.price);
+  const priceText = Number.isFinite(price) && price > 0 ? ` at Rs. ${price}` : "";
 
+  const storedTitle = stripHtml(product?.meta_title);
+  const titleCandidates = [
+    storedTitle,
+    `${productName} - Buy Online | ${safeBrand}`,
+    `Buy ${productName} Online | ${safeBrand}`,
+    `${productName} Price & Details | ${safeBrand}`,
+  ].filter(Boolean);
   const title =
-    isTitleHealthy(product?.meta_title)
-      ? product.meta_title
-      : baseTitle.length <= 60
-        ? baseTitle
-        : `${productName}`.slice(0, 60).trim();
+    titleCandidates.find((candidate) => isTitleHealthy(candidate)) ||
+    fitText(`Buy ${productName} Online | ${safeBrand}`, 45, 60, "Shop Now");
 
-  const descriptionText = stripHtml(
-    product?.meta_description ||
-      product?.description ||
-      `Buy ${productName} online at ${safeBrand} with great deals, reliable delivery, and trusted support.`
-  );
-
-  const description =
-    isDescriptionHealthy(product?.meta_description)
-      ? product.meta_description
-      : `${descriptionText.slice(0, 155)}${descriptionText.length > 155 ? "..." : ""}`;
+  const storedDescription = stripHtml(product?.meta_description);
+  const description = isDescriptionHealthy(storedDescription)
+    ? storedDescription
+    : fitText(
+        `Buy ${productName}${priceText} online at ${safeBrand}. Explore ${category} features, product details, pricing, secure payment, and reliable delivery for your next purchase.`,
+        140,
+        170,
+        "Shop confidently today."
+      );
 
   return {
     title: title.trim(),
@@ -48,94 +68,8 @@ function getFallbackSeo(product, brandName) {
   };
 }
 
-function extractTextFromOpenAiResponse(result) {
-  if (typeof result?.output_text === "string" && result.output_text.trim()) {
-    return result.output_text;
-  }
-
-  if (Array.isArray(result?.output)) {
-    for (const block of result.output) {
-      const text = block?.content?.[0]?.text;
-      if (typeof text === "string" && text.trim()) return text;
-    }
-  }
-
-  return null;
-}
-
-async function generateSeoFromOpenAI(product, brandName) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
-
-  const productName = product?.name || "Product";
-  const productCategory = product?.sub_category_name || product?.category_new || "Electronics";
-  const productBrand = brandName || product?.brand || "Sathyamobiles";
-
-  const prompt = `You are a product SEO specialist for an Indian e-commerce store.
-
-Return only valid JSON with keys: title, description, keywords.
-
-Rules:
-- title: 45-60 characters, SEO-friendly, include product name.
-- description: 140-170 characters, include product name, brand, and a key benefit.
-- keywords: 8-12 comma-separated search terms.
-- product name: ${productName}
-- brand: ${productBrand}
-- category: ${productCategory}
-- tone: clear, commercial, conversion-focused.
-- do not include markdown or extra text.
-
-Example format:
-{"title":"${productName} Price & Features | ${productBrand}","description":"Shop ${productName} online from ${productBrand} with trusted quality, great value and fast delivery.","keywords":"${productName}, ${productBrand}, buy ${productName}, ${productCategory}, online shopping"}`;
-
-  try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-4o",
-        input: prompt,
-        text: {
-          format: {
-            type: "json_object",
-          },
-        },
-      }),
-    });
-
-    const result = await response.json();
-    if (!response.ok) {
-      console.warn("OpenAI SEO generation failed:", result?.error?.message || response.statusText);
-      return null;
-    }
-
-    const rawText = extractTextFromOpenAiResponse(result);
-    if (!rawText) return null;
-
-    const cleanedText = rawText.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
-    const parsed = JSON.parse(cleanedText);
-    const nextTitle = String(parsed.title || "").trim();
-    const nextDescription = String(parsed.description || "").trim();
-    const nextKeywords = String(parsed.keywords || "").trim();
-
-    if (!nextTitle || !nextDescription) return null;
-
-    return {
-      title: nextTitle,
-      description: nextDescription,
-      keywords: nextKeywords,
-    };
-  } catch (error) {
-    console.warn("SEO OpenAI generation error:", error.message || error);
-    return null;
-  }
-}
-
-async function resolveProductSeo(product, brandName) {
-  const fallback = getFallbackSeo(product, brandName);
+function resolveProductSeo(product, brandName) {
+  const fallback = getProductSeo(product, brandName);
   const hasValidTitle = isTitleHealthy(product?.meta_title);
   const hasValidDescription = isDescriptionHealthy(product?.meta_description);
 
@@ -144,15 +78,6 @@ async function resolveProductSeo(product, brandName) {
       title: product.meta_title,
       description: product.meta_description,
       keywords: product.search_keywords || fallback.keywords,
-    };
-  }
-
-  const aiSeo = await generateSeoFromOpenAI(product, brandName);
-  if (aiSeo) {
-    return {
-      title: aiSeo.title || fallback.title,
-      description: aiSeo.description || fallback.description,
-      keywords: aiSeo.keywords || fallback.keywords,
     };
   }
 
@@ -189,7 +114,7 @@ export async function generateMetadata({ params }) {
           }))
       : null;
 
-    const seo = await resolveProductSeo(product, brandName);
+    const seo = resolveProductSeo(product, brandName);
     const image =
       product.images?.length > 0
         ? `${baseUrl}/uploads/products/${product.images[0]}`
@@ -428,10 +353,11 @@ export default async function ProductNew({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       )}
-      <h1 className="container mx-auto px-4 pt-6 text-2xl font-bold text-gray-900 sm:text-4xl">
-        {pageHeading}
-      </h1>
+      
       <ProductClient initialProduct={product} />
+      <h1 className="container mx-auto px-4 pt-6 text-2xl font-bold text-gray-900 sm:text-4xl">
+        &nbsp;
+      </h1>
     </>
   );
 }

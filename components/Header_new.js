@@ -2234,7 +2234,7 @@ export default function Header() {
                                           return (
                                             <li key={bIdx}>
                                               <Link
-                                                href={`/category/${sub.category_slug}?brands=${bSlug}`}
+                                                href={`/category/brand/${sub.category_slug}/${bSlug}`}
                                                 className="text-[12px] font-medium text-gray-600 hover:text-red-600 hover:bg-red-50 px-1.5 py-0.5 rounded transition-colors block truncate"
                                               >
                                                 {bName}
@@ -2278,7 +2278,7 @@ export default function Header() {
                                   {visibleBrands.map((brand, bIdx) => (
                                     <Link
                                       key={bIdx}
-                                      href={`/category/${cat.category_slug}?brands=${brand.brand_slug}`}
+                                      href={`/category/brand/${cat.category_slug}/${brand.brand_slug}`}
                                       className="flex items-center justify-center h-9 w-[82px] px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-2xs hover:border-red-500 hover:shadow-md transition-all shrink-0 group/brandcard"
                                     >
                                       <img

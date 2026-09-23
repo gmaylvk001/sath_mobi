@@ -33,6 +33,16 @@ async function getCategoryTree(parentId, productCategoryIds = null) {
  
   return filteredCategories;
 }
+
+async function getDescendantCategoryIds(parentId) {
+  const children = await ecom_category_info.find({ parentid: parentId }).select("_id").lean();
+  const childIds = children.map((category) => category._id.toString());
+  const descendantGroups = await Promise.all(
+    childIds.map((childId) => getDescendantCategoryIds(childId))
+  );
+
+  return childIds.concat(descendantGroups.flat());
+}
  
 export async function GET(request, { params }) {
   try {
@@ -53,10 +63,25 @@ export async function GET(request, { params }) {
       return Response.json({ error: "Brand not found" }, { status: 404 });
     }
  
-    // First get all products for this brand to determine which categories have products
+    const scopedCategoryIds = [
+      category._id.toString(),
+      ...(await getDescendantCategoryIds(category._id.toString()))
+    ];
+    const categoryScope = {
+      $or: [
+        { category: { $in: scopedCategoryIds } },
+        { sub_category: { $in: scopedCategoryIds } },
+        ...(category.md5_cat_name
+          ? [{ sub_category_new: { $regex: category.md5_cat_name, $options: "i" } }]
+          : [])
+      ]
+    };
+
+    // First get scoped products for this brand to determine which categories have products
     const allBrandProducts = await Product.find({
       brand: brand._id,
-      status: "Active"
+      status: "Active",
+      ...categoryScope
     }).select('sub_category').lean();
    
     if (!allBrandProducts || allBrandProducts.length === 0) {
@@ -65,23 +90,21 @@ export async function GET(request, { params }) {
         brand,
         products: [],
         categories: [],
+        allCategoryIds: scopedCategoryIds,
         filters: []
       });
     }
    
-    // Get all subcategory IDs that have products for this brand
+    // Get all scoped subcategory IDs that have products for this brand
     const productSubCategoryIds = [...new Set(
       allBrandProducts.map(p => p.sub_category?.toString()).filter(Boolean)
     )];
    
-    // Get products for this brand and category (including subcategories)
+    // Get products for this brand and selected category branch
     const products = await Product.find({
       brand: brand._id.toString(),
-      $or: [
-        { category: category._id.toString() },
-        { sub_category: { $in: productSubCategoryIds } }
-      ],
-      status: "Active"
+      status: "Active",
+      ...categoryScope
     }).populate('brand', 'brand_name brand_slug');
    
     // Build category tree with only categories that have products
@@ -114,6 +137,7 @@ export async function GET(request, { params }) {
       brand,
       products,
       categories: categoryTree,
+      allCategoryIds: scopedCategoryIds,
       filters: formattedFilters
     });
   } catch (error) {

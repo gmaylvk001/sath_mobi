@@ -11,6 +11,7 @@ export async function GET(req) {
     const categoryIds = searchParams.get('categoryIds')?.split(',') || [];
     const subcategoryIds = searchParams.get('subcategoryIds')?.split(',') || [];
     const brandIds = searchParams.get('brands')?.split(',') || [];
+    const categoryMd5 = searchParams.get('categoryMd5');
     const minPrice = parseFloat(searchParams.get('minPrice')) || 0;
     const maxPrice = parseFloat(searchParams.get('maxPrice')) || 1000000;
     const filterIds = searchParams.get('filters')?.split(',') || [];
@@ -47,8 +48,19 @@ export async function GET(req) {
 
     console.log(query);
     
+    const andConditions = [];
+
+    if (categoryMd5) {
+      andConditions.push({
+        sub_category_new: {
+          $regex: categoryMd5,
+          $options: "i"
+        }
+      });
+    }
+
     // Price range filter (considers both price and special_price)
-    query.$and = [
+    andConditions.push(
       {
         $or: [
           { 
@@ -65,7 +77,9 @@ export async function GET(req) {
           }
         ]
       }
-    ];
+    );
+
+    query.$and = andConditions;
     
     let productsQuery = Product.find(query).populate('brand', 'brand_name brand_slug');
   
