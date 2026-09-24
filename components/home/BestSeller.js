@@ -273,171 +273,188 @@ const BestSellers = () => {
           </div>
         </>
       )}
- {categoryName === "Accessories" && (
-  <div
-    className="
-      grid
-      grid-cols-[1fr_1.26fr]
-      gap-20
-      mb-8
-      items-start
+      {categoryName === "Accessories" && (
+        <div
+          className="
+            grid
+            grid-cols-3
+            gap-4
+            mb-8
+            items-stretch
 
-      max-lg:grid-cols-[1fr_1.2fr]
-      max-lg:gap-5
+            max-sm:grid-cols-2
+            max-sm:gap-2.5
+            max-sm:bg-white
+            max-sm:p-3
+            max-sm:rounded-2xl
+            max-sm:border
+            max-sm:border-amber-100
+            max-sm:shadow-xs
+          "
+        >
+          {/* ================= 1 - DESKTOP MAIN ACCESSORIES CARD (Desktop Only) ================= */}
+          <Link
+            href="/category/accessories"
+            className="
+              hidden
+              sm:flex
+              col-span-1
+              w-full
+              h-full
+              min-h-0
+            "
+          >
+            <GridImage
+              src="/assets/images/categoryimages/access-1.png"
+              alt="Accessories1"
+              fill={true}
+              className="w-full h-full"
+              imgClassName="object-contain"
+            />
+          </Link>
 
-      max-sm:grid-cols-1
-      max-sm:gap-3
-      max-sm:bg-white
-      max-sm:p-3
-      max-sm:rounded-2xl
-      max-sm:border
-      max-sm:border-amber-100
-      max-sm:shadow-xs
-    "
-  >
-    {/* ================= LEFT BIG ACCESSORIES CARD ================= */}
-    <Link
-      href="/category/accessories"
-      className="
-        relative
-        rounded-2xl
-        overflow-hidden
-        w-full
-        h-[430px]
+          {/* ================= 1 - MOBILE MAIN ACCESSORIES CARD (Mobile Only) ================= */}
+          <Link
+            href="/category/accessories"
+            className="
+              sm:hidden
+              col-span-2
+              w-full
+              aspect-[1.15/1]
+            "
+          >
+            <GridImage
+              src="/assets/images/categoryimages/access-1.png"
+              alt="Accessories1"
+              fill={true}
+              className="w-full h-full aspect-[1.15/1]"
+              imgClassName="object-contain"
+            />
+          </Link>
 
-        max-lg:h-[560px]
-        max-sm:h-auto
-      "
-    >
-      <GridImage
-        src="/assets/images/categoryimages/access-1.png"
-        alt="Accessories"
-        imgClassName="w-full h-full object-contain"
-      />
-    </Link>
+          {/* ================= RIGHT 6-CARD GRID ================= */}
+          <div
+            className="
+              col-span-2
+              max-sm:col-span-2
+              grid
+              grid-cols-3
+              gap-4
+              w-full
+              max-sm:grid-cols-2
+              max-sm:gap-2.5
+            "
+          >
+            {/* 2 - SPEAKERS */}
+            <Link
+              href="/category/speakers"
+              className="
+                rounded-2xl
+                overflow-hidden
+                aspect-square
+                sm:aspect-[1/0.88]
+                w-full
+              "
+            >
+              <GridImage
+                src="/assets/images/categoryimages/access-2.png"
+                alt="Accessories2"
+                imgClassName="w-full h-full object-contain"
+              />
+            </Link>
 
-    {/* ================= RIGHT ACCESSORIES GRID ================= */}
-    <div
-      className="
-        grid
-        grid-cols-3
-        gap-3
-        w-full
-        content-start
-        items-start
-        self-center
-        translate-y-[8px]
+            {/* 3 - EARBUDS */}
+            <Link
+              href="/category/earbuds"
+              className="
+                rounded-2xl
+                overflow-hidden
+                aspect-square
+                sm:aspect-[1/0.88]
+                w-full
+              "
+            >
+              <GridImage
+                src="/assets/images/categoryimages/access-4.png"
+                alt="Accessories4"
+                imgClassName="w-full h-full object-contain"
+              />
+            </Link>
 
-        max-sm:grid-cols-2
-        max-sm:gap-2.5
-        max-sm:self-start
-        max-sm:translate-y-0
-      "
-    >
-      {/* SPEAKERS */}
-      <Link
-        href="/category/speakers"
-        className="
-          rounded-2xl
-          overflow-hidden
-          aspect-square
-          w-full
-        "
-      >
-        <GridImage
-          src="/assets/images/categoryimages/access-2.png"
-          alt="Speakers"
-          imgClassName="w-full h-full object-contain"
-        />
-      </Link>
+            {/* 4 - CHARGERS */}
+            <Link
+              href="/category/chargers"
+              className="
+                rounded-2xl
+                overflow-hidden
+                aspect-square
+                sm:aspect-[1/0.88]
+                w-full
+              "
+            >
+              <GridImage
+                src="/assets/images/categoryimages/access-6.png"
+                alt="Accessories6"
+                imgClassName="w-full h-full object-contain"
+              />
+            </Link>
 
-      {/* EARBUDS */}
-      <Link
-        href="/category/earbuds"
-        className="
-          rounded-2xl
-          overflow-hidden
-          aspect-square
-          w-full
-        "
-      >
-        <GridImage
-          src="/assets/images/categoryimages/access-4.png"
-          alt="EarBuds"
-          imgClassName="w-full h-full object-contain"
-        />
-      </Link>
+            {/* 5 - SMART WATCH */}
+            <Link
+              href="/category/smartwatches-and-accessories"
+              className="
+                rounded-2xl
+                overflow-hidden
+                aspect-square
+                sm:aspect-[1/0.88]
+                w-full
+              "
+            >
+              <GridImage
+                src="/assets/images/categoryimages/access-3.png"
+                alt="Accessories3"
+                imgClassName="w-full h-full object-contain"
+              />
+            </Link>
 
-      {/* CHARGERS */}
-      <Link
-        href="/category/chargers"
-        className="
-          rounded-2xl
-          overflow-hidden
-          aspect-square
-          w-full
-        "
-      >
-        <GridImage
-          src="/assets/images/categoryimages/access-6.png"
-          alt="Chargers"
-          imgClassName="w-full h-full object-contain"
-        />
-      </Link>
+            {/* 6 - POWER BANK */}
+            <Link
+              href="/category/power-banks"
+              className="
+                rounded-2xl
+                overflow-hidden
+                aspect-square
+                sm:aspect-[1/0.88]
+                w-full
+              "
+            >
+              <GridImage
+                src="/assets/images/categoryimages/access-5.png"
+                alt="Accessories5"
+                imgClassName="w-full h-full object-contain"
+              />
+            </Link>
 
-      {/* SMART WATCH */}
-      <Link
-        href="/category/smartwatches-and-accessories"
-        className="
-          rounded-2xl
-          overflow-hidden
-          aspect-square
-          w-full
-        "
-      >
-        <GridImage
-          src="/assets/images/categoryimages/access-3.png"
-          alt="Smart Watch"
-          imgClassName="w-full h-full object-contain"
-        />
-      </Link>
-
-      {/* POWER BANK */}
-      <Link
-        href="/category/power-banks"
-        className="
-          rounded-2xl
-          overflow-hidden
-          aspect-square
-          w-full
-        "
-      >
-        <GridImage
-          src="/assets/images/categoryimages/access-5.png"
-          alt="Power Bank"
-          imgClassName="w-full h-full object-contain"
-        />
-      </Link>
-
-      {/* BACK CASE */}
-      <Link
-        href="/category/back-case"
-        className="
-          rounded-2xl
-          overflow-hidden
-          aspect-square
-          w-full
-        "
-      >
-        <GridImage
-          src="/assets/images/categoryimages/access-7.png"
-          alt="Back Case"
-          imgClassName="w-full h-full object-contain"
-        />
-      </Link>
-    </div>
-  </div>
-)}
+            {/* 7 - BACK CASE */}
+            <Link
+              href="/category/back-case"
+              className="
+                rounded-2xl
+                overflow-hidden
+                aspect-square
+                sm:aspect-[1/0.88]
+                w-full
+              "
+            >
+              <GridImage
+                src="/assets/images/categoryimages/access-7.png"
+                alt="Accessories7"
+                imgClassName="w-full h-full object-contain"
+              />
+            </Link>
+          </div>
+        </div>
+      )}
       {categoryName === "Tablets" && (
         <>
           {/* ---------------- TABLETS GRID ---------------- */}
@@ -606,16 +623,29 @@ const BestSellers = () => {
 
 };
 
-function GridImage({ src, alt, className, imgClassName }) {
+function GridImage({ src, alt, className, imgClassName, fill = false }) {
+  const isContain = imgClassName?.includes("object-contain");
   return (
     <div className={`h-full rounded-2xl max-sm:rounded-xl overflow-hidden shadow-2xs max-sm:shadow-xs border border-gray-100 hover:shadow-md transition-all duration-300 bg-white p-0.5 max-sm:p-1 active:scale-[0.98] ${className || ""}`}>
-      <Image
-        src={src}
-        alt={alt}
-        width={600}
-        height={400}
-        className={`w-full h-full object-cover rounded-xl max-sm:rounded-lg ${imgClassName || ""}`}
-      />
+      <div className="relative w-full h-full min-h-0 rounded-xl max-sm:rounded-lg overflow-hidden">
+        {fill ? (
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className={`w-full h-full ${isContain ? "object-contain" : "object-cover"} rounded-xl max-sm:rounded-lg ${imgClassName || ""}`}
+          />
+        ) : (
+          <Image
+            src={src}
+            alt={alt}
+            width={600}
+            height={400}
+            className={`w-full h-full ${isContain ? "object-contain" : "object-cover"} rounded-xl max-sm:rounded-lg ${imgClassName || ""}`}
+          />
+        )}
+      </div>
     </div>
   );
 }
