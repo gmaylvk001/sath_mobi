@@ -1,4 +1,5 @@
 import ProductClient from "./ProductClient";
+import { getCanonicalUrl, getSiteUrl } from "@/lib/siteUrl";
 
 function stripHtml(value) {
   return String(value ?? "")
@@ -87,7 +88,7 @@ function resolveProductSeo(product, brandName) {
 export async function generateMetadata({ params }) {
   const awaitedParams = await params;
   const slug = awaitedParams.slug;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
 
   try {
     const response = await fetch(`${baseUrl}/api/product/${slug}`, {
@@ -98,10 +99,14 @@ export async function generateMetadata({ params }) {
       return {
         title: "Product not found",
         description: "This product is unavailable",
+        alternates: {
+          canonical: getCanonicalUrl(`/product/${slug}`),
+        },
       };
     }
 
     const product = await response.json();
+    const canonicalUrl = getCanonicalUrl(`/product/${product.slug || slug}`);
     const brandName = product.brand
       ? (await fetch(`${baseUrl}/api/brand/get`, { cache: "no-store" })
           .then((res) => (res.ok ? res.json() : null))
@@ -124,11 +129,14 @@ export async function generateMetadata({ params }) {
       title: seo.title,
       description: seo.description,
       keywords: seo.keywords,
+      alternates: {
+        canonical: canonicalUrl,
+      },
 
       openGraph: {
         title: seo.title,
         description: seo.description,
-        url: `${baseUrl}/product/${slug}`,
+        url: canonicalUrl,
         images: [image],
         type: "website",
       },
@@ -145,12 +153,15 @@ export async function generateMetadata({ params }) {
     return {
       title: "Product",
       description: "Buy products online",
+      alternates: {
+        canonical: getCanonicalUrl(`/product/${slug}`),
+      },
     };
   }
 }
 
 async function getProductData(slug) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
   try {
     const res = await fetch(`${baseUrl}/api/product/${slug}`, {
       cache: "no-store",
@@ -163,7 +174,7 @@ async function getProductData(slug) {
 }
 
 async function getBrandName(brandId) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
   try {
     const res = await fetch(`${baseUrl}/api/brand/get`, {
       cache: "no-store",
@@ -181,7 +192,7 @@ async function getBrandName(brandId) {
 }
 
 async function getReviewData(productId) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
   try {
     const res = await fetch(`${baseUrl}/api/reviews/${productId}`, {
       cache: "no-store",
@@ -196,7 +207,7 @@ async function getReviewData(productId) {
 export default async function ProductNew({ params }) {
   const awaitedParams = await params;
   const slug = awaitedParams.slug;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
 
   const product = await getProductData(slug);
 

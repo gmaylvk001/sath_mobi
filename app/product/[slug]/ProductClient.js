@@ -6,7 +6,6 @@ import {  useEffect, useState, useRef, useCallback } from "react";
 import { ShieldHalf } from 'lucide-react';
 import { Icon } from '@iconify/react';
 import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { FaStore } from "react-icons/fa";
 import { FaShield } from "react-icons/fa6";
 import { FaShoppingCart, FaHeart, FaShareAlt, FaRupeeSign, FaCartPlus, FaBell } from "react-icons/fa";
@@ -26,7 +25,6 @@ import RazorpayOffers from "@/components/RazorpayOffers";
 import { v4 as uuidv4 } from "uuid";
 
 export default function ProductClient({ initialProduct = null }) {
-    const router = useRouter(); 
     const { slug } = useParams();
     const [relatedProductsLoading, setRelatedProductsLoading] = useState(false);
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -44,6 +42,8 @@ export default function ProductClient({ initialProduct = null }) {
     const [selectedWarrantyAmount, setSelectedWarrantyAmount] = useState(0);
     const [showNoWarrantyModal, setShowNoWarrantyModal] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const isProductInactive = product?.status && product.status !== "Active" && product.status !== "NewArrived";
+    const isProductPurchasable = product?.status === "Active";
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -84,6 +84,8 @@ export default function ProductClient({ initialProduct = null }) {
     const { updateCartCount } = useCart() || {};
     const { openAuthModal } = useModal() || {};
     const handleBuyNow = async () => {
+        if (!isProductPurchasable) return;
+
         console.log("Buying now with warranty:", selectedWarranty, selectedExtendedWarranty);
         try {
             const token = localStorage.getItem("token");
@@ -461,11 +463,6 @@ export default function ProductClient({ initialProduct = null }) {
                 }
                 
                 const data = await response.json();
-                // ✅ Final client-side check
-                if (data.status !== "Active" && data.status !== "NewArrived") {
-                router.push("/404");
-                return;
-                }
                 // console.log(data);
                 
                 // If API returns an array, find the product with matching slug
@@ -919,7 +916,7 @@ export default function ProductClient({ initialProduct = null }) {
                                     />
                                     </div> */}
 
-                                    {product.quantity > 0 && (
+                                    {product.quantity > 0 && isProductPurchasable && (
                                         <div className="flex-grow mt-2">
                                             <ProductCard productId={product._id} />
                                         </div>
@@ -1768,8 +1765,13 @@ export default function ProductClient({ initialProduct = null }) {
                                 </div>
                                 </div>
                             )}
+                            {isProductInactive && (
+                                <div className="w-full border border-red-200 bg-red-50 text-red-700 font-semibold py-3 rounded-md shadow-sm text-center">
+                                    Product no longer available
+                                </div>
+                            )}
                             {/* Buy Now */}
-                            {product.stock_status === "In Stock" && product.quantity > 0 && product.status === "Active" && (
+                            {product.stock_status === "In Stock" && product.quantity > 0 && isProductPurchasable && (
                             <button
                                 onClick={handleBuyNow}
                                 className="w-full bg-white hover:bg-green-600 hover:text-white text-green-600 border border-green-200 font-semibold py-3 rounded-md shadow-md flex items-center justify-center gap-3"
@@ -1780,7 +1782,7 @@ export default function ProductClient({ initialProduct = null }) {
                             )}
 
                             {/* Add to Cart */}
-                            {product.stock_status === "In Stock" && product.quantity > 0 && product.status === "Active" && (
+                            {product.stock_status === "In Stock" && product.quantity > 0 && isProductPurchasable && (
                             <ProductAddtoCart
                                 productId={product._id}
                                 stockQuantity={product.quantity}

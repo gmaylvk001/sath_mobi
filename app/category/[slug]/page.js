@@ -1,8 +1,9 @@
 import CategoryClient from "@/components/category/CategoryComponent";
+import { getCanonicalUrl, getSiteUrl } from "@/lib/siteUrl";
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
 
   try {
     const res = await fetch(`${baseUrl}/api/categories/${slug}`, {
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }) {
 
     const data = await res.json();
     const category = data.main_category;
+    const canonicalUrl = getCanonicalUrl(`/category/${category.category_slug || slug}`);
 
     return {
       title: category.meta_title || category.category_name,
@@ -25,11 +27,14 @@ export async function generateMetadata({ params }) {
         category.meta_description ||
         `Browse products in ${category.category_name}`,
       keywords: category.meta_keyword || "",
+      alternates: {
+        canonical: canonicalUrl,
+      },
 
       openGraph: {
         title: category.meta_title || category.category_name,
         description: category.meta_description,
-        url: `${baseUrl}/category/${slug}`,
+        url: canonicalUrl,
         images: category.image ? [`${baseUrl}${category.image}`] : [],
         type: "website",
       },
@@ -49,7 +54,7 @@ export async function generateMetadata({ params }) {
 }
 
 async function getCategoryData(slug) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
   try {
     const res = await fetch(`${baseUrl}/api/categories/${slug}`, {
       cache: "no-store",
@@ -63,7 +68,7 @@ async function getCategoryData(slug) {
 
 export default async function Page({ params }) {
   const { slug } = params;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = getSiteUrl();
   const data = await getCategoryData(slug);
   const pageHeading =
     data?.main_category?.category_name ||
