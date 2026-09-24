@@ -1,4 +1,5 @@
 import BrandComponent from "@/components/brand/BrandComponent";
+import { redirect } from "next/navigation";
 
 async function getBrand(slug) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -18,6 +19,10 @@ async function getBrand(slug) {
 export default async function Dashboard({ params }) {
   const resolvedParams = await params;
   const brand = await getBrand(resolvedParams.slug);
+
+  if (!brand) {
+    redirect("/");
+  }
 
   return (
     <div>

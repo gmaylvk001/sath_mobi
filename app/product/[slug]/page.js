@@ -1,5 +1,6 @@
 import ProductClient from "./ProductClient";
 import { getCanonicalUrl, getSiteUrl } from "@/lib/siteUrl";
+import { redirect } from "next/navigation";
 
 function stripHtml(value) {
   return String(value ?? "")
@@ -210,6 +211,9 @@ export default async function ProductNew({ params }) {
   const baseUrl = getSiteUrl();
 
   const product = await getProductData(slug);
+  if (!product) {
+    redirect("/");
+  }
 
   let brandName = null;
   let reviewData = null;

@@ -1,5 +1,6 @@
 import CategoryClient from "@/components/category/CategoryComponent";
 import { getCanonicalUrl, getSiteUrl } from "@/lib/siteUrl";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -70,6 +71,9 @@ export default async function Page({ params }) {
   const { slug } = params;
   const baseUrl = getSiteUrl();
   const data = await getCategoryData(slug);
+  if (!data?.main_category) {
+    redirect("/");
+  }
   const pageHeading =
     data?.main_category?.category_name ||
     slug

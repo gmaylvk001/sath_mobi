@@ -1,5 +1,6 @@
 // app/blog/[slug]/page.js
 import React from 'react';
+import { redirect } from 'next/navigation';
 
 async function getBlogPost(slug) {
   try {
@@ -26,6 +27,8 @@ export default async function BlogPost({ params }) {
   const blog = await getBlogPost(slug);
 
   if (!blog) {
+    redirect("/");
+  }
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center p-8 bg-white rounded-lg shadow-md max-w-md mx-auto">

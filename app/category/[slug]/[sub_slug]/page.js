@@ -1,5 +1,6 @@
 
 import CategoryClient from "@/components/category/[slug]/page";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const awaitedParams = await params;
@@ -70,6 +71,9 @@ export default async function Page({ params }) {
   const slug = awaitedParams.slug;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const data = await getSubCategoryData(sub_slug);
+  if (!data?.main_category) {
+    redirect("/");
+  }
   const pageHeading =
     data?.main_category?.category_name ||
     sub_slug
