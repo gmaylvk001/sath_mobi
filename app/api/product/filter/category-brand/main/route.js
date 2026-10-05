@@ -7,10 +7,10 @@ export async function GET(req) {
     await dbConnect();
     
     const { searchParams } = new URL(req.url);
-    const maincategoryId = searchParams.get('maincategoryId')?.split(',') || [];
-    const categoryIds = searchParams.get('categoryIds')?.split(',') || [];
-    const subcategoryIds = searchParams.get('subcategoryIds')?.split(',') || [];
-    const brandIds = searchParams.get('brands')?.split(',') || [];
+    const maincategoryIds = searchParams.get('maincategoryId')?.split(',').filter(Boolean) || [];
+    const categoryIds = searchParams.get('categoryIds')?.split(',').filter(Boolean) || [];
+    const subcategoryIds = searchParams.get('subcategoryIds')?.split(',').filter(Boolean) || [];
+    const brandIds = searchParams.get('brands')?.split(',').filter(Boolean) || [];
     const categoryMd5 = searchParams.get('categoryMd5');
     const minPrice = parseFloat(searchParams.get('minPrice')) || 0;
     const maxPrice = parseFloat(searchParams.get('maxPrice')) || 1000000;
@@ -21,25 +21,40 @@ export async function GET(req) {
     // Base query
     let query = { status: "Active" };
 
-    // Handle category and subcategory filters
-    if (categoryIds.length > 0 || subcategoryIds.length > 0) {
-      query.$or = [];
-      
-      if (categoryIds.length > 0) {
-        query.$or.push({ category: { $in: categoryIds } });
-      }else{
-        query.$or.push({ category: { $in: maincategoryId } });
-      }
-      
-      if (subcategoryIds.length > 0) {
-        query.$or.push({ sub_category: { $in: subcategoryIds } });
-      }
-    }
+    const andConditions = [];
 
-      if (maincategoryId.length > 0) {
-        query.$or = [];
-        query.$or.push({ category: { $in: maincategoryId } });
+    // Match the same main-category scope used to load the page's initial data.
+    if (maincategoryIds.length > 0) {
+      const mainCategoryScope = [
+        { category: { $in: maincategoryIds } },
+        { sub_category: { $in: maincategoryIds } }
+      ];
+      if (categoryMd5) {
+        mainCategoryScope.push({
+          sub_category_new: { $regex: categoryMd5, $options: "i" }
+        });
       }
+      andConditions.push({ $or: mainCategoryScope });
+
+      const selectedCategoryIds = [...categoryIds, ...subcategoryIds];
+      if (selectedCategoryIds.length > 0) {
+        andConditions.push({
+          $or: [
+            { category: { $in: selectedCategoryIds } },
+            { sub_category: { $in: selectedCategoryIds } }
+          ]
+        });
+      }
+    } else if (categoryIds.length > 0 || subcategoryIds.length > 0) {
+      const selectedCategoryScope = [];
+      if (categoryIds.length > 0) {
+        selectedCategoryScope.push({ category: { $in: categoryIds } });
+      }
+      if (subcategoryIds.length > 0) {
+        selectedCategoryScope.push({ sub_category: { $in: subcategoryIds } });
+      }
+      andConditions.push({ $or: selectedCategoryScope });
+    }
 
     // Add brand filters if any
     if (brandIds.length > 0) {
@@ -48,17 +63,6 @@ export async function GET(req) {
 
     console.log(query);
     
-    const andConditions = [];
-
-    if (categoryMd5) {
-      andConditions.push({
-        sub_category_new: {
-          $regex: categoryMd5,
-          $options: "i"
-        }
-      });
-    }
-
     // Price range filter (considers both price and special_price)
     andConditions.push(
       {

@@ -130,6 +130,13 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
         query.set('brands', categoryData.brand._id);
       }
 
+      if (categoryData.category?._id) {
+        const mainCategoryIds = categoryData.allCategoryIds?.length
+          ? categoryData.allCategoryIds
+          : [categoryData.category._id];
+        query.set('maincategoryId', mainCategoryIds.join(','));
+      }
+
       if (categoryData.category?.md5_cat_name) {
         query.set('categoryMd5', categoryData.category.md5_cat_name);
       }
@@ -137,10 +144,6 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
       // Add category filters
       if (selectedFilters.categories.length > 0) {
         query.set('categoryIds', selectedFilters.categories.join(','));
-      } else if (categoryData.allCategoryIds?.length > 0) {
-        query.set('categoryIds', categoryData.allCategoryIds.join(','));
-      } else if (categoryData.category?._id) {
-        query.set('categoryIds', categoryData.category._id);
       }
       
       // Add subcategory filters if any
@@ -477,6 +480,20 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
     );
   };
 
+  const formatSlug = (slug) =>
+    slug
+      ? String(slug)
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (char) => char.toUpperCase())
+      : "";
+
+  const brandName = categoryData.brand?.brand_name || formatSlug(brandSlug);
+  const categoryName = categoryData.category?.category_name || formatSlug(categorySlug);
+  const pageHeading =
+    brandName && categoryName
+      ? `${brandName} ${categoryName}`
+      : brandName || categoryName || "Products";
+
   if ((loading || !categoryData.brand) && pagination.currentPage === 1) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -490,6 +507,31 @@ export default function CategoryBrandComponent({ categorySlug, brandSlug }) {
   return (
     <div className="container mx-auto px-4 py-2 pb-3 max-w-7xl">
       {/* Breadcrumb */}
+      <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-1.5 text-xs sm:text-sm text-gray-500 pt-2 pb-1">
+        <Link href="/" className="hover:text-red-600 transition-colors">
+          Home
+        </Link>
+        <span className="text-gray-400">/</span>
+        {categoryData.category?.category_slug ? (
+          <Link
+            href={`/category/${categoryData.category.category_slug}`}
+            className="hover:text-red-600 transition-colors"
+          >
+            {categoryName}
+          </Link>
+        ) : (
+          <span>{categoryName}</span>
+        )}
+        <span className="text-gray-400">/</span>
+        <span className="text-gray-800 font-medium">{brandName}</span>
+      </nav>
+
+      {/* SEO Heading */}
+      <div className="pt-1 pb-3">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
+          {pageHeading}
+        </h1>
+      </div>
     
 
       {!nofound && products.length > 0 ? (
