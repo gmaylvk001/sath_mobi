@@ -9,6 +9,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "https",
+        hostname: "sathyamobiles.com",
+        pathname: "/uploads/categories/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.sathyamobiles.com",
+        pathname: "/uploads/categories/**",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "3000",

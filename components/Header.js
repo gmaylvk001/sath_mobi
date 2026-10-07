@@ -542,12 +542,12 @@ export default function Header() {
 
 
             {category.image ? (
-              <Image 
+              <img 
                 src={category.image} 
                 alt={category.category_name} 
                 width={80} 
                 height={80} 
-                className="object-contain"
+                className="object-contain w-full h-full"
               />
             ) : (
               <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
