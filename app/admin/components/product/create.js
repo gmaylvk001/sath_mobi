@@ -57,6 +57,7 @@ export default function AddProductPage({ mode = "add", productData = null, produ
     warranty: "",
     extend_warranty: [],
     product_highlights: [],
+    newArrived: "none",
     faqs: [],
     category_new : "",
     sub_category_new : "",
@@ -353,6 +354,7 @@ useEffect(() => {
     setProduct(prevProduct => ({
       ...productData,
       brand_code: productData.brand_code || "",
+      newArrived: productData.newArrived || productData.newarrived || "none",
       product_highlights: Array.isArray(productData.product_highlights) 
         ? productData.product_highlights 
         : [],
@@ -1423,6 +1425,7 @@ const handleupdatefilterchange = (filters) => {
     };
     reader.readAsText(file);
   };
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -1850,6 +1853,25 @@ const handleSubmit = async (e) => {
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">New Arrived</label>
+              <select
+                name="newArrived"
+                value={product.newArrived || product.newarrived || "none"}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setProduct(prev => ({
+                    ...prev,
+                    newArrived: val,
+                    newarrived: val
+                  }));
+                }}
+                className="w-full border p-2 rounded bg-white"
+              >
+                <option value="none">None</option>
+                <option value="yes">Yes</option>
+              </select>
             </div>
             </div>
 
@@ -2473,8 +2495,7 @@ const handleSubmit = async (e) => {
         )}
         <StepNavigation />
       </form>
-
-      {/* Bulk Import FAQs Modal */}
+            {/* Bulk Import FAQs Modal */}
       {showFaqImportModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
@@ -2506,10 +2527,7 @@ const handleSubmit = async (e) => {
                   <span>Expected JSON Format Example:</span>
                 </div>
                 <pre className="bg-white/90 border border-blue-100 rounded-md p-3 text-xs text-blue-950 font-mono overflow-x-auto">
-{`[
-  { "question": "What is the warranty period?", "answer": "1 Year Brand Warranty" },
-  { "question": "Is cash on Delivery available?", "answer": "Yes, COD is available" }
-]`}
+                  {"[\n  { \"question\": \"What is the warranty period?\", \"answer\": \"1 Year Brand Warranty\" },\n  { \"question\": \"Is cash on Delivery available?\", \"answer\": \"Yes, COD is available\" }\n]"}
                 </pre>
               </div>
 
@@ -2534,7 +2552,7 @@ const handleSubmit = async (e) => {
                 value={faqJsonInput}
                 onChange={(e) => setFaqJsonInput(e.target.value)}
                 className="w-full h-44 border border-gray-300 rounded-lg p-3 text-xs sm:text-sm font-mono text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                placeholder={`[\n  {\n    "question": "Question here...",\n    "answer": "Answer here..."\n  }\n]`}
+                placeholder='[{"question": "Question here...", "answer": "Answer here..."}]'
               />
             </div>
 

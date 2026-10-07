@@ -122,6 +122,16 @@ console.log("..............................................................");
 
     const highlights = JSON.parse(formData.get("highlights") || "[]");
     productData.product_highlights = highlights;
+
+    const newArrivedVal = (productData.newArrived || productData.newarrived || formData.get("newArrived") || "none").toLowerCase();
+    productData.newArrived = newArrivedVal === "yes" ? "yes" : "none";
+    productData.newarrived = productData.newArrived;
+
+    // Enforce ONE single newArrived product rule in DB
+    if (productData.newArrived === "yes") {
+      await Product.updateMany({}, { $set: { newArrived: "none", newarrived: "none" } });
+    }
+
     console.log(productData);
     const newProduct = new Product({
       ...productData,

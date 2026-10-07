@@ -41,6 +41,8 @@ add_ons: {
   extended_warranty:Number,
   overviewdescription: String,
   product_highlights: {type: [String],default: [],},
+  newArrived: { type: String, enum: ["yes", "none"], default: "none" },
+  newarrived: { type: String, default: "none" },
   faqs: {
     type: [
       {

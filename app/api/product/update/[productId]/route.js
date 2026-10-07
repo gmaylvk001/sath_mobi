@@ -93,6 +93,18 @@ for (const file of imageFiles) {
     }
 
     productData.product_highlights = highlights;
+
+
+
+    const newArrivedVal = (productData.newArrived || productData.newarrived || formData.get("newArrived") || "none").toLowerCase();
+    productData.newArrived = newArrivedVal === "yes" ? "yes" : "none";
+    productData.newarrived = productData.newArrived;
+
+    // Enforce ONE single newArrived product rule in DB
+    if (productData.newArrived === "yes") {
+      await Product.updateMany({ _id: { $ne: productId } }, { $set: { newArrived: "none", newarrived: "none" } });
+    }
+
     productData.variants = variants;
     productData.md5_name = md5_cat_name;
 

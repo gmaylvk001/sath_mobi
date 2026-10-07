@@ -28,100 +28,119 @@ export default function NewlyArrivedSection() {
   if (!product) return null;
 
   return (
-     <>
-     <section className="w-auto inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-5 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#faf5ff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4 max-sm:w-auto">
-      <div className="flex items-center justify-between mb-4 max-sm:mb-3">
-        <h2 className="text-primary max-sm:text-gray-900 font-semibold text-2xl max-sm:text-lg">
-          Newly Arrived
-        </h2>
-        <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
-          ➔
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
-
-        {/* LEFT: PRODUCT IMAGE */}
-        <div className="flex flex-col items-center">
-        <Swiper
-            modules={[Pagination, Autoplay]}
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
-            loop
-            className="w-full max-w-[320px]"
-        >
-            {product.images?.map((img, index) => (
-            <SwiperSlide key={index}>
-                <Link href={`/product/${product.slug}`}>
-                <div className="flex justify-center items-center">
-                    <Image
-                    src={`/uploads/products/${img}`}
-                    alt={`${product.name} ${index + 1}`}
-                    width={320}
-                    height={500}
-                    className="object-contain cursor-pointer"
-                    priority={index === 0}
-                    />
-                </div>
-                </Link>
-            </SwiperSlide>
-            ))}
-        </Swiper>
+    <>
+      <section className="w-auto inner-section-padding bg-linear-to-r from-linearyellow via-white to-linearyellow py-5 border border-gray-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] max-sm:border-none max-sm:shadow-none max-sm:bg-[#faf5ff] max-sm:p-3.5 max-sm:rounded-2xl max-sm:mx-3 max-sm:my-4 max-sm:w-auto">
+        <div className="flex items-center justify-between mb-4 max-sm:mb-3">
+          <h2 className="text-primary max-sm:text-gray-900 font-semibold text-2xl max-sm:text-lg">
+            Newly Arrived
+          </h2>
+          <div className="hidden max-sm:flex w-7 h-7 bg-black text-white rounded-full items-center justify-center font-bold text-xs shrink-0">
+            ➔
+          </div>
         </div>
 
-        {/* MIDDLE: PRODUCT HIGHLIGHTS */}
-        <div>
-          <h3 className="text-primary text-2xl font-semibold mb-4">
-            Product Highlights
-          </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
 
-          <ul className="productHighlights transition-all duration-300">
-            {(showHighlights
-              ? product.product_highlights
-              : product.product_highlights?.slice(0, 3)
-            )?.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-
-          {product.product_highlights?.length > 3 && (
-            <button
-              onClick={() => setShowHighlights(!showHighlights)}
-              className="text-primary text-sm font-semibold mt-2 hover:underline cursor-pointer"
+          {/* LEFT: PRODUCT IMAGE */}
+          <div className="flex flex-col items-center">
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              loop
+              className="w-full max-w-[320px]"
             >
-              {showHighlights ? "View Less" : "View More"}
-            </button>
-          )}
-        </div>
+              {product.images?.map((img, index) => (
+                <SwiperSlide key={index}>
+                  <Link href={`/product/${product.slug}`}>
+                    <div className="flex justify-center items-center">
+                      <Image
+                        src={`/uploads/products/${img}`}
+                        alt={`${product.name} ${index + 1}`}
+                        width={320}
+                        height={500}
+                        className="object-contain cursor-pointer"
+                        priority={index === 0}
+                      />
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
 
-        {/* RIGHT: PRODUCT FEATURES */}
-        <div className="md:col-span-2 lg:col-span-1">
-          <h3 className="text-primary font-semibold text-2xl mb-4">
-            Product Features
-          </h3>
+          {/* MIDDLE: PRODUCT HIGHLIGHTS */}
+          <div>
+            <h3 className="text-primary text-2xl font-semibold mb-4">
+              Product Highlights
+            </h3>
 
-          <ul className="productFeatures transition-all duration-300">
-            {(showFeatures
-              ? product.features
-              : product.features?.slice(0, 3)
-            )?.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
+            <ul className="productHighlights transition-all duration-300">
+              {(showHighlights
+                ? product.product_highlights
+                : product.product_highlights?.slice(0, 3)
+              )?.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
 
-          {product.features?.length > 3 && (
-            <button
-              onClick={() => setShowFeatures(!showFeatures)}
-              className="text-primary text-sm font-semibold mt-2 hover:underline cursor-pointer"
-            >
-              {showFeatures ? "View Less" : "View More"}
-            </button>
-          )}
+            {product.product_highlights?.length > 3 && (
+              <button
+                onClick={() => setShowHighlights(!showHighlights)}
+                className="text-primary text-sm font-semibold mt-2 hover:underline cursor-pointer"
+              >
+                {showHighlights ? "View Less" : "View More"}
+              </button>
+            )}
+          </div>
 
-          {/* PRICE + CTA */}
+          {/* RIGHT: PRODUCT FEATURES */}
+          <div className="md:col-span-2 lg:col-span-1">
+            <h3 className="text-primary font-semibold text-2xl mb-4">
+              Product Features
+            </h3>
 
-          <div className="mt-6">
-            {/*
+            {(() => {
+              let featuresList = [];
+              if (product?.key_specifications) {
+                if (Array.isArray(product.key_specifications)) {
+                  featuresList = product.key_specifications.flatMap(item =>
+                    String(item).split(/[\n,]+(?![^(]*\))/)
+                  );
+                } else if (typeof product.key_specifications === "string") {
+                  featuresList = product.key_specifications.split(/[\n,]+(?![^(]*\))/);
+                }
+              }
+              featuresList = featuresList
+                .map(f => String(f).replace(/[{}\[\]"]/g, "").trim())
+                .filter(Boolean);
+
+              const displayedFeatures = showFeatures ? featuresList : featuresList.slice(0, 3);
+
+              return (
+                <>
+                  <ul className="productFeatures transition-all duration-300">
+                    {displayedFeatures.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+
+                  {featuresList.length > 3 && (
+                    <button
+                      onClick={() => setShowFeatures(!showFeatures)}
+                      className="text-primary text-sm font-semibold mt-2 hover:underline cursor-pointer"
+                    >
+                      {showFeatures ? "View Less" : "View More"}
+                    </button>
+                  )}
+                </>
+              );
+            })()}
+
+            {/* PRICE + CTA */}
+
+            <div className="mt-6">
+              {/*
             <p className="text-xl font-bold text-black">
               ₹ {product.special_price || product.price}
             </p>
@@ -133,12 +152,12 @@ export default function NewlyArrivedSection() {
               View Product
             </Link>
             */}
+            </div>
           </div>
-        </div>
 
-      </div>
-    </section>
-     {/* ===== CUSTOM STYLES ===== */}
+        </div>
+      </section>
+      {/* ===== CUSTOM STYLES ===== */}
       <style jsx>{`
 
       .swiper-pagination-bullet {
@@ -210,7 +229,7 @@ export default function NewlyArrivedSection() {
             }
 
       `}</style>
-       </>
+    </>
   );
-  
+
 }

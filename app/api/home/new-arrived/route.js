@@ -6,9 +6,15 @@ export async function GET() {
   try {
     await dbConnect();
 
-    const product = await Product.findOne({ status: "NewArrived" })
-      .sort({ createdAt: -1 }) // latest
-      .lean();
+    // Query strictly for product marked as newArrived: "yes"
+    const product = await Product.findOne({
+      $or: [
+        { newArrived: "yes" },
+        { newarrived: "yes" },
+        { newArrived: "Yes" },
+        { newarrived: "Yes" }
+      ]
+    }).lean();
 
     return NextResponse.json({ success: true, product });
   } catch (error) {
