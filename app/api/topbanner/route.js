@@ -111,7 +111,7 @@ function getSafeImageFilename(filename = "") {
   return safeFilename && safeFilename === decodedFilename ? safeFilename : "";
 }
 
-function getImageResponse(filename = "") {
+function getImageResponse(req, filename = "") {
   const safeFilename = getSafeImageFilename(filename);
   if (!safeFilename) {
     return NextResponse.json(
@@ -131,15 +131,39 @@ function getImageResponse(filename = "") {
     );
   }
 
-  const imageBuffer = fs.readFileSync(filePath);
-  const extension = path.extname(safeFilename).toLowerCase();
+  try {
+    const stat = fs.statSync(filePath);
+    const etag = `W/"${stat.size}-${Math.floor(stat.mtimeMs)}"`;
 
-  return new Response(imageBuffer, {
-    headers: {
-      ...NO_STORE_HEADERS,
-      "Content-Type": IMAGE_CONTENT_TYPES[extension] || "application/octet-stream",
-    },
-  });
+    const reqEtag = req ? req.headers?.get?.("if-none-match") : null;
+    if (reqEtag && reqEtag === etag) {
+      return new Response(null, {
+        status: 304,
+        headers: {
+          "Cache-Control": "public, max-age=31536000, immutable",
+          ETag: etag,
+        },
+      });
+    }
+
+    const imageBuffer = fs.readFileSync(filePath);
+    const extension = path.extname(safeFilename).toLowerCase();
+
+    return new Response(imageBuffer, {
+      headers: {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Type": IMAGE_CONTENT_TYPES[extension] || "application/octet-stream",
+        "Content-Length": imageBuffer.length.toString(),
+        ETag: etag,
+      },
+    });
+  } catch (err) {
+    console.error("Error serving banner image:", err);
+    return NextResponse.json(
+      { success: false, message: "Error reading image file" },
+      { status: 500 }
+    );
+  }
 }
 
 async function saveFile(file) {
@@ -158,10 +182,16 @@ async function saveFile(file) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    const filename = `${Date.now()}-${file.name.replace(/\s/g, "_")}`;
+    const ext = path.extname(file.name).toLowerCase();
+    let filename = `${Date.now()}-${file.name.replace(/\s/g, "_")}`;
     const filepath = path.join(uploadDir, filename);
 
-    await sharp(buffer).toFile(filepath);
+    if (ext === ".png" || ext === ".jpg" || ext === ".jpeg") {
+      await sharp(buffer).webp({ quality: 82 }).toFile(filepath.replace(new RegExp(`${ext}$`), ".webp"));
+      filename = filename.replace(new RegExp(`${ext}$`), ".webp");
+    } else {
+      await sharp(buffer).toFile(filepath);
+    }
 
     return toPublicUrl(...TOP_BANNER_UPLOAD_SEGMENTS, filename);
   } catch (err) {
@@ -174,7 +204,7 @@ export async function GET(req) {
   try {
     const imageFilename = new URL(req.url).searchParams.get("image");
     if (imageFilename) {
-      return getImageResponse(imageFilename);
+      return getImageResponse(req, imageFilename);
     }
 
     await dbConnect();
@@ -189,7 +219,11 @@ export async function GET(req) {
 
     return NextResponse.json(
       { success: true, banners: normalizedBanners },
-      { headers: NO_STORE_HEADERS }
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=3600",
+        },
+      }
     );
   } catch (err) {
     return NextResponse.json(

@@ -204,15 +204,15 @@ const getCategoryIconPath = (catName) => {
 
 const BRAND_LOGO_MAP = {
   "oppo": "/assets/brand-logos/oppo.webp",
-  "samsung": "/assets/brand-logos/samsung.png",
-  "lg": "/assets/brand-logos/lg.png",
-  "vivo": "/assets/brand-logos/vivo.png",
-  "apple": "/assets/brand-logos/apple.png",
-  "iphone": "/assets/brand-logos/apple.png",
+  "samsung": "/assets/brand-logos/samsung.webp",
+  "lg": "/assets/brand-logos/lg.webp",
+  "vivo": "/assets/brand-logos/vivo.webp",
+  "apple": "/assets/brand-logos/apple.webp",
+  "iphone": "/assets/brand-logos/apple.webp",
   "xiaomi": "/assets/brand-logos/xiaomi.webp",
   "mi": "/assets/brand-logos/xiaomi.webp",
   "redmi": "/assets/brand-logos/xiaomi.webp",
-  "realme": "/assets/brand-logos/realme.png",
+  "realme": "/assets/brand-logos/realme.webp",
   "boat": "/assets/brand-logos/boat.webp",
   "jbl": "/assets/brand-logos/jbl.webp",
   "hp": "/assets/brand-logos/hp.webp",
@@ -220,26 +220,30 @@ const BRAND_LOGO_MAP = {
   "acer": "/assets/brand-logos/acer.webp",
   "lenovo": "/assets/brand-logos/lenovo.webp",
   "daikin": "/assets/brand-logos/daikin.webp",
-  "hitachi": "/assets/brand-logos/hitachi.png",
-  "blue star": "/assets/brand-logos/bluestar.png",
-  "bluestar": "/assets/brand-logos/bluestar.png",
+  "hitachi": "/assets/brand-logos/hitachi.webp",
+  "blue star": "/assets/brand-logos/bluestar.webp",
+  "bluestar": "/assets/brand-logos/bluestar.webp",
   "bpl": "/assets/brand-logos/bpl.webp",
-  "haier": "/assets/brand-logos/haier.png",
-  "godrej": "/assets/brand-logos/godreg.png",
-  "godreg": "/assets/brand-logos/godreg.png",
-  "sony": "/assets/brand-logos/sony.svg",
-  "zebronics": "/assets/brand-logos/zabronics.png",
-  "zabronics": "/assets/brand-logos/zabronics.png",
+  "haier": "/assets/brand-logos/haier.webp",
+  "godrej": "/assets/brand-logos/godreg.webp",
+  "godreg": "/assets/brand-logos/godreg.webp",
+  "sony": "/assets/brand-logos/sony.webp",
+  "zebronics": "/assets/brand-logos/zabronics.webp",
+  "zabronics": "/assets/brand-logos/zabronics.webp",
   "cellecor": "/assets/brand-logos/cellecor.webp",
-  "micromax": "/assets/brand-logos/micromax.jpg",
-  "onida": "/assets/brand-logos/onida.png"
+  "micromax": "/assets/brand-logos/micromax.webp",
+  "onida": "/assets/brand-logos/onida.webp"
 };
 
 const getBrandLogoPath = (brandInput) => {
   if (!brandInput) return null;
   if (typeof brandInput === "object" && brandInput?.image) {
-    if (brandInput.image.startsWith("/") || brandInput.image.startsWith("http")) {
-      return brandInput.image;
+    let img = brandInput.image;
+    if (img.startsWith("/") || img.startsWith("http")) {
+      if (img.endsWith(".png") || img.endsWith(".jpg") || img.endsWith(".jpeg") || img.endsWith(".svg")) {
+        img = img.replace(/\.(png|jpg|jpeg|svg)$/i, ".webp");
+      }
+      return img;
     }
   }
   const name = typeof brandInput === "string" ? brandInput : (brandInput?.brand_name || brandInput?.name || "");
@@ -254,13 +258,13 @@ const getBrandLogoPath = (brandInput) => {
 const getMenuBannerPath = (catName, catSlug) => {
   const slug = (catSlug || "").toLowerCase();
   const name = (catName || "").toLowerCase();
-  if (slug.includes("mobile") || name.includes("mobile")) return "/assets/menu_img/phone.jpg";
-  if (slug.includes("tv") || name.includes("tv")) return "/assets/menu_img/tv.jpg";
-  if (slug.includes("tab") || name.includes("tab")) return "/assets/menu_img/tab.jpg";
-  if (slug.includes("accessori") || name.includes("accessori")) return "/assets/menu_img/Accessories.jpg";
-  if (slug.includes("laptop") || name.includes("laptop") || name.includes("desktop")) return "/assets/menu_img/laptop.jpg";
-  if (slug.includes("air") || slug.includes("ac") || name.includes("air") || name.includes("conditioner")) return "/assets/menu_img/ac.jpg";
-  return "/assets/menu_img/phone.jpg";
+  if (slug.includes("mobile") || name.includes("mobile")) return "/assets/menu_img/phone.webp";
+  if (slug.includes("tv") || name.includes("tv")) return "/assets/menu_img/tv.webp";
+  if (slug.includes("tab") || name.includes("tab")) return "/assets/menu_img/tab.webp";
+  if (slug.includes("accessori") || name.includes("accessori")) return "/assets/menu_img/Accessories.webp";
+  if (slug.includes("laptop") || name.includes("laptop") || name.includes("desktop")) return "/assets/menu_img/laptop.webp";
+  if (slug.includes("air") || slug.includes("ac") || name.includes("air") || name.includes("conditioner")) return "/assets/menu_img/ac.webp";
+  return "/assets/menu_img/phone.webp";
 };
 
 // ADD: prepareFlatListAlpha - level-aware alphabetical ordering

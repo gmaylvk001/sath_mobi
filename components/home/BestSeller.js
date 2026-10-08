@@ -485,12 +485,12 @@ const BestSellers = () => {
 
 
       {/* PRODUCT SWIPER */}
-      <div className="relative">
-        <div className="product-nav-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 bg-primary rounded-full flex items-center justify-center cursor-pointer">
-          <i className="fi fi-ss-angle-small-left text-white"></i>
+      <div className="relative px-1 sm:px-2">
+        <div className="product-nav-prev absolute -left-2.5 sm:-left-3.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-primary border-2 border-white rounded-full flex items-center justify-center cursor-pointer shadow-md active:scale-95 transition-transform">
+          <i className="fi fi-ss-angle-small-left text-white text-xs"></i>
         </div>
-        <div className="product-nav-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 bg-primary rounded-full flex items-center justify-center cursor-pointer">
-          <i className="fi fi-ss-angle-small-right text-white"></i>
+        <div className="product-nav-next absolute -right-2.5 sm:-right-3.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-primary border-2 border-white rounded-full flex items-center justify-center cursor-pointer shadow-md active:scale-95 transition-transform">
+          <i className="fi fi-ss-angle-small-right text-white text-xs"></i>
         </div>
 
         <Swiper
@@ -499,18 +499,19 @@ const BestSellers = () => {
             nextEl: ".product-nav-next",
             prevEl: ".product-nav-prev",
           }}
-          spaceBetween={16}
-          slidesPerView={1} // mobile: single product card per view
+          spaceBetween={10}
+          slidesPerView={2} // mobile: show 2 product cards per view
           breakpoints={{
-            640: { slidesPerView: 2 },  // large phones
-            768: { slidesPerView: 3 },  // tablets
-            1024: { slidesPerView: 4 }, // desktop
+            480: { slidesPerView: 2, spaceBetween: 12 },
+            640: { slidesPerView: 2, spaceBetween: 16 },  // large phones
+            768: { slidesPerView: 3, spaceBetween: 16 },  // tablets
+            1024: { slidesPerView: 4, spaceBetween: 16 }, // desktop
           }}
         >
           {loading
             ? [...Array(4)].map((_, i) => (
               <SwiperSlide key={i}>
-                <div className="h-[380px] bg-gray-200 rounded-xl animate-pulse" />
+                <div className="h-[240px] sm:h-[380px] bg-gray-200 rounded-xl animate-pulse" />
               </SwiperSlide>
             ))
             : products.map((product) => {
@@ -522,7 +523,7 @@ const BestSellers = () => {
               return (
                 <SwiperSlide key={product._id} className="!h-auto flex">
                   <div className="rounded-xl bg-linear-120 from-yellow-200 to-pink-200 p-2 md:p-4 h-full w-full flex flex-col">
-                    <div className="bg-white rounded-lg p-3 sm:p-4 flex justify-center items-center h-[240px] sm:h-[260px] md:h-[220px] lg:h-[260px]">
+                    <div className="bg-white rounded-lg p-2 sm:p-4 flex justify-center items-center h-[140px] sm:h-[260px] md:h-[220px] lg:h-[260px]">
                       <Link href={`/product/${product.slug}`} className="flex h-full w-full items-center justify-center">
 
                         <img
@@ -564,7 +565,7 @@ const BestSellers = () => {
                       </div>
 
                       <Link href={`/product/${product.slug}`}>
-                        <p className="font-semibold line-clamp-2 min-h-[40px] text-md">
+                        <p className="font-semibold line-clamp-2 min-h-[32px] sm:min-h-[40px] text-xs sm:text-base">
                           {product.name}
                         </p>
                       </Link>

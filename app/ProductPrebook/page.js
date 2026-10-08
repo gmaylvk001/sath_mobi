@@ -1,5 +1,6 @@
 // app/page.js (or any React component)
 'use client';
+export const dynamic = "force-dynamic";
 import ProductPrebook from "@/components/prebook/prebook"; // Update the path if needed
 
 const imageUrls = [

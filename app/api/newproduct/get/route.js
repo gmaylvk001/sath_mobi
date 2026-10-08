@@ -6,6 +6,9 @@ import Filter from '@/models/ecom_filter_infos';
 import ProductFilter from '@/models/ecom_productfilter_info';
 import Products from "@/models/product";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   try {
     await dbConnect();

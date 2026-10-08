@@ -42,6 +42,8 @@ const videos = [
 export default function HomePage() {
   const [heroBanners, setHeroBanners] = useState([]);
   const [isHeroLoading, setIsHeroLoading] = useState(true);
+  const [latestProductIds, setLatestProductIds] = useState([]);
+  const [onSaleProductIds, setOnSaleProductIds] = useState([]);
 
   const brands = [
     "daikin",
@@ -84,9 +86,7 @@ export default function HomePage() {
     setIsHeroLoading(true);
 
     try {
-      const response = await fetch(`/api/topbanner?ts=${Date.now()}`, {
-        cache: "no-store",
-      });
+      const response = await fetch('/api/topbanner');
       const data = await response.json();
 
       if (data.success) {
@@ -172,7 +172,7 @@ export default function HomePage() {
           autoplay={{ delay: 4000, disableOnInteraction: false }}
           pagination={{ clickable: true, el: ".banner-pagination" }}
           speed={800}
-          className="bannerSwiper max-sm:rounded-2xl max-sm:overflow-hidden max-sm:shadow-xs"
+          className="bannerSwiper max-sm:rounded-2xl max-sm:overflow-hidden max-sm:shadow-xs min-h-[160px] sm:min-h-[280px] md:min-h-[400px] bg-slate-100/50"
         >
           {displayedHeroBanners.map((banner, index) => {
             const isUploadedBanner = isUploadedHeroImage(banner.banner_image);
@@ -187,7 +187,7 @@ export default function HomePage() {
               )
               : null;
             const image = isUploadedBanner ? (
-              <picture className="block rounded-2xl max-sm:rounded-xl overflow-hidden">
+              <picture className="block rounded-2xl max-sm:rounded-xl overflow-hidden w-full h-full">
                 {mobileImageSrc && (
                   <source media="(max-width: 767px)" srcSet={mobileImageSrc} />
                 )}
@@ -195,19 +195,20 @@ export default function HomePage() {
                   src={imageSrc}
                   alt={`Banner ${index + 1}`}
                   className="w-full h-full object-cover rounded-2xl max-sm:rounded-xl md:rounded-none"
-                  loading={index === 0 ? "eager" : "lazy"}
+                  loading={index < 2 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
+                  decoding="async"
                 />
               </picture>
             ) : (
-              <div className="block rounded-2xl max-sm:rounded-xl overflow-hidden">
+              <div className="block rounded-2xl max-sm:rounded-xl overflow-hidden w-full h-full">
                 <Image
                   src={imageSrc}
                   alt={`Banner ${index + 1}`}
                   width={1920}
                   height={600}
                   className="w-full h-full object-cover rounded-2xl max-sm:rounded-xl md:rounded-none"
-                  priority={index === 0}
+                  priority={index < 2}
                 />
               </div>
             );
@@ -218,11 +219,11 @@ export default function HomePage() {
               <SwiperSlide key={banner._id || index}>
                 {banner.redirect_url ? (
                   isExternal ? (
-                    <a href={banner.redirect_url} target="_blank" rel="noreferrer" className="block rounded-2xl max-sm:rounded-xl overflow-hidden">
+                    <a href={banner.redirect_url} target="_blank" rel="noreferrer" className="block rounded-2xl max-sm:rounded-xl overflow-hidden w-full h-full">
                       {image}
                     </a>
                   ) : (
-                    <Link href={banner.redirect_url} className="block rounded-2xl max-sm:rounded-xl overflow-hidden">
+                    <Link href={banner.redirect_url} className="block rounded-2xl max-sm:rounded-xl overflow-hidden w-full h-full">
                       {image}
                     </Link>
                   )
@@ -338,41 +339,41 @@ export default function HomePage() {
             {
               line1: "Best Selling",
               line2: "Air Conditioner",
-              productImg: "/assets/images/acbg.png",
+              productImg: "/assets/images/acbg.webp",
               defaultImg: "/assets/images/latest-sm-1.png",
               price: "Starting @ ₹ 27,990",
               link: "/category/air-conditioner",
-              bgImg: "/assets/images/cardbg.png",
+              bgImg: "/assets/images/cardbg.webp",
             },
             {
               line1: "Best Selling",
               line2: "Smart Phone",
-              productImg: "/assets/images/phonebg.png",
+              productImg: "/assets/images/phonebg.webp",
               defaultImg: "/assets/images/latest-sm-2.png",
               price: "Starting @ ₹ 11,990",
               link: "/category/mobiles",
-              bgImg: "/assets/images/cardbg.png",
+              bgImg: "/assets/images/cardbg.webp",
             },
             {
               line1: "Best Selling",
               line2: "Neck Band",
-              productImg: "/assets/images/neck.png",
+              productImg: "/assets/images/neck.webp",
               defaultImg: "/assets/images/latest-sm-3.png",
               price: "Starting @ ₹ 299",
               link: "/category/accessories",
-              bgImg: "/assets/images/cardbg.png",
+              bgImg: "/assets/images/cardbg.webp",
             },
             {
               line1: "Best Selling",
               line2: "Laptop",
-              productImg: "/assets/images/lap.png",
+              productImg: "/assets/images/lap.webp",
               defaultImg: "/assets/images/latest-sm-4.png",
               price: "Starting @ ₹ 39,790",
               link: "/category/laptop-desktops",
-              bgImg: "/assets/images/cardbg.png",
+              bgImg: "/assets/images/cardbg.webp",
             },
           ].map((item, index) => {
-            const cardBg = item.bgImg || "/assets/images/cardbg.png";
+            const cardBg = item.bgImg || "/assets/images/cardbg.webp";
             const productImgSrc = item.productImg || item.image || item.localImg || item.defaultImg;
             const titleText = item.title || `${item.line1} ${item.line2}`;
 
@@ -443,7 +444,7 @@ export default function HomePage() {
       </div>
 
       {/* ================= Latest Products ================= */}
-      <LatestProducts />
+      <LatestProducts onLoaded={setLatestProductIds} />
 
 
       {/* TOP BANNER */}
@@ -463,8 +464,8 @@ export default function HomePage() {
 
       </div>
 
-      {/* ================= Latest Products ================= */}
-      <OnSaleSection />
+      {/* ================= Fast Moving / On Sale ================= */}
+      <OnSaleSection excludeIds={latestProductIds} onLoaded={setOnSaleProductIds} />
 
       <section className="inner-section-padding py-10 max-sm:py-4 max-sm:mx-3 max-sm:my-4 max-sm:p-3.5 max-sm:bg-[#eff6ff] max-sm:rounded-2xl max-sm:w-auto">
         <div className="hidden max-sm:flex items-center justify-between mb-3">
@@ -529,8 +530,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= Top Sellers Section Products ================= */}
-      <TopSellersSection />
+      {/* ================= Trending's of Sathya Mobiles / Top Sellers ================= */}
+      <TopSellersSection excludeIds={[...latestProductIds, ...onSaleProductIds]} />
 
 
       {/* TOP BANNER */}
