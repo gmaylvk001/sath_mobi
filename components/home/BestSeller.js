@@ -278,7 +278,7 @@ const BestSellers = () => {
           className="
             grid
             grid-cols-3
-            gap-4
+            gap-3.5
             mb-8
             items-stretch
 
@@ -308,8 +308,8 @@ const BestSellers = () => {
               src="/assets/images/categoryimages/access-1.png"
               alt="Accessories1"
               fill={true}
-              className="w-full h-full"
-              imgClassName="object-contain"
+              className="w-full h-full border-0 p-0 shadow-2xs hover:shadow-md"
+              imgClassName="object-cover w-full h-full"
             />
           </Link>
 
@@ -327,8 +327,8 @@ const BestSellers = () => {
               src="/assets/images/categoryimages/access-1.png"
               alt="Accessories1"
               fill={true}
-              className="w-full h-full aspect-[1.15/1]"
-              imgClassName="object-contain"
+              className="w-full h-full aspect-[1.15/1] border-0 p-0 shadow-2xs hover:shadow-md"
+              imgClassName="object-cover w-full h-full"
             />
           </Link>
 
@@ -339,7 +339,7 @@ const BestSellers = () => {
               max-sm:col-span-2
               grid
               grid-cols-3
-              gap-4
+              gap-3.5
               w-full
               max-sm:grid-cols-2
               max-sm:gap-2.5
@@ -352,14 +352,15 @@ const BestSellers = () => {
                 rounded-2xl
                 overflow-hidden
                 aspect-square
-                sm:aspect-[1/0.88]
+                sm:aspect-[1/0.82]
                 w-full
               "
             >
               <GridImage
                 src="/assets/images/categoryimages/access-2.png"
                 alt="Accessories2"
-                imgClassName="w-full h-full object-contain"
+                className="border-0 p-0 shadow-2xs hover:shadow-md"
+                imgClassName="w-full h-full object-cover"
               />
             </Link>
 
@@ -370,14 +371,15 @@ const BestSellers = () => {
                 rounded-2xl
                 overflow-hidden
                 aspect-square
-                sm:aspect-[1/0.88]
+                sm:aspect-[1/0.82]
                 w-full
               "
             >
               <GridImage
                 src="/assets/images/categoryimages/access-4.png"
                 alt="Accessories4"
-                imgClassName="w-full h-full object-contain"
+                className="border-0 p-0 shadow-2xs hover:shadow-md"
+                imgClassName="w-full h-full object-cover"
               />
             </Link>
 
@@ -388,14 +390,15 @@ const BestSellers = () => {
                 rounded-2xl
                 overflow-hidden
                 aspect-square
-                sm:aspect-[1/0.88]
+                sm:aspect-[1/0.82]
                 w-full
               "
             >
               <GridImage
                 src="/assets/images/categoryimages/access-6.png"
                 alt="Accessories6"
-                imgClassName="w-full h-full object-contain"
+                className="border-0 p-0 shadow-2xs hover:shadow-md"
+                imgClassName="w-full h-full object-cover"
               />
             </Link>
 
@@ -406,14 +409,15 @@ const BestSellers = () => {
                 rounded-2xl
                 overflow-hidden
                 aspect-square
-                sm:aspect-[1/0.88]
+                sm:aspect-[1/0.82]
                 w-full
               "
             >
               <GridImage
                 src="/assets/images/categoryimages/access-3.png"
                 alt="Accessories3"
-                imgClassName="w-full h-full object-contain"
+                className="border-0 p-0 shadow-2xs hover:shadow-md"
+                imgClassName="w-full h-full object-cover"
               />
             </Link>
 
@@ -424,14 +428,15 @@ const BestSellers = () => {
                 rounded-2xl
                 overflow-hidden
                 aspect-square
-                sm:aspect-[1/0.88]
+                sm:aspect-[1/0.82]
                 w-full
               "
             >
               <GridImage
                 src="/assets/images/categoryimages/access-5.png"
                 alt="Accessories5"
-                imgClassName="w-full h-full object-contain"
+                className="border-0 p-0 shadow-2xs hover:shadow-md"
+                imgClassName="w-full h-full object-cover"
               />
             </Link>
 
@@ -442,14 +447,15 @@ const BestSellers = () => {
                 rounded-2xl
                 overflow-hidden
                 aspect-square
-                sm:aspect-[1/0.88]
+                sm:aspect-[1/0.82]
                 w-full
               "
             >
               <GridImage
                 src="/assets/images/categoryimages/access-7.png"
                 alt="Accessories7"
-                imgClassName="w-full h-full object-contain"
+                className="border-0 p-0 shadow-2xs hover:shadow-md"
+                imgClassName="w-full h-full object-cover"
               />
             </Link>
           </div>
