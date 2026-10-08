@@ -135,7 +135,7 @@ export default function OnSaleSection({ excludeIds = [], onLoaded }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-6 gap-y-4 items-start">
         {/* LEFT CATEGORY LIST / TABS */}
-        <div className="space-y-3 z-40">
+        <div className="space-y-3 relative z-10">
           <div className="lg:grid lg:grid-rows-7 lg:gap-y-3 flex gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-2 pt-1 px-0.5">
             {categories.map((cat) => {
               const isActive = activeCat === cat._id;

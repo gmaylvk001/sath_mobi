@@ -1843,7 +1843,7 @@ export default function Header() {
   return (
     <>
       {/* ================= HEADER ================= */}
-      <header className="bg-linear-to-r w-full from-linearyellow from-0% via-white via-50% to-linearyellow to-100% sticky top-0 z-40 lg:static">
+      <header className="bg-linear-to-r w-full from-linearyellow from-0% via-white via-50% to-linearyellow to-100% sticky top-0 z-50 lg:static">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 lg:py-3 flex items-center justify-between gap-2">
 
           {/* Logo + Mobile Menu */}
