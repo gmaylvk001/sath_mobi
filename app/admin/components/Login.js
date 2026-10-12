@@ -23,10 +23,16 @@ export default function Login() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const res = await fetch("/api/auth/session");
-      const data = await res.json();
-      if (data.isAuthenticated) {
-        router.push("/admin/dashboard");
+      try {
+        const res = await fetch("/api/auth_old8/session");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.isAuthenticated) {
+            router.replace("/admin/dashboard");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to check admin session:", error);
       }
     };
     checkSession();
@@ -47,8 +53,8 @@ export default function Login() {
       if (!res.ok) throw new Error(result.error || "Login failed");
 
       setMessage("Login successful! ✅");
-      localStorage.setItem('token', result.token);
-      setTimeout(() => router.push("/admin/dashboard"), 2000);
+      localStorage.setItem("token", result.token);
+      router.replace("/admin/dashboard");
     } catch (error) {
       setMessage(error.message);
     } finally {

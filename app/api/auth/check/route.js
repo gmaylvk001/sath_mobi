@@ -1,42 +1,40 @@
-// app/api/auth/check/route.js
 import jwt from 'jsonwebtoken';
 import User from '@/models/User';
+import dbConnect from '@/lib/db';
+
 export async function GET(req) {
-  const token = req.headers.get('Authorization')?.split(' ')[1]; // Extract token from Authorization header
+  const authorization = req.headers.get('authorization') || '';
+  const token = authorization.startsWith('Bearer ')
+    ? authorization.slice(7)
+    : '';
 
   if (!token) {
-    return Response.json({ loggedIn: false }, { status: 200 });
+    return Response.json({ loggedIn: false }, { status: 401 });
   }
 
   try {
-    // Implement your token verification logic
-    const decoded = verifyToken(token);
-    const userRole = await User.findOne({ _id: decoded.userId }, {name: 1, email: 1, mobile: 1, user_type: 1});
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    await dbConnect();
+    const user = await User.findById(decoded.userId)
+      .select('name email mobile user_type')
+      .lean();
+
+    if (!user) {
+      return Response.json({ loggedIn: false }, { status: 401 });
+    }
+
     return Response.json({
       loggedIn: true,
-      user: decoded, // optional
-      role:userRole.user_type,
-      phone:userRole.mobile
-    }, { status: 200 });
+      user: decoded,
+      role: user.user_type,
+      phone: user.mobile,
+    });
   } catch (error) {
-    return Response.json({ loggedIn: false }, { status: 200 });
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return Response.json({ loggedIn: false }, { status: 401 });
+    }
+
+    console.error('Admin authentication check failed:', error);
+    return Response.json({ error: 'Authentication check failed' }, { status: 500 });
   }
 }
-
-// Simple JWT verification example (implement properly)
-function verifyToken(token) {
-//   return jwt.verify(token, process.env.JWT_SECRET);
-// }
-// const verifyToken = (token) => {
-  if (!token) throw new Error("Authorization token required");
-   const jwt = require('jsonwebtoken');
-   try {
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      throw new Error("Token has expired");
-    } else {
-      throw new Error("Invalid token");
-    }
-  }
-};

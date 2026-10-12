@@ -14,8 +14,14 @@ export function middleware(req) {
   }
 
   const session = req.cookies.get("admin_session");
+  const normalizedPathname = pathname.replace(/\/+$/, "") || "/";
+  const publicAdminRoutes = ["/admin/login", "/admin/register"];
 
-  if (!session && pathname.startsWith("/admin")) {
+  if (
+    !session &&
+    pathname.startsWith("/admin") &&
+    !publicAdminRoutes.includes(normalizedPathname)
+  ) {
     return Response.redirect(new URL("/admin/login", req.url));
   }
 }

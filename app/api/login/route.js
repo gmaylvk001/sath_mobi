@@ -25,12 +25,29 @@ export async function POST(req) {
 
     if (!isPassword) return NextResponse.json({ error: "Incorrect Password" }, { status: 400 });
 
-    // Create a JWT token
-    // const token = jwt.sign({ userId: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    const token = jwt.sign({ userId: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET);
+    if (existingUser.user_type !== "admin") {
+      return NextResponse.json(
+        { error: "This account is not authorized to access the admin area" },
+        { status: 403 }
+      );
+    }
 
-    // Send the token back to the client
-    return NextResponse.json({ message: "User Login", token }, { status: 200 });
+    // Create a JWT token
+    const token = jwt.sign(
+      { userId: existingUser._id, email: existingUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    const response = NextResponse.json({ message: "User Login", token }, { status: 200 });
+    response.cookies.set("admin_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60,
+    });
+    return response;
 
   } catch (error) {
     console.error("API Error:", error);

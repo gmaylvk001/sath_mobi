@@ -29,6 +29,11 @@ const AdminHeader = ({ toggleSidebar }) => {
   const handleSignOut = async (e) => {
     e.preventDefault();
     try {
+      const response = await fetch("/api/logout", { method: "POST" });
+      if (!response.ok) {
+        throw new Error("Failed to end the admin session");
+      }
+      localStorage.removeItem("token");
       localStorage.removeItem('authToken');
       sessionStorage.removeItem('authToken');
       router.push('/admin/login');
