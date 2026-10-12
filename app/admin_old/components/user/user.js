@@ -27,7 +27,10 @@ export default function UserComponent() {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("/api/users/get");
+      const token = localStorage.getItem("token");
+      const response = await axios.get("/api/users/get", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);

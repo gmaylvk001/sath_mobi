@@ -133,7 +133,10 @@ const handleSendMail = async () => {
 useEffect(() => {
   const fetchUsers = async () => {
     try {
-      const res = await fetch("/api/users/get");
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/users/get", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await res.json();
       setUsers(data);
     } catch (err) {

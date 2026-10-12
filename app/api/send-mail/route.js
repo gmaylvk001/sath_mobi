@@ -31,13 +31,10 @@ console.log(products,offerId, subject, message);
     
 const offer = await Offer.findOne({ _id: new mongoose.Types.ObjectId(offerId) });
     console.log(offer);
-    const usersResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/get`);
-    const users = await usersResponse.json();
+    const users = await User.find({}, { email: 1 }).lean();
 
-   
-
-    const recipients = users.filter(user => 
-      offer.selected_users.includes(user._id) || offer.selected_users.includes("all")
+    const recipients = users.filter(user =>
+      offer.selected_users.includes(String(user._id)) || offer.selected_users.includes("all")
     );
  console.log(recipients);
     // Send email to each recipient
