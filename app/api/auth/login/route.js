@@ -44,8 +44,7 @@ export async function POST(req) {
         email: existingUser.email,
         name: existingUser.name 
       }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET
     );
 
     return NextResponse.json(

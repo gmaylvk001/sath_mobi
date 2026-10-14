@@ -3,13 +3,11 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { jwtDecode } from 'jwt-decode';
 
 export default function AuthProvider({ children }) {
   const [authStatus, setAuthStatus] = useState('checking');
   const router = useRouter();
   const pathname = usePathname();
-  const [userrole, setUserrole] = useState('user');
   useEffect(() => {
     const verifyAuth = async () => {
       try {
@@ -26,16 +24,6 @@ export default function AuthProvider({ children }) {
 
         // If no token, redirect to login
         if (!token) {
-          router.replace('/admin/login');
-          setAuthStatus('unauthenticated');
-          return;
-        }
-
-        // Decode and check token expiration
-        const decoded = jwtDecode(token);
-        const isExpired = decoded.exp * 1000 < Date.now();
-        if (isExpired) {
-          localStorage.removeItem('token');
           router.replace('/admin/login');
           setAuthStatus('unauthenticated');
           return;

@@ -35,8 +35,7 @@ export async function POST(req) {
     // Create a JWT token
     const token = jwt.sign(
       { userId: existingUser._id, email: existingUser.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET
     );
 
     const response = NextResponse.json({ message: "User Login", token }, { status: 200 });
@@ -45,7 +44,7 @@ export async function POST(req) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60,
+      maxAge: 60 * 60 * 24 * 365 * 10,
     });
     return response;
 
