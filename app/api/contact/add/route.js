@@ -6,6 +6,7 @@ export async function POST(req) {
     await dbConnect();
     const body = await req.json();
     const { name, subject, mobile_number, message } = body;
+    const updatesConsent = body.updatesConsent === true;
 
     if (!name || !subject || !mobile_number || !message) {
       return Response.json({ message: "All fields are required" }, { status: 400 });
@@ -16,6 +17,7 @@ export async function POST(req) {
       subject,
       mobile_number,
       message,
+      updatesConsent,
       status: "active",
     });
 

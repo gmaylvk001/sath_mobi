@@ -22,6 +22,10 @@ const ContactSchema = new mongoose.Schema(
       required: true, 
       trim: true 
     },
+    updatesConsent: {
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       enum: ["active", "inactive"],
