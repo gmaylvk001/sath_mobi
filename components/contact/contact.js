@@ -17,7 +17,10 @@ export default function ContactForm() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    setForm((currentForm) => ({
+      ...currentForm,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
 const handleSubmit = async (e) => {
@@ -32,7 +35,7 @@ const handleSubmit = async (e) => {
       body: JSON.stringify(form),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
 
     if (res.ok) {
       setResponseMsg("Message sent successfully!");
@@ -49,10 +52,11 @@ const handleSubmit = async (e) => {
         setResponseMsg("");
       }, 2000);
     } else {
-      setResponseMsg(data.message || "Something went wrong");
+      setResponseMsg(data.message || "Something went wrong. Please try again.");
     }
   } catch (error) {
-    setResponseMsg("Server error");
+    console.error("Error submitting contact form:", error);
+    setResponseMsg("Unable to submit your message. Please try again.");
   } finally {
     setLoading(false);
   }
@@ -146,7 +150,16 @@ const handleSubmit = async (e) => {
             </button>
 
             {responseMsg && (
-              <p className="text-green-600 font-medium mt-2">{responseMsg}</p>
+              <p
+                role="status"
+                className={`font-medium mt-2 ${
+                  responseMsg === "Message sent successfully!"
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {responseMsg}
+              </p>
             )}
           </form>
         </div>

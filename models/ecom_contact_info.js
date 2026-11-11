@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
+import { randomUUID } from "node:crypto";
 
 const ContactSchema = new mongoose.Schema(
   {
+    cus_id: {
+      type: String,
+      required: true,
+      unique: true,
+      default: randomUUID,
+    },
     name: { 
       type: String, 
       required: true, 
